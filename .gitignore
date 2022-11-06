@@ -28,7 +28,7 @@ yarn-error.log*
 # Misc files
 .DS_Store
 .idea/
-#.vscode/
+.vscode/
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
