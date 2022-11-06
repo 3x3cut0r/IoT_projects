@@ -1,0 +1,122 @@
+{
+  "version": 1,
+  "author": "3x3cut0r",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "wokwi-arduino-uno", "id": "uno", "top": -15.39, "left": 32.22, "attrs": {} },
+    {
+      "type": "wokwi-lcd2004",
+      "id": "lcd2004",
+      "top": 272.62,
+      "left": 327,
+      "attrs": { "pins": "i2c" }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "tempDownBtn",
+      "top": -64.17,
+      "left": 337.8,
+      "attrs": { "bounce": "0", "color": "blue", "label": "TempDown" }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "tempUpBtn",
+      "top": -150.98,
+      "left": 338.13,
+      "attrs": { "bounce": "0", "color": "red", "label": "TempUp" }
+    },
+    {
+      "type": "wokwi-ntc-temperature-sensor",
+      "id": "tempSensor",
+      "top": 277.8,
+      "left": -228.22,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-led",
+      "id": "ledOpenOff",
+      "top": -165.12,
+      "left": -199.06,
+      "attrs": { "color": "red" }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "ledOpenOn",
+      "top": -165.08,
+      "left": -222.51,
+      "attrs": { "color": "green" }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "ledCloseOff",
+      "top": -92.73,
+      "left": -152.09,
+      "attrs": { "color": "red" }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "ledCloseOn",
+      "top": -92.82,
+      "left": -174.42,
+      "attrs": { "color": "green" }
+    },
+    {
+      "type": "wokwi-ks2e-m-dc5",
+      "id": "relayOpen",
+      "top": -170.77,
+      "left": -102.21,
+      "attrs": {}
+    },
+    { "type": "wokwi-ks2e-m-dc5", "id": "relayClose", "top": -83.84, "left": -101.5, "attrs": {} }
+  ],
+  "connections": [
+    [ "btn1:1.l", "uno:2", "green", [ "h0" ] ],
+    [ "btn2:1.l", "uno:3", "green", [ "h0" ] ],
+    [ "btn1:2.l", "uno:GND.2", "green", [ "h0" ] ],
+    [ "btn2:2.l", "uno:GND.2", "green", [ "h0" ] ],
+    [ "lcd2004:GND", "uno:GND.2", "black", [ "h0" ] ],
+    [ "tempUpBtn:1.l", "uno:2", "magenta", [ "h0" ] ],
+    [ "tempDownBtn:1.l", "uno:3", "magenta", [ "h0" ] ],
+    [ "ntc1:GND", "uno:GND.2", "black", [ "h0" ] ],
+    [ "ntc1:VCC", "uno:5V", "red", [ "h0" ] ],
+    [ "ntc1:OUT", "uno:4", "magenta", [ "h0" ] ],
+    [ "relay2:NC1", "led1:A", "gray", [ "h0" ] ],
+    [ "led1:C", "uno:GND.2", "black", [ "v0" ] ],
+    [ "relay2:NO1", "led2:A", "gray", [ "v0" ] ],
+    [ "led2:C", "uno:GND.2", "black", [ "v0" ] ],
+    [ "led3:A", "relay1:NC1", "gray", [ "v0" ] ],
+    [ "led4:A", "relay1:NO1", "gray", [ "v0" ] ],
+    [ "led3:C", "uno:GND.2", "black", [ "v0" ] ],
+    [ "led4:C", "uno:GND.2", "black", [ "v0" ] ],
+    [ "tempSensor:GND", "uno:GND.2", "black", [ "h0" ] ],
+    [ "tempSensor:VCC", "uno:5V", "red", [ "h0" ] ],
+    [ "relay2:P1", "uno:5V", "red", [ "v12.73", "h249.35" ] ],
+    [ "relay1:P1", "uno:5V", "red", [ "v12.09", "h250.63" ] ],
+    [ "relay1:NC1", "ledOpenOff:A", "blue", [ "v14.01", "h-95.9" ] ],
+    [ "relay1:COIL1", "uno:4", "magenta", [ "v0.23", "h268.97" ] ],
+    [ "relay2:COIL1", "uno:5", "magenta", [ "v0.04", "h265.95" ] ],
+    [ "ledCloseOff:A", "relay2:NC1", "blue", [ "v12.5", "h77.02" ] ],
+    [ "ledOpenOn:A", "relay1:NO1", "green", [ "v21.8", "h103.85" ] ],
+    [ "ledCloseOn:A", "relay2:NO1", "green", [ "v24.65", "h55.37" ] ],
+    [ "relayOpen:COIL1", "uno:4", "magenta", [ "v0.41", "h270.62" ] ],
+    [ "relayClose:COIL1", "uno:5", "magenta", [ "v-0.44", "h264.2" ] ],
+    [ "tempDownBtn:2.l", "uno:GND.2", "black", [ "h-15.44", "v236.46", "h-119.31" ] ],
+    [ "relayOpen:NC1", "ledOpenOff:A", "blue", [ "v19.83", "h34.04" ] ],
+    [ "relayClose:NC1", "ledCloseOff:A", "blue", [ "v19.1", "h41.89" ] ],
+    [ "relayOpen:NO1", "ledOpenOn:A", "green", [ "v38.1", "h242.86" ] ],
+    [ "relayClose:NO1", "ledCloseOn:A", "green", [ "v36.08", "h120.89" ] ],
+    [ "tempUpBtn:2.l", "uno:GND.2", "black", [ "h-15.43", "v323.59", "h-109.27" ] ],
+    [ "ledCloseOff:C", "uno:GND.2", "black", [ "v255.34", "h360.02" ] ],
+    [ "ledCloseOn:C", "uno:GND.2", "black", [ "v255.43", "h381.88" ] ],
+    [ "ledOpenOff:C", "uno:GND.2", "black", [ "v327.73", "h410.8" ] ],
+    [ "ledOpenOn:C", "uno:GND.2", "black", [ "v327.21", "h430.92" ] ],
+    [ "relayOpen:COIL2", "uno:GND.2", "black", [ "v0.15", "h42.01", "v369.92", "h189.83" ] ],
+    [ "relayClose:COIL2", "uno:GND.2", "black", [ "v0.45", "h41.68", "v282.69", "h188.33" ] ],
+    [ "lcd2004:SCL", "uno:A5.2", "blue", [ "h0" ] ],
+    [ "lcd2004:SDA", "uno:A4.2", "green", [ "h0" ] ],
+    [ "lcd2004:VCC", "uno:5V", "red", [ "h0" ] ],
+    [ "tempSensor:OUT", "uno:8", "magenta", [ "h201.48", "v-239.09", "h128.62" ] ],
+    [ "relayClose:P1", "uno:5V", "red", [ "v364.87", "h242.65" ] ],
+    [ "relayOpen:P1", "uno:5V", "red", [ "v19.65", "h58.68", "v432.11", "h192.13" ] ]
+  ]
+}
