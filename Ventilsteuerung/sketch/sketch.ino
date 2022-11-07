@@ -82,18 +82,18 @@ const unsigned int RELAIS_TIME = 2000;
  * Default = 300
  * 
  * Zulässige Werte = 0.0 - 120.0
- * Bedinung: NOMINAL_MIN_TEMP >= NOMINAL_MAX_TEMP
+ * Bedingung: nominalMinTemp <= nominalMaxTemp
  */
-const float NOMINAL_MIN_TEMP = 45.0;
+float nominalMinTemp = 45.0;
 
 /** 
  * Maximale Solltemperatur (in Grad Celsius)
  * Default = 300
  * 
  * Zulässige Werte = 0.0 - 120.0
- * Bedinung: NOMINAL_MIN_TEMP >= NOMINAL_MAX_TEMP
+ * Bedingung: nominalMaxTemp >= nominalMinTemp
  */
-const float NOMINAL_MAX_TEMP = 60.0; 
+float nominalMaxTemp = 60.0; 
 
 /** 
  * Hintergrundbeleuchtung des LCD I2C Displays
@@ -146,8 +146,6 @@ const int RELAY_CLOSE_PIN = 5; // Relais, welches öffnet, wenn es kälter werde
 // Temps
 float currentTemp = 0; // aktuelle Temperatur (in Grad Celsius)
 unsigned int updateTime = UPDATE_TIME; // Zeit (in Sekunden), bis zur nächsten Angleichung
-float nominalMinTemp = NOMINAL_MIN_TEMP; // eingestellte Minimale Solltemperatur (in Grad Celsius)
-float nominalMaxTemp = NOMINAL_MAX_TEMP; // eingestellte Maximale Solltemperatur (in Grad Celsius)
 const int nominalMinTempAddress = 0; // Speicheradresse (int), im EEPROM der Minimalen Solltemperatur
 const int nominalMaxTempAddress = 4; // Speicheradresse (int), im EEPROM der Maximalen Solltemperatur
 
@@ -201,10 +199,9 @@ float getEEPROM(int address) {
  */
 void readNominalMinTemp() {
   float temp = getEEPROM(nominalMinTempAddress);
-  if (temp == 0) {
-    temp = NOMINAL_MIN_TEMP;
+  if (temp != 0) {
+    nominalMinTemp = temp;
   }
-  nominalMinTemp = temp;
 }
 
 /** 
@@ -212,23 +209,22 @@ void readNominalMinTemp() {
  */
 void readNominalMaxTemp() {
   float temp = getEEPROM(nominalMaxTempAddress);
-  if (temp == 0) {
-    temp = NOMINAL_MAX_TEMP;
+  if (temp != 0) {
+    nominalMaxTemp = temp;
   }
-  nominalMaxTemp = temp;
 }
 
 /** 
  * aktualisiert die minimale Solltemperatur im EEPROM (falls geändert)
  */
-void updateNominalMinTemp() {
+void updateNominalMinTempInEEPROM() {
   toEEPROM(nominalMinTempAddress, nominalMinTemp);
 }
 
 /** 
  * aktualisiert die maximale Solltemperatur im EEPROM (falls geändert)
  */
-void updateNominalMaxTemp() {
+void updateNominalMaxTempInEEPROM() {
   toEEPROM(nominalMaxTempAddress, nominalMaxTemp);
 }
 
@@ -296,10 +292,10 @@ void setRelais(int relayPin, int relayTime) {
  * schaltet das jeweilige Relais abhängig von der Solltemperatur 
  */
 void openRelais(int relayTime) {
-  if (currentTemp < NOMINAL_MIN_TEMP) {
+  if (currentTemp < nominalMinTemp) {
       // erhöhe Temperatur
       setRelais(RELAY_OPEN_PIN, relayTime);
-    } else if (currentTemp > NOMINAL_MAX_TEMP) {
+    } else if (currentTemp > nominalMaxTemp) {
       // verringere Temperatur
       setRelais(RELAY_CLOSE_PIN, relayTime);
     } else {
@@ -491,8 +487,8 @@ void loop() {
   // reset Timer
   if (updateTime == 0) {
     updateTime = UPDATE_TIME;
-    updateNominalMinTemp();
-    updateNominalMaxTemp();
+    updateNominalMinTempInEEPROM();
+    updateNominalMaxTempInEEPROM();
   }
 
   // aktualisiere Timer
