@@ -9,18 +9,22 @@
 */
 
 /** 
-  Includes
-*/
+ * Includes
+ * OneWire.h            -> OneWire by Jim Studt                     v2.3.7
+ * DallasTemperature.h  -> DallasTemperature by Miles Burton        v3.9.0
+ * LiquidCrystal_I2C.h  -> LiquidCrystal I2C by Frank de Brabander  v1.1.2
+ * EEPROM.h             -> EEPROM-Storage by Daniel Porrey          v1.0.1
+ */
 #include <OneWire.h> // Temperatur Library
 #include <DallasTemperature.h> // Temperatur Library für DS18B20
 #include <LiquidCrystal_I2C.h> // LCD Library für 20x4 I2C Display
 #include <EEPROM.h> // EEPROM um die Solltemperaturen dauerhaft zu speichern
 
 /** 
-  ==================================================
-  Änderbare Variablen
-  ==================================================
-*/
+ * ==================================================
+ * Änderbare Variablen
+ * ==================================================
+ */
 
 /** 
  * 1. Startverzögerung (in Sekunden)
