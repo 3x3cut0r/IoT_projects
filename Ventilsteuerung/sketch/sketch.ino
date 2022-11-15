@@ -157,6 +157,9 @@ const int nominalMaxTempAddress = 4; // Speicheradresse (int), im EEPROM der Max
 const int BUTTON_TEMP_UP_PIN = 2; // PIN des Buttons Solltemperatur senken
 const int BUTTON_TEMP_DOWN_PIN = 3; // PIN des Buttons Solltemperatur erhöhen
 
+// Delay
+unsigned int defaultReducer = 165;
+
 
 
 /** 
@@ -171,8 +174,8 @@ const int BUTTON_TEMP_DOWN_PIN = 3; // PIN des Buttons Solltemperatur erhöhen
  */
 void delayTime(int time) {
   int reducer = SECOND_REDUCER;
-  if(SECOND_REDUCER > 1000 || SECOND_REDUCER < 0){
-    reducer = 165;
+  if (SECOND_REDUCER > 1000 || SECOND_REDUCER < 0) {
+    reducer = defaultReducer;
   }
   time = time - reducer;
   delay(time);
