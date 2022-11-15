@@ -5,7 +5,7 @@
 
   Copyright (C) 2022, 3x3cut0r
 
-  Released under the MIT License.
+  Veröffentlicht unter der MIT Lizenz.
 */
 
 /** 
@@ -109,24 +109,6 @@ float nominalMaxTemp = 60.0;
  */
 const int LCD_I2C_BACKLIGHT = 1;
 
-/** 
- * Zeitkorrektur (in Millisekunden)
- * Default = 165
- * 
- * Ein Zyklus besteht aus einer Sekunde.
- * In dieser Sekunde finden Rechenaufgaben (x) statt (Messungen, Schaltungen, etc ...).
- * Die Zeit der Rechenaufgaben lässt sich nicht ermitteln.
- * Nach den Rechenaufgaben wird mit einem delay eine kurze Zeit gewartet bis der nächste Zyklus beginnt.
- * 
- * Mit SECOND_REDUCER gibt man die geschätze Zeit für x an, welche vom delay abgezogen wird.
- * x + delay sollte also genau 1 Sekunde betragen (1000ms), damit am Ende die Zeitangaben stimmen.
- * 
- * Zulässige Werte = 0 bis 1000 (in Millisekunden)
- * 0 = es wird nichts abgezogen
- * 1000 = es wird 1 Sekunde abgezogen
- */
-const int SECOND_REDUCER = 165;
-
 
 
 /** 
@@ -134,6 +116,10 @@ const int SECOND_REDUCER = 165;
   Feste Variablen (bitte nicht ändern!)
   ==================================================
 */
+
+// Time
+unsigned long previousMillis = 0UL;
+unsigned long interval = 1000UL;
 
 // LCD
 LiquidCrystal_I2C lcd(0x27, 20, 4); // I2C_ADDR, LCD_COLUMNS, LCD_LINES
@@ -157,9 +143,6 @@ const int nominalMaxTempAddress = 4; // Speicheradresse (int), im EEPROM der Max
 const int BUTTON_TEMP_UP_PIN = 2; // PIN des Buttons Solltemperatur senken
 const int BUTTON_TEMP_DOWN_PIN = 3; // PIN des Buttons Solltemperatur erhöhen
 
-// Delay
-unsigned int defaultReducer = 165;
-
 
 
 /** 
@@ -167,19 +150,6 @@ unsigned int defaultReducer = 165;
  * Funktionen
  * ==================================================
  */
-
-/** 
- * gleicht die Zeit (time) eines delays mit einer Sekunde
- * mittels SECOND_REDUCER an
- */
-void delayTime(int time) {
-  int reducer = SECOND_REDUCER;
-  if (SECOND_REDUCER > 1000 || SECOND_REDUCER < 0) {
-    reducer = defaultReducer;
-  }
-  time = time - reducer;
-  delay(time);
-}
 
 /** 
  * speichert einen Wert (value) in der übergebenen Adresse (address)
@@ -364,38 +334,39 @@ void checkButtons() {
  */
 void waitStart(unsigned int secs) {
   int counter = secs;
-  while (counter > 0) {
+  while (counter >= 0) {
+    unsigned long currentMillis = millis();
+    if (currentMillis - previousMillis > interval) {
 
-    // prüfe ob Button gedrückt
-    checkButtons();
+      // prüfe ob Button gedrückt
+      checkButtons();
 
-    // aktualisiere aktuelle Temperatur
-    updateTemp();
+      // aktualisiere aktuelle Temperatur
+      updateTemp();
 
-    secs = counter;
-    String statusWait = "STARTE IN:          ";
-    String time = "";
+      secs = counter;
+      String statusWait = "STARTE IN:          ";
+      String time = "";
 
-    // int years = (int) (secs / (60*60*24*365));
-    // secs     -= years       * (60*60*24*365);
-    // int days  = (int) (secs / (60*60*24));
-    // secs     -= days 	      * (60*60*24);
-    int hours = (int) (secs / (60*60));
-    secs     -= hours       * (60*60);
-    int mins  = (int) (secs / (60));
-    secs     -= mins        * (60);
+      // int years = (int) (secs / (60*60*24*365));
+      // secs     -= years       * (60*60*24*365);
+      // int days  = (int) (secs / (60*60*24));
+      // secs     -= days 	      * (60*60*24);
+      int hours = (int) (secs / (60*60));
+      secs     -= hours       * (60*60);
+      int mins  = (int) (secs / (60));
+      secs     -= mins        * (60);
 
-    if (hours > 0) { time = time + hours + "h "; }
-    time = time + mins  + "m " + secs  + "s"; 
+      if (hours > 0) { time = time + hours + "h "; }
+      time = time + mins  + "m " + secs  + "s"; 
 
-    int empty = 20 - time.length();
-    printLCD(3, 0, statusWait);
-    printLCD(3, empty, time);
+      int empty = 20 - time.length();
+      printLCD(3, 0, statusWait);
+      printLCD(3, empty, time);
 
-    counter = counter - 1;
-
-    // warte 1 Sekunde
-    delayTime(1000);
+      counter = counter - 1;
+      previousMillis = currentMillis;
+    }
   }
 }
 
@@ -434,7 +405,7 @@ void setup() {
 
   // Init LCD
   lcd.init();
-  if(LCD_I2C_BACKLIGHT == 1) {
+  if (LCD_I2C_BACKLIGHT == 1) {
     lcd.backlight();
   } else {
     lcd.noBacklight();
@@ -476,31 +447,34 @@ void setup() {
  * ==================================================
  */
 void loop() {
+  unsigned long currentMillis = millis();
+  if (currentMillis - previousMillis > interval) {
+    
+    // aktualisiere Timer
+    if (updateTime >= 0) {
+      updateTimer(updateTime);
+      updateTime--;
+    }
 
-  // warte 1 Sekunde
-  delayTime(1000);
+    // prüfe ob Button gedrückt
+    checkButtons();
 
-  // prüfe ob Button gedrückt
-  checkButtons();
+    // aktualisiere Temperatur
+    updateTemp();
 
-  // aktualisiere Temperatur
-  updateTemp();
+    // öffne Ventil
+    if (updateTime == 0) {
+      openRelais(RELAIS_TIME);
+    }
 
-  // öffne Ventil
-  if (updateTime == 0) {
-    openRelais(RELAIS_TIME);
-  }
+    // reset Timer
+    if (updateTime == 0) {
+      updateTime = UPDATE_TIME;
+      updateNominalMinTempInEEPROM();
+      updateNominalMaxTempInEEPROM();
+    }
 
-  // reset Timer
-  if (updateTime == 0) {
-    updateTime = UPDATE_TIME;
-    updateNominalMinTempInEEPROM();
-    updateNominalMaxTempInEEPROM();
-  }
-
-  // aktualisiere Timer
-  if (updateTime > 0) {
-    updateTimer(updateTime);
-    updateTime--;
+    // aktualisiere previousMillis
+    previousMillis = currentMillis;
   }
 }
