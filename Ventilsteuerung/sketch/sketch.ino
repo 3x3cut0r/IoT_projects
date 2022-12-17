@@ -40,64 +40,64 @@ const unsigned int DELAY_BEFORE_START_1 = 660;
 /** 
  * 2. Startverzögerung (in Sekunden)
  * die gewartet wird bevor die erste Temperaturanpassung stattfindet
- * Default = 600
+ * Default = 480
  * 
  * Zulässige Werte = 0-65535
  * Maximaler Wert entspricht 18h 12m 15s
  * (wegen Arduino Uno Speicherbegrenzung von 32 bit (unsigned int))
  */
-const unsigned int DELAY_BEFORE_START_2 = 600;
+const unsigned int DELAY_BEFORE_START_2 = 480;
 
 /** 
  * Zeit (in Millisekunden)
  * wie lang das Relais beim Einschalten einmalig schaltet
- * Default = 3000
- * 
- * Zulässige Werte = 0-65535
- * Maximaler Wert entspricht 65s 535ms
- * (wegen Arduino Uno Speicherbegrenzung von 32 bit (unsigned int))
- */
-const unsigned int INIT_RELAIS_TIME = 3000;
-
-/** 
- * Zeit (in Sekunden)
- * bis zur nächsten Temperaturmessung
- * Default = 180
- * 
- * Zulässige Werte = 0-65535
- * Maximaler Wert entspricht 18h 12m 15s
- * (wegen Arduino Uno Speicherbegrenzung von 32 bit (unsigned int))
- */
-const unsigned int UPDATE_TIME = 180; // Sekunden
-
-/** 
- * Zeit (in Millisekunden)
- * wie lang das Relais schaltet
  * Default = 2000
  * 
  * Zulässige Werte = 0-65535
  * Maximaler Wert entspricht 65s 535ms
  * (wegen Arduino Uno Speicherbegrenzung von 32 bit (unsigned int))
  */
-const unsigned int RELAIS_TIME = 2000;
+const unsigned int INIT_RELAIS_TIME = 2000;
+
+/** 
+ * Zeit (in Sekunden)
+ * bis zur nächsten Temperaturmessung
+ * Default = 120
+ * 
+ * Zulässige Werte = 0-65535
+ * Maximaler Wert entspricht 18h 12m 15s
+ * (wegen Arduino Uno Speicherbegrenzung von 32 bit (unsigned int))
+ */
+const unsigned int UPDATE_TIME = 120; // Sekunden
+
+/** 
+ * Zeit (in Millisekunden)
+ * wie lang das Relais schaltet
+ * Default = 1500
+ * 
+ * Zulässige Werte = 0-65535
+ * Maximaler Wert entspricht 65s 535ms
+ * (wegen Arduino Uno Speicherbegrenzung von 32 bit (unsigned int))
+ */
+const unsigned int RELAIS_TIME = 1500;
 
 /** 
  * Minimale Solltemperatur (in Grad Celsius)
- * Default = 300
+ * Default = 43.0
  * 
  * Zulässige Werte = 0.0 - 120.0
  * Bedingung: nominalMinTemp <= nominalMaxTemp
  */
-float nominalMinTemp = 45.0;
+float nominalMinTemp = 43.0;
 
 /** 
  * Maximale Solltemperatur (in Grad Celsius)
- * Default = 300
+ * Default = 55.0
  * 
  * Zulässige Werte = 0.0 - 120.0
  * Bedingung: nominalMaxTemp >= nominalMinTemp
  */
-float nominalMaxTemp = 60.0; 
+float nominalMaxTemp = 55.0; 
 
 /** 
  * Hintergrundbeleuchtung des LCD I2C Displays
@@ -314,7 +314,7 @@ void updateNominalTemp(int buttonPin) {
       if (buttonLong == 5) {
         rate = 1;
       } else if (buttonLong == 10) {
-        rate = 5;
+        rate = 1; // rate = 5 -> war zu schnell
       }
   }
   printLCD(2, 0, "                    ");
@@ -462,14 +462,14 @@ void loop() {
     // aktualisiere Temperatur
     updateTemp();
 
-    // öffne Ventil
     if (updateTime == 0) {
+      // öffne Ventil
       openRelais(RELAIS_TIME);
-    }
 
-    // reset Timer
-    if (updateTime == 0) {
+      // reset Timer
       updateTime = UPDATE_TIME;
+
+      // update nominalTemp
       updateNominalMinTempInEEPROM();
       updateNominalMaxTempInEEPROM();
     }
