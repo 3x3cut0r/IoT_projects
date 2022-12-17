@@ -152,14 +152,14 @@ const int BUTTON_TEMP_DOWN_PIN = 3; // PIN des Buttons Solltemperatur erhöhen
  */
 
 /** 
- * speichert einen Wert (value) in der übergebenen Adresse (address)
+ * speichert in der übergebenen Adresse (address) einen Wert (value) 
  */
 void toEEPROM(int address, float value) {
   EEPROM.put(address, value);
 }
 
 /** 
- * liest einen Wert (value) aus der übergebenen Adresse (address)
+ * liest aus der übergebenen Adresse (address) einen Wert (value) 
  */
 float getEEPROM(int address) {
   float temp;
