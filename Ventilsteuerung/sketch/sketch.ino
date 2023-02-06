@@ -62,13 +62,13 @@ const unsigned int INIT_RELAIS_TIME = 2000;
 /** 
  * Zeit (in Sekunden)
  * bis zur nächsten Temperaturmessung
- * Default = 120
+ * Default = 150
  * 
  * Zulässige Werte = 0-65535
  * Maximaler Wert entspricht 18h 12m 15s
  * (wegen Arduino Uno Speicherbegrenzung von 32 bit (unsigned int))
  */
-const unsigned int UPDATE_TIME = 120; // Sekunden
+const unsigned int UPDATE_TIME = 150; // Sekunden
 
 /** 
  * Zeit (in Millisekunden)
@@ -255,14 +255,19 @@ void printNominalTemp() {
  * über die übergebene Zeit (relayTime)
  */
 void setRelais(int relayPin, int relayTime) {
-  if (relayPin == RELAY_OPEN_PIN) {
-    printLCD(3, 0, "\357ffne Ventil     >>>");
-  } else if (relayPin == RELAY_CLOSE_PIN) {
-    printLCD(3, 0, "schlie\342e Ventil: <<<");
-  }
-  digitalWrite(relayPin, HIGH);
-  delay(relayTime);
-  digitalWrite(relayPin, LOW);
+  if (currentTemp >= 0 && currentTemp <= 150) {
+    if (relayPin == RELAY_OPEN_PIN) {
+      printLCD(3, 0, "\357ffne Ventil     >>>");
+    } else if (relayPin == RELAY_CLOSE_PIN) {
+      printLCD(3, 0, "schlie\342e Ventil: <<<");
+    }
+    digitalWrite(relayPin, HIGH);
+    delay(relayTime);
+    digitalWrite(relayPin, LOW);
+  } else {
+    printLCD(3, 0, "Fehler: Temp Fehler!");
+    delay(RELAIS_TIME);
+  } 
 }
 
 /** 
@@ -270,14 +275,14 @@ void setRelais(int relayPin, int relayTime) {
  */
 void openRelais(int relayTime) {
   if (currentTemp < nominalMinTemp) {
-      // erhöhe Temperatur
-      setRelais(RELAY_OPEN_PIN, relayTime);
-    } else if (currentTemp > nominalMaxTemp) {
-      // verringere Temperatur
-      setRelais(RELAY_CLOSE_PIN, relayTime);
-    } else {
-      printLCD(3, 0, "Soll Temp erreicht !");
-    }
+    // erhöhe Temperatur
+    setRelais(RELAY_OPEN_PIN, relayTime);
+  } else if (currentTemp > nominalMaxTemp) {
+    // verringere Temperatur
+    setRelais(RELAY_CLOSE_PIN, relayTime);
+  } else {
+    printLCD(3, 0, "Soll Temp erreicht !");
+  }
 }
 
 /** 
