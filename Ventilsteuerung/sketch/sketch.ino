@@ -164,7 +164,7 @@ void toEEPROM(int address, float value) {
 float getEEPROM(int address) {
   float temp;
   EEPROM.get(address, temp);
-  if (temp > 0 && temp <= 300) {
+  if (temp > 0 && temp <= 110) {
     return temp;
   } else {
     return 0;
