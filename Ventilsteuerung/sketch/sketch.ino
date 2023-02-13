@@ -100,6 +100,15 @@ float nominalMinTemp = 43.0;
 float nominalMaxTemp = 55.0; 
 
 /** 
+ * Zeit (in Sekunden)
+ * bis die Temperatur erneut aktualisiert werden soll
+ * Default = 5
+ * 
+ * Zulässige Werte = 1 - 60
+ */
+const unsigned int UPDATE_TEMP_INTERVAL = 5; 
+
+/** 
  * Hintergrundbeleuchtung des LCD I2C Displays
  * Default = 1
  * 
@@ -107,7 +116,21 @@ float nominalMaxTemp = 55.0;
  * 0 = Hintergrundbeleuchtung aus
  * 1 = Hintergrundbeleuchtung an
  */
-const int LCD_I2C_BACKLIGHT = 1;
+const unsigned int LCD_I2C_BACKLIGHT = 1;
+
+/**
+ * Bit der Sensor-Auflösung
+ * Default: 9
+ * 
+ * Zulässige Werte: 9-12
+ * 
+ * Bits  Auflösung   Messzeit
+ *  9        0,5 °C   93,75 ms
+ * 10       0,25 °C  187,50 ms
+ * 11      0,125 °C  375,00 ms
+ * 12    0,00626 °C  750,00 ms
+ */
+const unsigned int SENSOR_RESOLUTION_BIT = 9;
 
 
 
@@ -346,8 +369,10 @@ void waitStart(unsigned int secs) {
       // prüfe ob Button gedrückt
       checkButtons();
 
-      // aktualisiere aktuelle Temperatur
+      // aktualisiere Temperatur alle 5 Sekunden
+    if (updateTime % UPDATE_TEMP_INTERVAL == 0) {
       updateTemp();
+    }
 
       secs = counter;
       String statusWait = "STARTE IN:          ";
@@ -416,8 +441,14 @@ void setup() {
     lcd.noBacklight();
   }
 
+  // Init Serial
+  Serial.begin(115200);
+
   // Init Temperatursensor
   sensors.begin();
+
+  // Init Sensor Auflösung
+  sensors.setResolution(SENSOR_RESOLUTION_BIT);
 
   // setze Relais pinMode
   pinMode(RELAY_OPEN_PIN, OUTPUT);
@@ -464,8 +495,10 @@ void loop() {
     // prüfe ob Button gedrückt
     checkButtons();
 
-    // aktualisiere Temperatur
-    updateTemp();
+    // aktualisiere Temperatur alle 5 Sekunden
+    if (updateTime % UPDATE_TEMP_INTERVAL == 0) {
+      updateTemp();
+    }
 
     if (updateTime == 0) {
       // öffne Ventil
