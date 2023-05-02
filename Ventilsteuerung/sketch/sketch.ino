@@ -11,7 +11,7 @@
 /** 
  * Includes
  * OneWire.h            -> OneWire by Jim Studt                     v2.3.7
- * DallasTemperature.h  -> DallasTemperature by Miles Burton        v3.9.0
+ * DallasTemperature.h  -> DallasTemperature by Miles Burton        v3.9.1
  * LiquidCrystal_I2C.h  -> LiquidCrystal I2C by Frank de Brabander  v1.1.2
  * EEPROM.h             -> EEPROM-Storage by Daniel Porrey          v1.0.1
  */
@@ -278,6 +278,7 @@ void printNominalTemp() {
  * über die übergebene Zeit (relayTime)
  */
 void setRelais(int relayPin, int relayTime) {
+  // schalte nur, wenn die Temperatur ausgelesen werden kann
   if (currentTemp >= 0 && currentTemp <= 150) {
     if (relayPin == RELAY_OPEN_PIN) {
       printLCD(3, 0, "\357ffne Ventil     >>>");
@@ -370,9 +371,9 @@ void waitStart(unsigned int secs) {
       checkButtons();
 
       // aktualisiere Temperatur alle 5 Sekunden
-    if (updateTime % UPDATE_TEMP_INTERVAL == 0) {
-      updateTemp();
-    }
+      if (updateTime % UPDATE_TEMP_INTERVAL == 0) {
+        updateTemp();
+      }
 
       secs = counter;
       String statusWait = "STARTE IN:          ";
@@ -450,11 +451,13 @@ void setup() {
   // Init Sensor Auflösung
   sensors.setResolution(SENSOR_RESOLUTION_BIT);
 
-  // setze Relais pinMode
+  // Init Relais
+  digitalWrite(RELAY_OPEN_PIN, LOW);
   pinMode(RELAY_OPEN_PIN, OUTPUT);
+  digitalWrite(RELAY_CLOSE_PIN, LOW);
   pinMode(RELAY_CLOSE_PIN, OUTPUT);
 
-  // setze Button pinMode
+  // Init Buttons
   pinMode(BUTTON_TEMP_UP_PIN, INPUT_PULLUP); 
   pinMode(BUTTON_TEMP_DOWN_PIN, INPUT_PULLUP); 
 
