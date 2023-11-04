@@ -15,12 +15,12 @@
 
 /** 
  * Minimale Solltemperatur (in Grad Celsius)
- * Default = 43.0
+ * Default = 41.0
  * 
  * Zulässige Werte = 0.0 - 120.0
  * Bedingung: nominalMinTemp <= nominalMaxTemp
  */
-float nominalMinTemp = 43.0;
+float nominalMinTemp = 41.0;
 
 /** 
  * Maximale Solltemperatur (in Grad Celsius)
@@ -30,6 +30,24 @@ float nominalMinTemp = 43.0;
  * Bedingung: nominalMaxTemp >= nominalMinTemp
  */
 float nominalMaxTemp = 55.0;
+
+/** 
+ * Minimale Solltemperatur (in Grad Celsius) - 2
+ * Default = 41.0
+ * 
+ * Zulässige Werte = 0.0 - 120.0
+ * Bedingung: nominalMinTemp <= nominalMaxTemp
+ */
+float nominalMinTemp2 = 41.0;
+
+/** 
+ * Maximale Solltemperatur (in Grad Celsius) - 2
+ * Default = 57.0
+ * 
+ * Zulässige Werte = 0.0 - 120.0
+ * Bedingung: nominalMaxTemp >= nominalMinTemp
+ */
+float nominalMaxTemp2 = 55.0;
 
 /** 
  * Hintergrundbeleuchtung des LCD I2C Displays
@@ -53,6 +71,8 @@ LiquidCrystal_I2C lcd(0x27, 20, 4); // I2C_ADDR, LCD_COLUMNS, LCD_LINES
 // Temps
 const int nominalMinTempAddress = 0; // Speicheradresse (int), im EEPROM der Minimalen Solltemperatur
 const int nominalMaxTempAddress = 4; // Speicheradresse (int), im EEPROM der Maximalen Solltemperatur
+const int nominalMinTempAddress2 = 8; // Speicheradresse (int), im EEPROM der Minimalen Solltemperatur - 2
+const int nominalMaxTempAddress2 = 12; // Speicheradresse (int), im EEPROM der Maximalen Solltemperatur - 2
 
 
 
@@ -85,15 +105,25 @@ float getEEPROM(int address) {
 /** 
  * aktualisiert die minimale Solltemperatur im EEPROM (falls geändert)
  */
-void updateNominalMinTempInEEPROM() {
-  toEEPROM(nominalMinTempAddress, nominalMinTemp);
+void updateNominalMinTempInEEPROM(int eepromAddress, float temp) {
+  printLCD(2, 0, "Soll (Min):         ");
+  toEEPROM(eepromAddress, temp);
+  String nominalTemp = String(getEEPROM(eepromAddress), 1) + " \337C";
+  int tempPos = 20 - nominalTemp.length();
+  printLCD(2, tempPos, nominalTemp);
+  delay(2000);
 }
 
 /** 
  * aktualisiert die maximale Solltemperatur im EEPROM (falls geändert)
  */
-void updateNominalMaxTempInEEPROM() {
-  toEEPROM(nominalMaxTempAddress, nominalMaxTemp);
+void updateNominalMaxTempInEEPROM(int eepromAddress, float temp) {
+  printLCD(3, 0, "Soll (Max):         ");
+  toEEPROM(eepromAddress, temp);
+  String nominalTemp = String(getEEPROM(eepromAddress), 1) + " \337C";
+  int tempPos = 20 - nominalTemp.length();
+  printLCD(3, tempPos, nominalTemp);
+  delay(2000);
 }
 
 /** 
@@ -116,21 +146,19 @@ void setup() {
   }
 
   // speichere Solltemperatur in EEPROM
-  printLCD(0, 0, "write EEPROM:   ....");
-  printLCD(2, 0, "Soll (Min):         ");
-  printLCD(3, 0, "Soll (Max):         ");
-  updateNominalMinTempInEEPROM();
-  updateNominalMaxTempInEEPROM();
-  delay(2000);
+  printLCD(0, 0, "write EEPROM:   0  4");
+  updateNominalMinTempInEEPROM(nominalMinTempAddress, nominalMinTemp);
+  updateNominalMaxTempInEEPROM(nominalMaxTempAddress, nominalMaxTemp);
 
-  // lese aus EEPROM
+  // speichere Solltemperatur2 in EEPROM
+  printLCD(0, 0, "write EEPROM:   8 12");
+  updateNominalMinTempInEEPROM(nominalMinTempAddress2, nominalMinTemp2);
+  updateNominalMaxTempInEEPROM(nominalMaxTempAddress2, nominalMaxTemp2);
+
+  // lese und aus EEPROM und printe auf LCD
   printLCD(0, 0, "write EEPROM:   DONE");
-  float minTemp = getEEPROM(nominalMinTempAddress);
-  float maxTemp = getEEPROM(nominalMaxTempAddress);
-  int minTempPos = 20 - String(minTemp).length();
-  int maxTempPos = 20 - String(maxTemp).length();
-  printLCD(2, minTempPos, String(minTemp));
-  printLCD(3, maxTempPos, String(maxTemp));
+  printLCD(2, 0, " 0  4: " + String(getEEPROM(nominalMinTempAddress), 1) + " - " + String(getEEPROM(nominalMaxTempAddress), 1) + "\337C");
+  printLCD(3, 0, " 8 12: " + String(getEEPROM(nominalMinTempAddress2), 1) + " - " + String(getEEPROM(nominalMaxTempAddress2), 1) + "\337C");
 }
 
 void loop() {}

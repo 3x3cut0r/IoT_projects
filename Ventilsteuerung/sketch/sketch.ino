@@ -3,7 +3,7 @@
   mit 4 Zeilen Display
   und Soll-Temperatur-Bedienung
 
-  Copyright (C) 2022, 3x3cut0r
+  Copyright (C) 2023, 3x3cut0r
 
   Veröffentlicht unter der MIT Lizenz.
 */
@@ -40,55 +40,55 @@ const unsigned int DELAY_BEFORE_START_1 = 660;
 /** 
  * 2. Startverzögerung (in Sekunden)
  * die gewartet wird bevor die erste Temperaturanpassung stattfindet
- * Default = 480
+ * Default = 420
  * 
  * Zulässige Werte = 0-65535
  * Maximaler Wert entspricht 18h 12m 15s
  * (wegen Arduino Uno Speicherbegrenzung von 32 bit (unsigned int))
  */
-const unsigned int DELAY_BEFORE_START_2 = 480;
+const unsigned int DELAY_BEFORE_START_2 = 420;
 
 /** 
  * Zeit (in Millisekunden)
  * wie lang das Relais beim Einschalten einmalig schaltet
- * Default = 2000
+ * Default = 7000
  * 
  * Zulässige Werte = 0-65535
  * Maximaler Wert entspricht 65s 535ms
  * (wegen Arduino Uno Speicherbegrenzung von 32 bit (unsigned int))
  */
-const unsigned int INIT_RELAIS_TIME = 2000;
+const unsigned int INIT_RELAIS_TIME = 7000;
 
 /** 
  * Zeit (in Sekunden)
  * bis zur nächsten Temperaturmessung
- * Default = 150
+ * Default = 120
  * 
  * Zulässige Werte = 0-65535
  * Maximaler Wert entspricht 18h 12m 15s
  * (wegen Arduino Uno Speicherbegrenzung von 32 bit (unsigned int))
  */
-const unsigned int UPDATE_TIME = 150; // Sekunden
+const unsigned int UPDATE_TIME = 120; // Sekunden
 
 /** 
  * Zeit (in Millisekunden)
  * wie lang das Relais schaltet
- * Default = 1500
+ * Default = 1600
  * 
  * Zulässige Werte = 0-65535
  * Maximaler Wert entspricht 65s 535ms
  * (wegen Arduino Uno Speicherbegrenzung von 32 bit (unsigned int))
  */
-const unsigned int RELAIS_TIME = 1500;
+const unsigned int RELAIS_TIME = 1600;
 
 /** 
  * Minimale Solltemperatur (in Grad Celsius)
- * Default = 43.0
+ * Default = 41.0
  * 
  * Zulässige Werte = 0.0 - 120.0
  * Bedingung: nominalMinTemp <= nominalMaxTemp
  */
-float nominalMinTemp = 43.0;
+float nominalMinTemp = 41.0;
 
 /** 
  * Maximale Solltemperatur (in Grad Celsius)
@@ -97,16 +97,16 @@ float nominalMinTemp = 43.0;
  * Zulässige Werte = 0.0 - 120.0
  * Bedingung: nominalMaxTemp >= nominalMinTemp
  */
-float nominalMaxTemp = 55.0; 
+float nominalMaxTemp = 55.0;
 
 /** 
  * Zeit (in Sekunden)
  * bis die Temperatur erneut aktualisiert werden soll
- * Default = 5
+ * Default = 2
  * 
  * Zulässige Werte = 1 - 60
  */
-const unsigned int UPDATE_TEMP_INTERVAL = 5; 
+const unsigned int UPDATE_TEMP_INTERVAL = 2; 
 
 /** 
  * Hintergrundbeleuchtung des LCD I2C Displays
@@ -159,12 +159,14 @@ const int RELAY_CLOSE_PIN = 5; // Relais, welches öffnet, wenn es kälter werde
 // Temps
 float currentTemp = 0; // aktuelle Temperatur (in Grad Celsius)
 unsigned int updateTime = UPDATE_TIME; // Zeit (in Sekunden), bis zur nächsten Angleichung
-const int nominalMinTempAddress = 0; // Speicheradresse (int), im EEPROM der Minimalen Solltemperatur
-const int nominalMaxTempAddress = 4; // Speicheradresse (int), im EEPROM der Maximalen Solltemperatur
+int nominalMinTempAddress = 0; // Speicheradresse (int), im EEPROM der Minimalen Solltemperatur
+int nominalMaxTempAddress = 4; // Speicheradresse (int), im EEPROM der Maximalen Solltemperatur
 
 // Buttons
 const int BUTTON_TEMP_UP_PIN = 2; // PIN des Buttons Solltemperatur senken
 const int BUTTON_TEMP_DOWN_PIN = 3; // PIN des Buttons Solltemperatur erhöhen
+const int BUTTON_TEMP_SWITCH_PIN = 6; // PIN des Buttons Solltemperatur wechseln
+const int BUTTON_TEMP_SAVE_PIN = 7; // PIN des Buttons Solltemperatur speichern
 
 
 
@@ -350,12 +352,47 @@ void updateNominalTemp(int buttonPin) {
 }
 
 /** 
- * prüft ob ein TempButton gedrückt ist und
- * ändert entsprechend die Solltemperatur
+ * wechselt die Speicheradressen für die Solltemperaturen
+ */
+void switchNominalTemp(int buttonPin) {
+    if (buttonPin == BUTTON_TEMP_SWITCH_PIN && digitalRead(buttonPin) == LOW) {
+        nominalMinTempAddress = nominalMinTempAddress + 8; // 0 + 8 = 8
+        nominalMaxTempAddress = nominalMaxTempAddress + 8; // 4 + 8 = 12
+        if (nominalMinTempAddress > 8) { nominalMinTempAddress = 0; }
+        if (nominalMaxTempAddress > 12) { nominalMaxTempAddress = 4; }
+        String minTemp = String(nominalMinTempAddress);
+        String maxTemp = String(nominalMaxTempAddress);
+        int minTempPos = 17 - minTemp.length();
+        int maxTempPos = 20 - maxTemp.length();
+        printLCD(2, 0, "Switch Pressed      ");
+        printLCD(2, minTempPos, minTemp);
+        printLCD(2, maxTempPos, maxTemp);
+        delay(2000);
+    }
+}
+
+/** 
+ * speichert die Solltemperaturen im EEPROM
+ */
+void saveNominalTemp(int buttonPin) {
+    if (buttonPin == BUTTON_TEMP_SAVE_PIN && digitalRead(buttonPin) == LOW) {
+        // update nominalTemp
+        updateNominalMinTempInEEPROM();
+        updateNominalMaxTempInEEPROM();
+        printLCD(2, 0, "Save Temps to EEPROM");
+        delay(2000);
+    }
+}
+
+/** 
+ * prüft ob ein TempButton oder SwitchButton gedrückt ist und
+ * ändert entsprechend die Solltemperatur oder wechselt die Speicheradressen
  */
 void checkButtons() {
   updateNominalTemp(BUTTON_TEMP_UP_PIN);
   updateNominalTemp(BUTTON_TEMP_DOWN_PIN);
+  switchNominalTemp(BUTTON_TEMP_SWITCH_PIN);
+  saveNominalTemp(BUTTON_TEMP_SAVE_PIN);
 }
 
 /** 
@@ -460,6 +497,8 @@ void setup() {
   // Init Buttons
   pinMode(BUTTON_TEMP_UP_PIN, INPUT_PULLUP); 
   pinMode(BUTTON_TEMP_DOWN_PIN, INPUT_PULLUP); 
+  pinMode(BUTTON_TEMP_SWITCH_PIN, INPUT_PULLUP);
+  pinMode(BUTTON_TEMP_SAVE_PIN, INPUT_PULLUP);
 
   // aktualisiere aktuelle Temperatur
   updateTemp();
