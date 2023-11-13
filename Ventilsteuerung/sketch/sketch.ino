@@ -73,22 +73,22 @@ const unsigned int UPDATE_TIME = 120; // Sekunden
 /** 
  * Zeit (in Millisekunden)
  * wie lang das Relais schaltet
- * Default = 1600
+ * Default = 1800
  * 
  * Zulässige Werte = 0-65535
  * Maximaler Wert entspricht 65s 535ms
  * (wegen Arduino Uno Speicherbegrenzung von 32 bit (unsigned int))
  */
-const unsigned int RELAIS_TIME = 1600;
+const unsigned int RELAIS_TIME = 1800;
 
 /** 
  * Minimale Solltemperatur (in Grad Celsius)
- * Default = 41.0
+ * Default = 42.0
  * 
  * Zulässige Werte = 0.0 - 120.0
  * Bedingung: nominalMinTemp <= nominalMaxTemp
  */
-float nominalMinTemp = 41.0;
+float nominalMinTemp = 42.0;
 
 /** 
  * Maximale Solltemperatur (in Grad Celsius)
@@ -106,7 +106,16 @@ float nominalMaxTemp = 55.0;
  * 
  * Zulässige Werte = 1 - 60
  */
-const unsigned int UPDATE_TEMP_INTERVAL = 2; 
+const unsigned int UPDATE_TEMP_INTERVAL = 2;
+
+/** 
+ * Zeit (in Millisekunden)
+ * in der eine Temperaturveränderung betrachtet wird
+ * Default = 10000
+ * 
+ * Zulässige Werte = 1000 - 65535
+ */
+const int TEMP_SAMPLING_INTERVAL = 10000;
 
 /** 
  * Hintergrundbeleuchtung des LCD I2C Displays
@@ -143,9 +152,33 @@ const unsigned int SENSOR_RESOLUTION_BIT = 9;
 // Time
 unsigned long previousMillis = 0UL;
 unsigned long interval = 1000UL;
+unsigned long lastTempMeasurementTime = 0UL; // letzte Temperaturmessung im TEMP_SAMPLING_INTERVAL
 
 // LCD
 LiquidCrystal_I2C lcd(0x27, 20, 4); // I2C_ADDR, LCD_COLUMNS, LCD_LINES
+
+// LCD - create new characters
+const byte arrowUp[8] = {
+  0b00100,
+  0b01110,
+  0b11111,
+  0b00100,
+  0b00100,
+  0b00100,
+  0b00100,
+  0b00100
+};
+
+const byte arrowDown[8] = {
+  0b00100,
+  0b00100,
+  0b00100,
+  0b00100,
+  0b00100,
+  0b11111,
+  0b01110,
+  0b00100
+};
 
 // Temperatursensor DS18B20
 #define ONE_WIRE_BUS 8
@@ -161,6 +194,13 @@ float currentTemp = 0; // aktuelle Temperatur (in Grad Celsius)
 unsigned int updateTime = UPDATE_TIME; // Zeit (in Sekunden), bis zur nächsten Angleichung
 int nominalMinTempAddress = 0; // Speicheradresse (int), im EEPROM der Minimalen Solltemperatur
 int nominalMaxTempAddress = 4; // Speicheradresse (int), im EEPROM der Maximalen Solltemperatur
+float tempAtLastMeasurement = 0; // letzte Temperatur des TEMP_SAMPLING_INTERVALs
+enum TempChangeCategory { LOW_TEMP, MEDIUM_TEMP, HIGH_TEMP }; // mögliche Kategorien des letzten Temperaturveränderung
+TempChangeCategory tempChangeCat = LOW_TEMP; // Kategorie des letzten TEMP_SAMPLING_INTERVALs
+
+// Temp Thresholds
+float tempChangeHighThreshold = 1.0; // gibt hohe Temperaturveränderung des letzten TEMP_SAMPLING_INTERVALs an
+float tempChangeMediumThreshold = 0.3; // gibt niedrigere Temperaturveränderung des letzten TEMP_SAMPLING_INTERVALs an
 
 // Buttons
 const int BUTTON_TEMP_UP_PIN = 2; // PIN des Buttons Solltemperatur senken
@@ -241,6 +281,45 @@ void printLCD(int line, int cursor, String text) {
 }
 
 /** 
+ * gibt die Kategorie der Temperaturveränderung zurück
+ *      >= 1.0 => HIGH
+ * 1.0 bis 0.3 => MEDIUM
+ * 0.3 bis 0.0 => LOW
+ */
+TempChangeCategory categorizeTemperatureChange(float tempChange) {
+  if (abs(tempChange) >= tempChangeHighThreshold) {
+    printLCD(2, 0, "Temperatur      HIGH");
+    lcd.setCursor(11, 2);
+    lcd.write(byte(tempChange > 0 ? 0 : 1));
+    return HIGH_TEMP;
+  } else if (abs(tempChange) >= tempChangeMediumThreshold) {
+    printLCD(2, 0, "Temperatur    MEDIUM");
+    lcd.setCursor(11, 2);
+    lcd.write(byte(tempChange > 0 ? 0 : 1));
+    return MEDIUM_TEMP;
+  } else {
+    printLCD(2, 0, "Temperatur       LOW");
+    lcd.setCursor(11, 2);
+    lcd.write(byte(tempChange > 0 ? 0 : 1));
+    return LOW_TEMP;
+  }
+}
+
+/** 
+ * berechnet die relayTime aufgrund der Kategorie der Temperaturänderung
+ */
+int adjustRelayBasedOnTempChange(int relayTime) {
+  switch (tempChangeCat) {
+    case HIGH_TEMP:
+      return relayTime = (int) (relayTime * 0.3); // Kürzere Öffnungszeit für schnelle Temperaturänderungen
+    case MEDIUM_TEMP:
+      return relayTime = (int) (relayTime * 0.6); // Moderate Öffnungszeit
+    case LOW_TEMP:
+      return relayTime = (int) (relayTime * 1.0); // Längere Öffnungszeit für langsame Änderungen
+  }
+}
+
+/** 
  * liest die Temperatur vom Thermostat und gibt sie als float zurück
  */
 float getTemp() {
@@ -300,6 +379,9 @@ void setRelais(int relayPin, int relayTime) {
  * schaltet das jeweilige Relais abhängig von der Solltemperatur 
  */
 void openRelais(int relayTime) {
+  // berücksichtige Temperaturveränderung
+  relayTime = adjustRelayBasedOnTempChange(relayTime);
+
   if (currentTemp < nominalMinTemp) {
     // erhöhe Temperatur
     setRelais(RELAY_OPEN_PIN, relayTime);
@@ -348,7 +430,7 @@ void updateNominalTemp(int buttonPin) {
         rate = 1; // rate = 5 -> war zu schnell
       }
   }
-  printLCD(2, 0, "                    ");
+  // printLCD(2, 0, "                    ");
 }
 
 /** 
@@ -479,6 +561,10 @@ void setup() {
     lcd.noBacklight();
   }
 
+  // init special character
+  lcd.createChar(0, arrowUp);
+  lcd.createChar(1, arrowDown);
+
   // Init Serial
   Serial.begin(115200);
 
@@ -502,6 +588,7 @@ void setup() {
 
   // aktualisiere aktuelle Temperatur
   updateTemp();
+  tempAtLastMeasurement = getTemp();
 
   // setze Solltemperatur
   readNominalMinTemp();
@@ -526,6 +613,21 @@ void setup() {
  */
 void loop() {
   unsigned long currentMillis = millis();
+
+  // Kategorie der Temperaturveränderung ermitteln und setzen
+  if (currentMillis - lastTempMeasurementTime >= TEMP_SAMPLING_INTERVAL) {
+    float currentTemp = getTemp();
+    float tempChange = currentTemp - tempAtLastMeasurement;
+    tempChangeCat = categorizeTemperatureChange(tempChange);
+
+    // aktualisiere letzte gemessene Temperatur
+    tempAtLastMeasurement = currentTemp;
+
+    // aktualisiere lastTempMeasurementTime
+    lastTempMeasurementTime = currentMillis;
+  }
+
+  // Hauptprogramm
   if (currentMillis - previousMillis > interval) {
     
     // aktualisiere Timer
@@ -537,7 +639,7 @@ void loop() {
     // prüfe ob Button gedrückt
     checkButtons();
 
-    // aktualisiere Temperatur alle 5 Sekunden
+    // aktualisiere Temperatur alle 2 Sekunden
     if (updateTime % UPDATE_TEMP_INTERVAL == 0) {
       updateTemp();
     }
