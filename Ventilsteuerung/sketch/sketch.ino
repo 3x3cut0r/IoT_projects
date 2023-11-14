@@ -308,14 +308,28 @@ TempChangeCategory categorizeTemperatureChange(float tempChange) {
 /** 
  * berechnet die relayTime aufgrund der Kategorie der Temperaturänderung
  */
-int adjustRelayBasedOnTempChange(int relayTime) {
+int adjustRelayTimeBasedOnTempCategory(unsigned int relayTime) {
   switch (tempChangeCat) {
     case HIGH_TEMP:
-      return relayTime = (int) (relayTime * 0.3); // Kürzere Öffnungszeit für schnelle Temperaturänderungen
+      return relayTime = (unsigned int) (relayTime * 0.3); // Kürzere Öffnungszeit für schnelle Temperaturänderungen
     case MEDIUM_TEMP:
-      return relayTime = (int) (relayTime * 0.6); // Moderate Öffnungszeit
+      return relayTime = (unsigned int) (relayTime * 0.6); // Moderate Öffnungszeit
     case LOW_TEMP:
-      return relayTime = (int) (relayTime * 1.0); // Längere Öffnungszeit für langsame Änderungen
+      return relayTime = (unsigned int) (relayTime * 1.0); // Längere Öffnungszeit für langsame Änderungen
+  }
+}
+
+/** 
+ * berechnet die updateTime aufgrund der Kategorie der Temperaturänderung
+ */
+int adjustUpdateTimeBasedOnTempCategory(unsigned int updateTime) {
+  switch (tempChangeCat) {
+    case HIGH_TEMP:
+      return updateTime = (unsigned int) (updateTime / 2.0); // Temperaturmessung findet sehr oft statt
+    case MEDIUM_TEMP:
+      return updateTime = (unsigned int) (updateTime / 1.3); // Temperaturmessung findet öfter statt
+    case LOW_TEMP:
+      return updateTime = (unsigned int) (updateTime / 1.0); // Temperaturmessung findet normal statt
   }
 }
 
@@ -379,9 +393,6 @@ void setRelais(int relayPin, int relayTime) {
  * schaltet das jeweilige Relais abhängig von der Solltemperatur 
  */
 void openRelais(int relayTime) {
-  // berücksichtige Temperaturveränderung
-  relayTime = adjustRelayBasedOnTempChange(relayTime);
-
   if (currentTemp < nominalMinTemp) {
     // erhöhe Temperatur
     setRelais(RELAY_OPEN_PIN, relayTime);
@@ -648,8 +659,8 @@ void loop() {
       // öffne Ventil
       openRelais(RELAIS_TIME);
 
-      // reset Timer
-      updateTime = UPDATE_TIME;
+      // reset Timer und berücksichtige Temperaturveränderung
+      updateTime = adjustUpdateTimeBasedOnTempCategory(UPDATE_TIME);
 
       // update nominalTemp
       updateNominalMinTempInEEPROM();
