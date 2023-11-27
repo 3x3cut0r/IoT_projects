@@ -1,5 +1,5 @@
 /**
-  Ventilsteuerung für Heizung
+  Heizungssteuerung
   mit 4 Zeilen Display
   und Soll-Temperatur-Bedienung
 
