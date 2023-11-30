@@ -17,9 +17,15 @@
 # ==================================================
 
 # custom
-import time
+import time  # https://docs.micropython.org/en/latest/library/time.html
 from src.button import check_button
-from src.config import load_config, save_config, get_value, set_value
+from src.config import (
+    load_config,
+    save_config,
+    create_config_backup,
+    get_value,
+    set_value,
+)
 from src.lcd import init_lcd
 from src.relay import init_relays, open_relay, close_relay
 from src.temp import read_temp
@@ -69,6 +75,7 @@ def main():
         # load config
         config = load_config()
 
+        previous_millis = 0
         current_millis = time.ticks_ms()
         interval = 1000
 
@@ -90,7 +97,10 @@ def main():
                 open_relay(int(config["relay_time"]))
 
                 # set and adjust update time based on temp category
-                set_value('update_time', adjust_update_time_based_on_temp_category())
+                set_value("update_time", adjust_update_time_based_on_temp_category())
+
+                # create config backup
+                create_config_backup()
 
             # update previous millis
             previous_millis = current_millis

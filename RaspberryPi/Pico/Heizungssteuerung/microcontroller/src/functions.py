@@ -1,6 +1,6 @@
 # imports
 from enum import Enum
-import time
+import time  # https://docs.micropython.org/en/latest/library/time.html
 from src.button import check_button
 from src.config import load_config, save_config, get_value, set_value
 from src.lcd import (

@@ -1,5 +1,5 @@
 # imports
-import time
+import time  # https://docs.micropython.org/en/latest/library/time.html
 from machine import Pin
 
 # load config
