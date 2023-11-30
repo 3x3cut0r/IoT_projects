@@ -13,11 +13,13 @@
 #   Veröffentlicht unter der MIT Lizenz.
 
 # ==================================================
-# includes
+# imports
 # ==================================================
 
-# custom
+# micro python imports
 import time  # https://docs.micropython.org/en/latest/library/time.html
+
+# custom imports
 from src.button import check_button
 from src.config import (
     load_config,
@@ -29,6 +31,7 @@ from src.config import (
 from src.lcd import init_lcd
 from src.relay import init_relays, open_relay, close_relay
 from src.temp import read_temp
+from src.wifi import connect_wifi, check_wifi_isconnected
 from src.functions import (
     categorize_temp_change,
     adjust_relay_time_based_on_temp_category,
@@ -50,6 +53,9 @@ from src.functions import (
 
 # init lcd
 init_lcd()
+
+# connect wifi
+connect_wifi()
 
 # init relays
 init_relays()
@@ -101,6 +107,10 @@ def main():
 
                 # create config backup
                 create_config_backup()
+
+                # connect wifi if wifi is not connected
+                if not check_wifi_isconnected():
+                    connect_wifi()
 
             # update previous millis
             previous_millis = current_millis

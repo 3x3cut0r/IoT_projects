@@ -1,4 +1,7 @@
 {
+    "wifi_ssid": "some wifi ssid",
+    "wifi_password": "some wifi password",
+    "wifi_max_attempts": 10,
     "delay_before_start_1": 660,
     "delay_before_start_2": 420,
     "init_relay_time": 7000,
