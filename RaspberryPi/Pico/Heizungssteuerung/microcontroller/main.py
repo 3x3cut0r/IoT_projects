@@ -20,29 +20,21 @@
 import time  # https://docs.micropython.org/en/latest/library/time.html
 
 # custom imports
-from src.button import check_button
 from src.config import (
     load_config,
-    save_config,
     create_config_backup,
     get_value,
     set_value,
 )
 from src.lcd import init_lcd
 from src.relay import init_relays, open_relay, close_relay
-from src.temp import read_temp
 from src.wifi import connect_wifi, check_wifi_isconnected
 from src.functions import (
-    categorize_temp_change,
-    adjust_relay_time_based_on_temp_category,
     adjust_update_time_based_on_temp_category,
     update_temp,
     print_nominal_temp,
-    set_relay,
     open_relay,
-    update_nominal_temp,
     check_buttons,
-    format_time,
     update_timer,
     wait_start,
 )

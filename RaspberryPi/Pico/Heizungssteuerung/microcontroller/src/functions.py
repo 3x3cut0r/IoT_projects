@@ -2,15 +2,8 @@
 from enum import Enum
 import time  # https://docs.micropython.org/en/latest/library/time.html
 from src.button import check_button
-from src.config import load_config, save_config, get_value, set_value
-from src.lcd import (
-    set_backlight,
-    show_cursor,
-    blink_cursor,
-    clear_lcd,
-    print_lcd,
-    print_lcd_char,
-)
+from src.config import load_config, save_config, get_value
+from src.lcd import print_lcd, print_lcd_char
 from src.relay import open_relay, close_relay
 from src.temp import read_temp
 
