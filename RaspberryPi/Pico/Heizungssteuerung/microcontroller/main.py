@@ -24,6 +24,9 @@ from src.lcd import init_lcd
 from src.relay import init_relays, open_relay, close_relay
 from src.temp import read_temp
 from src.functions import (
+    categorize_temp_change,
+    adjust_relay_time_based_on_temp_category,
+    adjust_update_time_based_on_temp_category,
     update_temp,
     print_nominal_temp,
     set_relay,
@@ -54,7 +57,7 @@ print_nominal_temp()
 
 # wait start
 wait_start(get_value("delay_before_start_1"))
-close_relay(get_value("init_relais_time"))  # open relay initial
+close_relay(get_value("init_relay_time"))  # open relay initial
 wait_start(get_value("delay_before_start_2"))
 
 
@@ -64,7 +67,7 @@ wait_start(get_value("delay_before_start_2"))
 def main():
     while True:
         # load config
-        config = load_config
+        config = load_config()
 
         current_millis = time.ticks_ms()
         interval = 1000
@@ -75,7 +78,7 @@ def main():
                 update_timer(int(config["update_time"]))
                 config["update_time"] -= 1
 
-            # check button
+            # check buttons
             check_buttons()
 
             # update temp on temp update interval
@@ -84,16 +87,12 @@ def main():
 
             if int(config["update_time"]) == 0:
                 # open relay
-                open_relay(int(config["relais_time"]))
+                open_relay(int(config["relay_time"]))
 
-                # Reset Timer und berücksichtige Temperaturveränderung
-                update_time = adjust_update_time_based_on_temp_category(UPDATE_TIME)
+                # set and adjust update time based on temp category
+                set_value('update_time', adjust_update_time_based_on_temp_category())
 
-                # Update nominalTemp
-                update_nominal_min_temp_in_eeprom()
-                update_nominal_max_temp_in_eeprom()
-
-            # Aktualisiere previous_millis
+            # update previous millis
             previous_millis = current_millis
 
 

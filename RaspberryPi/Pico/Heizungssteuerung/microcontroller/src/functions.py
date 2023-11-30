@@ -43,8 +43,24 @@ def categorize_temp_change(temp_change):
         return "LOW_TEMP"  # return TempChangeCategory.LOW_TEMP
 
 
+# adjust relay time based on temp category
+def adjust_relay_time_based_on_temp_category():
+    if get_value("temp_change_category") == "HIGH_TEMP":
+        return int(
+            int(get_value("relay_time")) * 0.3
+        )  # shorter opening time for rapid temperature changes
+    elif get_value("temp_change_category") == "MEDIUM_TEMP":
+        return int(
+            int(get_value("relay_time")) * 0.6
+        )  # moderate opening time for normal temperature changes
+    elif get_value("temp_change_category") == "LOW_TEMP":
+        return int(
+            int(get_value("relay_time")) * 1.0
+        )  # normal opening time for slow temperature changes
+
+
 # adjust update time based on temp category
-def adjust_update_time_based_on_temp_category(update_time):
+def adjust_update_time_based_on_temp_category():
     if get_value("temp_change_category") == "HIGH_TEMP":
         return int(
             int(get_value("update_time")) / 2.0
