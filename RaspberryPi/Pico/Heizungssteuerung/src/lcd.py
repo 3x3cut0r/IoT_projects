@@ -16,6 +16,7 @@ lcd_addr = int(get_value("LCD_ADDR"), 16)
 lcd_cols = int(get_value("LCD_COLS"))
 lcd_rows = int(get_value("LCD_ROWS"))
 lcd = I2cLcd(i2c, lcd_addr, lcd_rows, lcd_cols)
+lcd_list = ["" for _ in range(int(get_value("LCD_ROWS")))]
 
 # create custom characters
 arrow_up = {0b00100, 0b01110, 0b11111, 0b00100, 0b00100, 0b00100, 0b00100, 0b00100}
@@ -72,13 +73,50 @@ def fill(string, cursor=0, padding=" "):
     return string.ljust(fill, padding)
 
 
+# get lcd list
+def get_lcd_list():
+    return lcd_list
+
+
+# get lcd line
+def get_lcd_line(line):
+    return lcd_list[int(line)]
+
+
+# set lcd line
+def set_lcd_line(line, cursor, message):
+    part1 = lcd_list[int(line)][: int(cursor)]
+    part2 = lcd_list[int(line)][int(cursor) :]
+    characters_to_remove = max(
+        0,
+        len(str(part1))
+        + len(str(message))
+        + len(str(part2))
+        - int(get_value("LCD_COLS")),
+    )
+    part2 = part2[:-characters_to_remove]
+    lcd_list[int(line)] = str(part1) + str(message) + str(part2)
+
+
 # print lcd
 def print_lcd(line=0, cursor=0, message=""):
+    # set lcd line
+    set_lcd_line(line, cursor, message)
+
+    # print lcd
     lcd.move_to(int(cursor), int(line))  # lcd.move_to(col, row)
     lcd.putstr(str(fill(message, cursor)))
 
 
 # print lcd custom character
 def print_lcd_char(line=0, cursor=0, char=0):
+    # set lcd list
+    if int(char) == 0:
+        message = "↑"
+    elif int(char) == 1:
+        message = "↓"
+    lcd_message = get_lcd_list(line, cursor, message)
+    lcd_list[line] = lcd_message
+
     lcd.move_to(int(cursor), int(line))  # lcd.move_to(col, row)
     lcd.putchar(chr(int(char)))

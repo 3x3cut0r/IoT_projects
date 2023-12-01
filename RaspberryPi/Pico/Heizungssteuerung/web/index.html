@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Heizungssteuerung</title>
+        <link rel="stylesheet" type="text/css" href="style.css" />
+    </head>
+    <body>
+        <div class="lcd-display">
+            <!--LCD_LINES_PLACEHOLDER-->
+            Aktuell:&nbsp;&nbsp;&nbsp;-127.0 °C<br />
+            Soll: 42.0 - 55.0 °C<br />
+            Temperatur ↑&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LOW<br />
+            WARTE:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0m 45s
+        </div>
+        <br />
+        <form action="/submit" method="post">
+            <table>
+                <tr>
+                    <td>
+                        <label for="nominal_min_temp"
+                            >Solltemperatur (min):</label
+                        >
+                    </td>
+                    <td>
+                        <input
+                            type="number"
+                            id="nominal_min_temp"
+                            name="nominal_min_temp"
+                            placeholder="42.0"
+                            value="42.0" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="nominal_max_temp"
+                            >Solltemperatur (max):</label
+                        >
+                    </td>
+                    <td>
+                        <input
+                            type="number"
+                            id="nominal_max_temp"
+                            name="nominal_max_temp"
+                            placeholder="55.0"
+                            value="55.0" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="submit" value="save" />
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </body>
+</html>

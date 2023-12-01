@@ -3,8 +3,12 @@ import ujson  # https://docs.micropython.org/en/latest/library/json.html
 
 # setup file_name
 file_name_präfix = "../"
-file_name = file_name_präfix + "config.json"
-file_name_backup = file_name_präfix + "config_backup.json"
+file_name = "config.json"
+file_name_backup = "config_backup.json"
+
+# setup file_path
+file_path = file_name_präfix + file_name
+file_path_backup = file_name_präfix + file_name_backup
 
 # config
 config = {}
@@ -15,18 +19,18 @@ config = {}
 
 
 # load config
-def load_config(file_name=file_name):
+def load_config(file_path=file_path):
     global config
 
     # try loading config.json
     try:
-        with open(file_name, "r") as file:
+        with open(file_path, "r") as file:
             config = ujson.load(file)
 
     except OSError:
         # try loading config_backup.json instead
         try:
-            with open(file_name_backup, "r") as file:
+            with open(file_path_backup, "r") as file:
                 config = ujson.load(file)
 
         except OSError:
@@ -44,12 +48,12 @@ def init_config():
 
 
 # save config
-def save_config(file_name=file_name):
+def save_config(file_path=file_path):
     global config
 
     # write config to file
     try:
-        with open(file_name, "w") as file:
+        with open(file_path, "w") as file:
             ujson.dump(config, file)
 
     except OSError as e:
@@ -58,7 +62,7 @@ def save_config(file_name=file_name):
 
 # create config backup
 def create_config_backup():
-    save_config(file_name_backup)
+    save_config(file_path_backup)
 
 
 # get value

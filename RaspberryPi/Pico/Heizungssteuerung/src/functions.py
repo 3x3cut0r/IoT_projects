@@ -7,14 +7,6 @@ from src.lcd import print_lcd, print_lcd_char
 from src.relay import open_relay, close_relay
 from src.temp import read_temp
 
-
-# define temp change category
-class TempChangeCategory(Enum):
-    LOW_TEMP = 1
-    MEDIUM_TEMP = 2
-    HIGH_TEMP = 3
-
-
 # ==================================================
 # functions
 # ==================================================
@@ -74,7 +66,7 @@ def update_temp():
     read_temp()
 
     # print temp on lcd
-    current_temp_string = str("{} \337C".format(get_value("current_temp")))
+    current_temp_string = str("{} °C".format(get_value("current_temp")))
     temp_pos = int(get_value("LCD_COLS")) - len(current_temp_string)
     print_lcd(0, 0, ("Aktuell:"))
     print_lcd(0, temp_pos, current_temp_string)
@@ -89,7 +81,7 @@ def print_nominal_temp():
     )
 
     # format the nominal temperature string
-    nominal_temp = f"{nominal_min_temp:.1f} - {nominal_max_temp:.1f} \337C"
+    nominal_temp = f"{nominal_min_temp:.1f} - {nominal_max_temp:.1f} °C"
 
     # calculate the position for displaying the temperature
     temp_pos = int(get_value("LCD_COLS")) - len(nominal_temp)
@@ -100,15 +92,15 @@ def print_nominal_temp():
 
 
 # set relay
-def set_relay(pin, time):
+def set_relay(pin, relay_time):
     # Schalte nur, wenn die Temperatur ausgelesen werden kann
     if 0 <= int(get_value("current_temp")) <= 150:
         if int(pin) == int(get_value("RELAY_OPEN_PIN")):
-            print_lcd(3, 0, "\357ffne Ventil     >>>")
-            open_relay(time)
+            print_lcd(3, 0, "öffne Ventil     >>>")
+            open_relay(relay_time)
         elif int(pin) == int(get_value("RELAY_CLOSE_PIN")):
-            print_lcd(3, 0, "schlie\342e Ventil: <<<")
-            close_relay(time)
+            print_lcd(3, 0, "schließe Ventil: <<<")
+            close_relay(relay_time)
     else:
         print_lcd(3, 0, "Fehler: Temp Fehler!")
         time.sleep(2)

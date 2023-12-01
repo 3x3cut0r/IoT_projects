@@ -1,0 +1,21 @@
+body {
+    display: block;
+    height: 100vh;
+    margin: 20px;
+    background-color: white;
+}
+
+.lcd-display {
+    background-color: lime;
+    color: black;
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    height: 70px;
+    width: 200px;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.lcd-line {
+    margin: 3px 0;
+}
