@@ -3,13 +3,11 @@ import time  # https://docs.micropython.org/en/latest/library/time.html
 from machine import Pin
 
 # load config
-from src.config import load_config
-
-config = load_config()
+from src.config import get_value
 
 # setup relays
-relay_open_pin = Pin(int(config["RELAY_OPEN_PIN"]), Pin.OUT)
-relay_close_pin = Pin(int(config["RELAY_CLOSE_PIN"]), Pin.OUT)
+relay_open_pin = Pin(int(get_value("RELAY_OPEN_PIN")), Pin.OUT)
+relay_close_pin = Pin(int(get_value("RELAY_CLOSE_PIN")), Pin.OUT)
 
 # ==================================================
 # functions

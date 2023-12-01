@@ -4,19 +4,17 @@ from lcd_api import LcdApi  # LCD API
 from i2c_lcd import I2cLcd  # I2C LCD
 
 # load config
-from src.config import load_config
-
-config = load_config()
+from src.config import get_value
 
 # setup i2c
-sda_pin = Pin(int(config["LCD_PIN_SDA"]))
-scl_pin = Pin(int(config["LCD_PIN_SCL"]))
-i2c = I2C(0, sda=sda_pin, scl=scl_pin, freq=int(config["LCD_FREQ"]))
+sda_pin = Pin(int(get_value("LCD_PIN_SDA")))
+scl_pin = Pin(int(get_value("LCD_PIN_SCL")))
+i2c = I2C(0, sda=sda_pin, scl=scl_pin, freq=int(get_value("LCD_FREQ")))
 
 # setup lcd
-lcd_addr = int(config["LCD_ADDR"], 16)
-lcd_cols = int(config["LCD_COLS"])
-lcd_rows = int(config["LCD_ROWS"])
+lcd_addr = int(get_value("LCD_ADDR"), 16)
+lcd_cols = int(get_value("LCD_COLS"))
+lcd_rows = int(get_value("LCD_ROWS"))
 lcd = I2cLcd(i2c, lcd_addr, lcd_rows, lcd_cols)
 
 # create custom characters
@@ -70,7 +68,7 @@ def clear_lcd():
 
 # fill string with spaces up to 20 chars
 def fill(string, cursor=0, padding=" "):
-    fill = int(config["LCD_COLS"]) - cursor
+    fill = int(get_value("LCD_COLS")) - cursor
     return string.ljust(fill, padding)
 
 

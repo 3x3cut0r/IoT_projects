@@ -21,7 +21,7 @@ import time  # https://docs.micropython.org/en/latest/library/time.html
 
 # custom imports
 from src.config import (
-    load_config,
+    init_config,
     create_config_backup,
     get_value,
     set_value,
@@ -30,6 +30,7 @@ from src.lcd import init_lcd
 from src.relay import init_relays, open_relay, close_relay
 from src.wifi import connect_wifi, check_wifi_isconnected
 from src.functions import (
+    categorize_temp_change,
     adjust_update_time_based_on_temp_category,
     update_temp,
     print_nominal_temp,
@@ -42,6 +43,9 @@ from src.functions import (
 # ==================================================
 # setup
 # ==================================================
+
+# init config
+init_config()
 
 # init lcd
 init_lcd()
@@ -69,30 +73,51 @@ wait_start(get_value("delay_before_start_2"))
 # main
 # ==================================================
 def main():
+    previous_millis = 0
+    interval = 1000
+
     while True:
-        # load config
-        config = load_config()
-
-        previous_millis = 0
         current_millis = time.ticks_ms()
-        interval = 1000
 
+        # adjust temp category
+        if current_millis - int(
+            get_value("temp_last_measurement_time")
+            >= int(get_value("temp_sampling_interval"))
+        ):
+            update_temp()
+            temp_change = float(get_value("current_temp")) - float(
+                get_value("temp_last_measurement")
+            )
+
+            # categorize temp change
+            categorize_temp_change(temp_change)
+
+            # update last measurement temp
+            set_value("temp_last_measurement", float(get_value("current_temp")))
+
+            # update last measurement temp time
+            set_value("temp_last_measurement_time", current_millis)
+
+        # main
         if current_millis - previous_millis > interval:
             # update time
-            if int(config["update_time"]) >= 0:
-                update_timer(int(config["update_time"]))
-                config["update_time"] -= 1
+            if int(get_value("update_time")) >= 0:
+                update_timer(int(get_value("update_time")))
+                set_value("update_time", (int(get_value("update_time")) - 1))
 
             # check buttons
             check_buttons()
 
             # update temp on temp update interval
-            if int(config["update_time"]) % int(config["temp_update_interval"]) == 0:
+            if (
+                int(get_value("update_time")) % int(get_value("temp_update_interval"))
+                == 0
+            ):
                 update_temp()
 
-            if int(config["update_time"]) == 0:
+            if int(get_value("update_time")) == 0:
                 # open relay
-                open_relay(int(config["relay_time"]))
+                open_relay(int(get_value("relay_time")))
 
                 # set and adjust update time based on temp category
                 set_value("update_time", adjust_update_time_based_on_temp_category())
