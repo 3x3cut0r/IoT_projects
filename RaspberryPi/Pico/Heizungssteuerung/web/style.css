@@ -19,3 +19,16 @@ body {
 .lcd-line {
     margin: 3px 0;
 }
+
+label {
+    display: block;
+    width: 300px;
+}
+
+input {
+    width: 75px;
+}
+
+.long {
+    width: 150px;
+}

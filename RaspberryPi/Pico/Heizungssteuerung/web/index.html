@@ -12,46 +12,310 @@
             Temperatur ↑&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LOW<br />
             WARTE:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0m 45s
         </div>
-        <br />
         <form action="/submit" method="post">
-            <table>
-                <tr>
-                    <td>
-                        <label for="nominal_min_temp"
-                            >Solltemperatur (min):</label
-                        >
-                    </td>
-                    <td>
-                        <input
-                            type="number"
-                            id="nominal_min_temp"
-                            name="nominal_min_temp"
-                            placeholder="42.0"
-                            value="42.0" />
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label for="nominal_max_temp"
-                            >Solltemperatur (max):</label
-                        >
-                    </td>
-                    <td>
-                        <input
-                            type="number"
-                            id="nominal_max_temp"
-                            name="nominal_max_temp"
-                            placeholder="55.0"
-                            value="55.0" />
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <br />
-                        <input type="submit" value="save" />
-                    </td>
-                </tr>
-            </table>
+            <form action="/submit" method="post">
+                <table>
+                    <tr><td><h3>Configuration</h3></td></tr>
+                    <tr>
+                        <td>
+                            <label for="nominal_min_temp"
+                                >Nominal Min Temp:</label
+                            >
+                        </td>
+                        <td>
+                            <input
+                                type="number"
+                                id="nominal_min_temp"
+                                name="nominal_min_temp"
+                                placeholder="42.0"
+                                value="42.0" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="nominal_max_temp"
+                                >Nominal Max Temp:</label
+                            >
+                        </td>
+                        <td>
+                            <input
+                                type="number"
+                                id="nominal_max_temp"
+                                name="nominal_max_temp"
+                                placeholder="55.0"
+                                value="55.0" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="delay_before_start_1">Delay Before Start 1:</label>
+                        </td>
+                        <td>
+                            <input type="number" id="delay_before_start_1" name="delay_before_start_1" placeholder="660" value="660" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="delay_before_start_2">Delay Before Start 2:</label>
+                        </td>
+                        <td>
+                            <input type="number" id="delay_before_start_2" name="delay_before_start_2" placeholder="420" value="420" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="init_relay_time">Init Relay Time:</label>
+                        </td>
+                        <td>
+                            <input type="number" id="init_relay_time" name="init_relay_time" placeholder="7000" value="7000" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="update_time">Update Time:</label>
+                        </td>
+                        <td>
+                            <input type="number" id="update_time" name="update_time" placeholder="120" value="120" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="relay_time">Relay Time:</label>
+                        </td>
+                        <td>
+                            <input type="number" id="relay_time" name="relay_time" placeholder="1800" value="1800" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="temp_update_interval">Temperature Update Interval:</label>
+                        </td>
+                        <td>
+                            <input type="number" id="temp_update_interval" name="temp_update_interval" placeholder="2" value="2" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="lcd_i2c_backlight">LCD I2C Backlight:</label>
+                        </td>
+                        <td>
+                            <input type="number" id="lcd_i2c_backlight" name="lcd_i2c_backlight" placeholder="1" value="1" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="temp_change_high_threshold">Temperature Change High Threshold:</label>
+                        </td>
+                        <td>
+                            <input type="number" id="temp_change_high_threshold" name="temp_change_high_threshold" placeholder="1.0" value="1.0" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="temp_change_medium_threshold">Temperature Change Medium Threshold:</label>
+                        </td>
+                        <td>
+                            <input type="number" id="temp_change_medium_threshold" name="temp_change_medium_threshold" placeholder="0.3" value="0.3" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="wifi_ssid">WiFi SSID:</label>
+                        </td>
+                        <td>
+                            <input
+                                class="long"
+                                type="text"
+                                id="wifi_ssid"
+                                name="wifi_ssid"
+                                placeholder="some wifi ssid"
+                                value="some wifi ssid" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="wifi_password">WiFi Password:</label>
+                        </td>
+                        <td>
+                            <input
+                                class="long"
+                                type="password"
+                                id="wifi_password"
+                                name="wifi_password"
+                                placeholder="some wifi password"
+                                value="some wifi password" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="wifi_max_attempts">WiFi Max Attempts:</label>
+                        </td>
+                        <td>
+                            <input type="number" id="wifi_max_attempts" name="wifi_max_attempts" placeholder="10" value="10" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <br />
+                            <input type="submit" value="Save" />
+                        </td>
+                    </tr>
+                    <tr><td><h3>Info</h3></td></tr>
+                    <tr>
+                        <td>
+                            <label for="previous_millis">Previous Millis:</label>
+                        </td>
+                        <td>
+                            <div id="previous_millis">0</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="interval">Interval:</label>
+                        </td>
+                        <td>
+                            <div id="interval">1000</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="current_temp">Current Temperature:</label>
+                        </td>
+                        <td>
+                            <div id="current_temp">0</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="temp_last_measurement">Temperature Last Measurement:</label>
+                        </td>
+                        <td>
+                            <div id="temp_last_measurement">0</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="temp_last_measurement_time">Temperature Last Measurement Time:</label>
+                        </td>
+                        <td>
+                            <div id="temp_last_measurement_time">0</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="temp_sampling_interval">Temperature Sampling Interval:</label>
+                        </td>
+                        <td>
+                            <div id="temp_sampling_interval">10000</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="temp_change_category">Temperature Change Category:</label>
+                        </td>
+                        <td>
+                            <div id="temp_change_category">LOW</div>
+                        </td>
+                    </tr>
+                    <tr><td><h3>PIN Configuration</h3></td></tr>
+                    <tr>
+                        <td>
+                            <label for="TEMP_SENSOR_PIN">Temperature Sensor PIN:</label>
+                        </td>
+                        <td>
+                            <div id="TEMP_SENSOR_PIN">15</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="TEMP_SENSOR_RESOLUTION_BIT">Temperature Sensor Resolution Bit:</label>
+                        </td>
+                        <td>
+                            <div id="TEMP_SENSOR_RESOLUTION_BIT">9</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="LCD_PIN_SDA">LCD SDA PIN:</label>
+                        </td>
+                        <td>
+                            <div id="LCD_PIN_SDA">20</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="LCD_PIN_SCL">LCD SCL PIN:</label>
+                        </td>
+                        <td>
+                            <div id="LCD_PIN_SCL">21</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="LCD_ADDR">LCD Address:</label>
+                        </td>
+                        <td>
+                            <div id="LCD_ADDR">0x27</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="LCD_FREQ">LCD Frequency:</label>
+                        </td>
+                        <td>
+                            <div id="LCD_FREQ">400000</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="LCD_COLS">LCD Columns:</label>
+                        </td>
+                        <td>
+                            <div id="LCD_COLS">20</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="LCD_ROWS">LCD Rows:</label>
+                        </td>
+                        <td>
+                            <div id="LCD_ROWS">4</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="RELAY_OPEN_PIN">Relay Open PIN:</label>
+                        </td>
+                        <td>
+                            <div id="RELAY_OPEN_PIN">4</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="RELAY_CLOSE_PIN">Relay Close PIN:</label>
+                        </td>
+                        <td>
+                            <div id="RELAY_CLOSE_PIN">5</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="BUTTON_TEMP_UP_PIN">Button Temperature Up PIN:</label>
+                        </td>
+                        <td>
+                            <div id="BUTTON_TEMP_UP_PIN">2</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="BUTTON_TEMP_DOWN_PIN">Button Temperature Down PIN:</label>
+                        </td>
+                        <td>
+                            <div id="BUTTON_TEMP_DOWN_PIN">3</div>
+                        </td>
+                    </tr> 
+                </table>
+                <br />
         </form>
     </body>
 </html>
