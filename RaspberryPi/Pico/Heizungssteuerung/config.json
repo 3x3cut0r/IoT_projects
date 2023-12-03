@@ -21,7 +21,7 @@
     "temp_change_category": "LOW",
     "temp_change_high_threshold": 1.0,
     "temp_change_medium_threshold": 0.3,
-    "TEMP_SENSOR_PIN": 15,
+    "TEMP_SENSOR_PIN": 16,
     "TEMP_SENSOR_RESOLUTION_BIT": 9,
     "LCD_PIN_SDA": 20,
     "LCD_PIN_SCL": 21,
@@ -29,8 +29,8 @@
     "LCD_FREQ": 400000,
     "LCD_COLS": 20,
     "LCD_ROWS": 4,
-    "RELAY_OPEN_PIN": 4,
-    "RELAY_CLOSE_PIN": 5,
+    "RELAY_OPEN_PIN": 14,
+    "RELAY_CLOSE_PIN": 15,
     "BUTTON_TEMP_UP_PIN": 2,
     "BUTOTN_TEMP_DOWN_PIN": 3
 }
