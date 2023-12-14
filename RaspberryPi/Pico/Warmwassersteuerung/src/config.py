@@ -38,13 +38,19 @@ def load_config(file_path=file_path):
             config = {}
 
 
+# reset config
+def reset_config():
+    global config
+    config["temp_last_measurement"] = 0
+    config["temp_last_measurement_time"] = 0
+    config["temp_change_category"] = "LOW"
+
+
 # init config
 def init_config():
     global config
     load_config()
-    config["temp_last_measurement"] = 0
-    config["temp_last_measurement_time"] = 0
-    config["temp_change_category"] = "LOW"
+    reset_config()
 
 
 # save config
@@ -66,8 +72,33 @@ def create_config_backup():
 
 
 # get value
-def get_value(key):
-    return config[str(key)]
+def get_value(key, default=None):
+    try:
+        return config[str(key)]
+    except:
+        if default is not None:
+            return default
+        else:
+            return None
+
+
+# get int value
+def get_int_value(key, default=0):
+    try:
+        return int(config[str(key)])
+    except:
+        return int(default)
+
+
+# get float value
+def get_float_value(key, default=0.0, decimal=None):
+    try:
+        if decimal is not None:
+            return round(float(config[str(key)]), int(decimal))
+        else:
+            return float(config[str(key)])
+    except:
+        return float(default)
 
 
 # set value

@@ -1,5 +1,5 @@
 # ==================================================
-# Heizungssteuerung
+# Warmwassersteuerung
 # ==================================================
 #
 # Komponenten:
@@ -23,18 +23,26 @@ import time  # https://docs.micropython.org/en/latest/library/time.html
 from src.config import (
     init_config,
     create_config_backup,
-    get_value,
+    get_int_value,
+    get_float_value,
     set_value,
 )
+
+# init config
+init_config()
+
 from src.lcd import init_lcd
-from src.relay import init_relays, open_relay, close_relay
+from src.led import init_led
+from src.relay import init_relays
 from src.wifi import connect_wifi, check_wifi_isconnected
+from src.webserver import run_webserver
 from src.functions import (
     categorize_temp_change,
     adjust_update_time_based_on_temp_category,
     update_temp,
     print_nominal_temp,
-    open_relay,
+    set_relay,
+    open_relays,
     check_buttons,
     update_timer,
     wait_start,
@@ -44,8 +52,8 @@ from src.functions import (
 # setup
 # ==================================================
 
-# init config
-init_config()
+# init led
+init_led()
 
 # init lcd
 init_lcd()
@@ -53,20 +61,25 @@ init_lcd()
 # connect wifi
 connect_wifi()
 
+# run webserver
+run_webserver()
+
 # init relays
 init_relays()
 
 # update temp
 update_temp()
-set_value("tempAtLastMeasurement", get_value("current_temp"))
+set_value("tempAtLastMeasurement", get_float_value("current_temp", -127.0))
 
 # print nominal temp
 print_nominal_temp()
 
 # wait start
-wait_start(get_value("delay_before_start_1"))
-close_relay(get_value("init_relay_time"))  # open relay initial
-wait_start(get_value("delay_before_start_2"))
+wait_start(get_int_value("delay_before_start_1"))
+set_relay(
+    get_int_value("RELAY_CLOSE_PIN", 15), get_int_value("init_relay_time", 2000)
+)  # open relay initial
+wait_start(get_int_value("delay_before_start_2"))
 
 
 # ==================================================
@@ -74,26 +87,27 @@ wait_start(get_value("delay_before_start_2"))
 # ==================================================
 def main():
     previous_millis = 0
-    interval = 1000
+    interval = get_int_value("interval")
+    update_time = get_int_value("update_time")
 
     while True:
         current_millis = time.ticks_ms()
 
         # adjust temp category
         if current_millis - int(
-            get_value("temp_last_measurement_time")
-            >= int(get_value("temp_sampling_interval"))
+            get_int_value("temp_last_measurement_time")
+            >= get_int_value("temp_sampling_interval")
         ):
             update_temp()
-            temp_change = float(get_value("current_temp")) - float(
-                get_value("temp_last_measurement")
+            temp_change = get_float_value("current_temp", -127.0) - get_float_value(
+                "temp_last_measurement"
             )
 
             # categorize temp change
             categorize_temp_change(temp_change)
 
             # update last measurement temp
-            set_value("temp_last_measurement", float(get_value("current_temp")))
+            set_value("temp_last_measurement", get_float_value("current_temp", -127.0))
 
             # update last measurement temp time
             set_value("temp_last_measurement_time", current_millis)
@@ -101,26 +115,23 @@ def main():
         # main
         if current_millis - previous_millis > interval:
             # update time
-            if int(get_value("update_time")) >= 0:
-                update_timer(int(get_value("update_time")))
-                set_value("update_time", (int(get_value("update_time")) - 1))
+            if update_time >= 0:
+                update_timer(update_time)
+                update_time -= 1
 
             # check buttons
             check_buttons()
 
             # update temp on temp update interval
-            if (
-                int(get_value("update_time")) % int(get_value("temp_update_interval"))
-                == 0
-            ):
+            if update_time % get_int_value("temp_update_interval") == 0:
                 update_temp()
 
-            if int(get_value("update_time")) == 0:
+            if update_time == 0:
                 # open relay
-                open_relay(int(get_value("relay_time")))
+                open_relays()
 
-                # set and adjust update time based on temp category
-                set_value("update_time", adjust_update_time_based_on_temp_category())
+                # set and adjust update_time based on temp category
+                update_time = adjust_update_time_based_on_temp_category()
 
                 # create config backup
                 create_config_backup()

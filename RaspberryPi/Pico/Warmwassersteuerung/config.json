@@ -1,6 +1,7 @@
 {
-    "wifi_ssid": "some wifi ssid",
-    "wifi_password": "some wifi password",
+    "wifi_ssid": "WLAN-0x1337",
+    "wifi_password": "8gZos46GK9c9htCYdL6ipXdd3H0rjN",
+    "wifi_country": "DE",
     "wifi_max_attempts": 10,
     "delay_before_start_1": 660,
     "delay_before_start_2": 420,
@@ -32,5 +33,6 @@
     "RELAY_OPEN_PIN": 14,
     "RELAY_CLOSE_PIN": 15,
     "BUTTON_TEMP_UP_PIN": 2,
-    "BUTOTN_TEMP_DOWN_PIN": 3
+    "BUTOTN_TEMP_DOWN_PIN": 3,
+    "LED": 1
 }

@@ -4,10 +4,10 @@ from onewire import OneWire  # OneWire
 from ds18x20 import DS18X20  # DS180B20
 
 # load config
-from src.config import get_value, set_value
+from src.config import get_int_value, set_value
 
 # setup temperature sensor
-temp_sensor_pin = Pin(int(get_value("TEMP_SENSOR_PIN")))
+temp_sensor_pin = Pin(get_int_value("TEMP_SENSOR_PIN", 16))
 temp_sensor = DS18X20(OneWire(temp_sensor_pin))
 
 # ==================================================
@@ -41,16 +41,19 @@ def set_temp_resolution(bits=9):
     set_value("TEMP_SENSOR_RESOLUTION_BIT", resolution)
 
 
-# read temperature
-def read_temp():
-    # read temps
-    roms = temp_sensor.scan()
-    temp_sensor.convert_temp()
-    for rom in roms:
-        temp = float(
-            temp_sensor.read_temp(rom, int(get_value("TEMP_SENSOR_RESOLUTION_BIT")))
-        )
-        set_value("current_temp", temp)
+# get temperature
+def get_temp():
+    try:
+        # get temps
+        roms = temp_sensor.scan()
+        temp_sensor.convert_temp()
+        for rom in roms:
+            temp = float(temp_sensor.read_temp(rom))
+            set_value("current_temp", round(temp, 1))
 
-        # return only first temp found
+            # return only first temp found
+            return temp
+    except:
+        temp = float(-127.0)
+        set_value("current_temp", temp)
         return temp

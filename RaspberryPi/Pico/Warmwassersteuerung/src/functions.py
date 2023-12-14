@@ -1,11 +1,10 @@
 # imports
-from enum import Enum
 import time  # https://docs.micropython.org/en/latest/library/time.html
 from src.button import check_button
-from src.config import save_config, get_value, set_value
+from src.config import save_config, get_value, get_int_value, get_float_value, set_value
 from src.lcd import print_lcd, print_lcd_char
 from src.relay import open_relay, close_relay
-from src.temp import read_temp
+from src.temp import get_temp
 
 # ==================================================
 # functions
@@ -13,12 +12,16 @@ from src.temp import read_temp
 
 
 # categorize temp change
-def categorize_temp_change(temp_change):
-    if abs(float(temp_change)) >= float(get_value("temp_change_high_threshold")):
+def categorize_temp_change(temp_change=0.0):
+    if abs(float(temp_change)) >= float(
+        get_float_value("temp_change_high_threshold", 1.0)
+    ):
         print_lcd(2, 0, "Temperatur      HIGH")
         print_lcd_char(2, 11, (0 if float(temp_change) > 0 else 1))
         return "HIGH"  # TempChangeCategory.HIGH
-    elif abs(float(temp_change)) >= float(get_value("temp_change_medium_threshold")):
+    elif abs(float(temp_change)) >= float(
+        get_float_value("temp_change_medium_threshold", 0.3)
+    ):
         print_lcd(2, 0, "Temperatur    MEDIUM")
         print_lcd_char(2, 11, (0 if float(temp_change) > 0 else 1))
         return "MEDIUM"  # TempChangeCategory.MEDIUM
@@ -30,44 +33,48 @@ def categorize_temp_change(temp_change):
 
 # adjust relay time based on temp category
 def adjust_relay_time_based_on_temp_category():
-    if get_value("temp_change_category") == "HIGH":
+    if get_value("temp_change_category", "LOW") == "HIGH":
         return int(
-            int(get_value("relay_time")) * 0.3
+            get_int_value("relay_time", 2000) * 0.3
         )  # shorter opening time for rapid temperature changes
-    elif get_value("temp_change_category") == "MEDIUM":
+    elif get_value("temp_change_category", "LOW") == "MEDIUM":
         return int(
-            int(get_value("relay_time")) * 0.6
+            get_int_value("relay_time", 2000) * 0.6
         )  # moderate opening time for normal temperature changes
-    elif get_value("temp_change_category") == "LOW":
-        return int(
-            int(get_value("relay_time")) * 1.0
+    # elif get_value("temp_change_category") == "LOW":
+    else:
+        return get_int_value(
+            "relay_time", 2000
         )  # normal opening time for slow temperature changes
 
 
 # adjust update time based on temp category
 def adjust_update_time_based_on_temp_category():
-    if get_value("temp_change_category") == "HIGH":
+    if get_value("temp_change_category", "LOW") == "HIGH":
         return int(
-            int(get_value("update_time")) / 2.0
+            get_int_value("update_time", 120) / 2.0
         )  # temp measurement takes place very often
-    elif get_value("temp_change_category") == "MEDIUM":
+    elif get_value("temp_change_category", "LOW") == "MEDIUM":
         return int(
-            int(get_value("update_time")) / 1.3
+            get_int_value("update_time", 120) / 1.3
         )  # temp measurement takes place more often
-    elif get_value("temp_change_category") == "LOW":
-        return int(
-            int(get_value("update_time")) / 1.0
+    # elif get_value("temp_change_category") == "LOW":
+    else:
+        return get_int_value(
+            "update_time", 120
         )  # temp measurement takes place normally
 
 
 # update current temp on lcd
 def update_temp():
     # read temp
-    read_temp()
+    get_temp()
 
     # print temp on lcd
-    current_temp_string = str("{} °C".format(get_value("current_temp")))
-    temp_pos = int(get_value("LCD_COLS")) - len(current_temp_string)
+    current_temp_string = str(
+        "{:.1f} \337C".format(get_float_value("current_temp", -127.0, 1))
+    )
+    temp_pos = get_int_value("LCD_COLS", 4) - len(current_temp_string)
     print_lcd(0, 0, ("Aktuell:"))
     print_lcd(0, temp_pos, current_temp_string)
 
@@ -75,16 +82,16 @@ def update_temp():
 # print nominal temp
 def print_nominal_temp():
     # set lower and upper bounds for nominal temperatures
-    nominal_min_temp = max(0.0, min(120.0, float(get_value("nominal_min_temp"))))
+    nominal_min_temp = max(0.0, min(120.0, get_float_value("nominal_min_temp", 42.0)))
     nominal_max_temp = max(
-        nominal_min_temp, min(120.0, float(get_value("nominal_max_temp")))
+        nominal_min_temp, min(120.0, get_float_value("nominal_max_temp", 55.0))
     )
 
     # format the nominal temperature string
-    nominal_temp = f"{nominal_min_temp:.1f} - {nominal_max_temp:.1f} °C"
+    nominal_temp = f"{nominal_min_temp:.1f} - {nominal_max_temp:.1f} \337C"
 
     # calculate the position for displaying the temperature
-    temp_pos = int(get_value("LCD_COLS")) - len(nominal_temp)
+    temp_pos = get_int_value("LCD_COLS", 4) - len(nominal_temp)
 
     # print the formatted temperature on LCD
     print_lcd(1, 0, "Soll:")
@@ -94,26 +101,30 @@ def print_nominal_temp():
 # set relay
 def set_relay(pin, relay_time):
     # Schalte nur, wenn die Temperatur ausgelesen werden kann
-    if 0 <= int(get_value("current_temp")) <= 150:
-        if int(pin) == int(get_value("RELAY_OPEN_PIN")):
-            print_lcd(3, 0, "öffne Ventil     >>>")
+    if 0 < get_float_value("current_temp", -127.0) <= 120:
+        if int(pin) == get_int_value("RELAY_OPEN_PIN", 14):
+            print_lcd(3, 0, "\357ffne Ventil     >>>")
             open_relay(relay_time)
-        elif int(pin) == int(get_value("RELAY_CLOSE_PIN")):
-            print_lcd(3, 0, "schließe Ventil: <<<")
+        elif int(pin) == get_int_value("RELAY_CLOSE_PIN", 15):
+            print_lcd(3, 0, "schlie\342e Ventil: <<<")
             close_relay(relay_time)
     else:
         print_lcd(3, 0, "Fehler: Temp Fehler!")
         time.sleep(2)
 
 
-# open relay depending on temp
-def open_relay(time):
-    if int(get_value("current_temp")) < int(get_value("nominal_min_temp")):
+# open relays depending on temp
+def open_relays(time=get_int_value("relay_time", 2000)):
+    if get_float_value("current_temp", -127.0) < get_float_value(
+        "nominal_min_temp", 42.0
+    ):
         # increase temp
-        set_relay(int(get_value("RELAY_OPEN_PIN")), time)
-    elif int(get_value("current_temp")) > int(get_value("nominal_max_temp")):
+        set_relay(get_int_value("RELAY_OPEN_PIN", 14), time)
+    elif get_float_value("current_temp", -127.0) > get_float_value(
+        "nominal_max_temp", 55.0
+    ):
         # decrease temp
-        set_relay(int(get_value("RELAY_CLOSE_PIN")), time)
+        set_relay(get_int_value("RELAY_CLOSE_PIN", 15), time)
     else:
         # do nothing
         print_lcd(3, 0, "Soll Temp erreicht !")
@@ -127,26 +138,34 @@ def update_nominal_temp(button_pin):
     # while button is pressed
     while check_button(button_pin):
         # increase temp on temp up button
-        if int(button_pin) == int(get_value("BUTTON_TEMP_UP_PIN")):
+        if int(button_pin) == get_int_value("BUTTON_TEMP_UP_PIN", 2):
             if rate >= 3:
                 print_lcd(2, 0, "TempUp Pressed   +++")
             elif rate >= 0.5:
                 print_lcd(2, 0, "TempUp Pressed    ++")
             else:
                 print_lcd(2, 0, "TempUp Pressed     +")
-            set_value("nominal_min_temp", (float(get_value("nominal_min_temp")) + rate))
-            set_value("nominal_max_temp", (float(get_value("nominal_max_temp")) + rate))
+            set_value(
+                "nominal_min_temp", (get_float_value("nominal_min_temp", 42.0)) + rate
+            )
+            set_value(
+                "nominal_max_temp", (get_float_value("nominal_max_temp", 55.0)) + rate
+            )
 
         # decrease temp on temp down button
-        elif int(button_pin) == int(get_value("BUTTON_TEMP_DOWN_PIN")):
+        elif int(button_pin) == get_int_value("BUTTON_TEMP_DOWN_PIN", 3):
             if rate >= 3:
                 print_lcd(2, 0, "TempDown Pressed ---")
             elif rate >= 0.5:
                 print_lcd(2, 0, "TempDown Pressed  --")
             else:
                 print_lcd(2, 0, "TempDown Pressed   -")
-            set_value("nominal_min_temp", (float(get_value("nominal_min_temp")) - rate))
-            set_value("nominal_max_temp", (float(get_value("nominal_max_temp")) - rate))
+            set_value(
+                "nominal_min_temp", (get_float_value("nominal_min_temp", 42.0)) - rate
+            )
+            set_value(
+                "nominal_max_temp", (get_float_value("nominal_max_temp", 55.0)) - rate
+            )
 
         # print nominal temp
         print_nominal_temp()
@@ -165,8 +184,8 @@ def update_nominal_temp(button_pin):
 # check buttons
 def check_buttons():
     # update nomianl temp
-    update_nominal_temp(int(get_value("BUTTON_TEMP_UP_PIN")))
-    update_nominal_temp(int(get_value("BUTTON_TEMP_DOWN_PIN")))
+    update_nominal_temp(get_int_value("BUTTON_TEMP_UP_PIN", 2))
+    update_nominal_temp(get_int_value("BUTTON_TEMP_DOWN_PIN", 3))
 
 
 # format time
@@ -201,7 +220,7 @@ def wait_start(secs):
             check_buttons()
 
             # temp update on interval
-            if secs % int(get_value("temp_update_interval")) == 0:
+            if secs % get_int_value("temp_update_interval", 120) == 0:
                 update_temp()
 
             # update timer
