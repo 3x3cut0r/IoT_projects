@@ -1,6 +1,6 @@
 {
-    "wifi_ssid": "WLAN-0x1337",
-    "wifi_password": "8gZos46GK9c9htCYdL6ipXdd3H0rjN",
+    "wifi_ssid": "your wifi ssid",
+    "wifi_password": "your wifi password",
     "wifi_country": "DE",
     "wifi_max_attempts": 10,
     "delay_before_start_1": 660,
