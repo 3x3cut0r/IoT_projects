@@ -1,8 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="de">
     <head>
-        <title>Heizungssteuerung</title>
-        <link rel="stylesheet" type="text/css" href="style.css" />
+        <title>Warmwassersteuerung</title>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" type="text/css" href="styles.css" />
+        <link href="data:image/x-icon;base64,AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAbAAACnAUBJ98BAASnAAAAIwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMAAABxAAAC5DIEvf9FBP3/NwTP/wIACukAAAByAAAACgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABACAAm/IQKH/w4BSv8LAUP/HwKF/xMCWf8MAUX/IwKN/wMAF9EAAAAhAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGALAOt/0wF//8eAn3/HAJ6/zoE2P8kA5T/HgJ//0sE//81BMj/AQAEpwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA0j8E6v81BMv/BQEn/0ME9v9CBPX/RwT//xMCWv82BM3/RwT//wMBFN4AAAAAAAAAAAAAAAAAAAAAAAAARw4CSf8OAkz/AwEX/wUBJP8rA6b/QgT0/zMDxP8FAST/BQEp/x4CgP8LAUT9AAAAQwAAAAAAAAAAAAAAAAAAAaA9BOL/CgE//ykDo/9CBPX/JgOa/wUBKf8bAnP/PgTn/ywDrf8IATf/OwTc/wAAAZ0AAAAAAAAAAAAAAAAAAAGCMQO8/x0Cev8+BOT/QgTz/0ME+f8JATr/PATe/0IE9v9ABO7/IgOL/zMEw/8AAAGHAAAAAAAAAAAAAAAAAAAAFQMAFdMFASn/IwKO/0YE//88BOD/BAEd/zYEzf9HBP//KwOn/woBO/8EAR/aAAAAGwAAAAAAAAAAAAAAAAAAAAAAAABrJgOb/xsCdv8QAk//GgJw/xsCdf8hA4b/FgJl/yECh/8lA5j/AAAAZwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGwcANN83AM//DgBH/y8Ct/9LBP//OAPU/xQAWv81AMr/BgAt3gAAABYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAQC2AFEy/wRmTP8EBh7/DwBP/wQCHf8DWkX/AF81/wAEAMsAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB/AHA2/wDIWP8AulD/AFId/wAGAP8APAv/AK9M/wDJWf8AjEL/AQMCrQAAAAAAAAAAAAAAAAAAAAAAAAAKAR8K6QDCXP8Aq1H/AJBF/wC6V/8ANRf/ALBQ/wCVRP8Ao0z/AMle/wBAHf8AAAAkAAAAAAAAAAAAAAAAAAAAGAEkDv8AoEv/AKlQ/wCvUf8AdDb/AAIBvwBcKf8ArFD/AKtR/wClT/8AQR7/AAAAPAAAAAAAAAAAAAAAAAAAAAIAAABSAQICngISBtMBBwS6AAAAbwAAAAQAAABXAQQDsQITB9MBBAOrAAAAZAAAAAkAAAAA/j8AAPwfAADwBwAA4AMAAOADAADgAwAAwAEAAMABAADgAwAA8AcAAPAHAADwBwAA8AMAAOADAADgAwAA8ccAAA==" rel="icon" type="image/x-icon">
     </head>
     <body>
         <div class="lcd-display">
@@ -163,7 +165,7 @@
                     <tr><td><h3>Info</h3></td></tr>
                     <tr>
                         <td>
-                            <label for="previous_millis">Previous Millis:</label>
+                            <div for="previous_millis">Previous Millis:</div>
                         </td>
                         <td>
                             <div id="previous_millis">0</div>
@@ -171,7 +173,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <label for="interval">Interval:</label>
+                            <div for="interval">Interval:</div>
                         </td>
                         <td>
                             <div id="interval">1000</div>
@@ -179,7 +181,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <label for="current_temp">Current Temperature:</label>
+                            <div for="current_temp">Current Temperature:</div>
                         </td>
                         <td>
                             <div id="current_temp">0</div>
@@ -187,7 +189,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <label for="temp_last_measurement">Temperature Last Measurement:</label>
+                            <div for="temp_last_measurement">Temperature Last Measurement:</div>
                         </td>
                         <td>
                             <div id="temp_last_measurement">0</div>
@@ -195,7 +197,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <label for="temp_last_measurement_time">Temperature Last Measurement Time:</label>
+                            <div for="temp_last_measurement_time">Temperature Last Measurement Time:</div>
                         </td>
                         <td>
                             <div id="temp_last_measurement_time">0</div>
@@ -203,7 +205,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <label for="temp_sampling_interval">Temperature Sampling Interval:</label>
+                            <div for="temp_sampling_interval">Temperature Sampling Interval:</div>
                         </td>
                         <td>
                             <div id="temp_sampling_interval">10000</div>
@@ -211,7 +213,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <label for="temp_change_category">Temperature Change Category:</label>
+                            <div for="temp_change_category">Temperature Change Category:</div>
                         </td>
                         <td>
                             <div id="temp_change_category">LOW</div>
@@ -220,7 +222,7 @@
                     <tr><td><h3>PIN Configuration</h3></td></tr>
                     <tr>
                         <td>
-                            <label for="TEMP_SENSOR_PIN">Temperature Sensor PIN:</label>
+                            <div for="TEMP_SENSOR_PIN">Temperature Sensor PIN:</div>
                         </td>
                         <td>
                             <div id="TEMP_SENSOR_PIN">15</div>
@@ -228,7 +230,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <label for="TEMP_SENSOR_RESOLUTION_BIT">Temperature Sensor Resolution Bit:</label>
+                            <div for="TEMP_SENSOR_RESOLUTION_BIT">Temperature Sensor Resolution Bit:</div>
                         </td>
                         <td>
                             <div id="TEMP_SENSOR_RESOLUTION_BIT">9</div>
@@ -236,7 +238,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <label for="LCD_PIN_SDA">LCD SDA PIN:</label>
+                            <div for="LCD_PIN_SDA">LCD SDA PIN:</div>
                         </td>
                         <td>
                             <div id="LCD_PIN_SDA">20</div>
@@ -244,7 +246,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <label for="LCD_PIN_SCL">LCD SCL PIN:</label>
+                            <div for="LCD_PIN_SCL">LCD SCL PIN:</div>
                         </td>
                         <td>
                             <div id="LCD_PIN_SCL">21</div>
@@ -252,7 +254,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <label for="LCD_ADDR">LCD Address:</label>
+                            <div for="LCD_ADDR">LCD Address:</div>
                         </td>
                         <td>
                             <div id="LCD_ADDR">0x27</div>
@@ -260,7 +262,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <label for="LCD_FREQ">LCD Frequency:</label>
+                            <div for="LCD_FREQ">LCD Frequency:</div>
                         </td>
                         <td>
                             <div id="LCD_FREQ">400000</div>
@@ -268,7 +270,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <label for="LCD_COLS">LCD Columns:</label>
+                            <div for="LCD_COLS">LCD Columns:</div>
                         </td>
                         <td>
                             <div id="LCD_COLS">20</div>
@@ -276,7 +278,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <label for="LCD_ROWS">LCD Rows:</label>
+                            <div for="LCD_ROWS">LCD Rows:</div>
                         </td>
                         <td>
                             <div id="LCD_ROWS">4</div>
@@ -284,7 +286,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <label for="RELAY_OPEN_PIN">Relay Open PIN:</label>
+                            <div for="RELAY_OPEN_PIN">Relay Open PIN:</div>
                         </td>
                         <td>
                             <div id="RELAY_OPEN_PIN">4</div>
@@ -292,7 +294,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <label for="RELAY_CLOSE_PIN">Relay Close PIN:</label>
+                            <div for="RELAY_CLOSE_PIN">Relay Close PIN:</div>
                         </td>
                         <td>
                             <div id="RELAY_CLOSE_PIN">5</div>
@@ -300,7 +302,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <label for="BUTTON_TEMP_UP_PIN">Button Temperature Up PIN:</label>
+                            <div for="BUTTON_TEMP_UP_PIN">Button Temperature Up PIN:</div>
                         </td>
                         <td>
                             <div id="BUTTON_TEMP_UP_PIN">2</div>
@@ -308,7 +310,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <label for="BUTTON_TEMP_DOWN_PIN">Button Temperature Down PIN:</label>
+                            <div for="BUTTON_TEMP_DOWN_PIN">Button Temperature Down PIN:</div>
                         </td>
                         <td>
                             <div id="BUTTON_TEMP_DOWN_PIN">3</div>

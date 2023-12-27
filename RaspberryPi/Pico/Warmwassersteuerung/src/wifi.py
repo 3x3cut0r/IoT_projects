@@ -33,21 +33,20 @@ def connect_wifi():
         while not wifi.isconnected() and attempts < max_attempts:
             time.sleep(1)
             attempts += 1
-            # print("Verbinde mit WLAN...")
             print_lcd(0, 0, "verbinde WLAN ... {:02d}".format(attempts))
 
         if wifi.isconnected():
             if show_message >= 1:
-                # print("WLAN verbunden:", wifi.ifconfig())
+                print("WLAN verbunden:", wifi.ifconfig())
                 print_lcd(0, 0, "WLAN wurde verbunden")
                 time.sleep(3)
             show_message = 0
         else:
-            # print("WLAN-Verbindung fehlgeschlagen!")
+            print("WLAN-Verbindung fehlgeschlagen!")
             print_lcd(0, 0, "WLAN nicht verbunden")
             time.sleep(3)
     else:
-        # print("keine SSID gefunden")
+        print("keine SSID gefunden!")
         print_lcd(0, 0, "keine SSID gefunden!")
         time.sleep(3)
 

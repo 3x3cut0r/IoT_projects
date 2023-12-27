@@ -18,6 +18,7 @@
 
 # micro python imports
 import time  # https://docs.micropython.org/en/latest/library/time.html
+import _thread  # https://docs.python.org/3.5/library/_thread.html#module-_thread
 
 # custom imports
 from src.config import (
@@ -34,7 +35,6 @@ init_config()
 from src.lcd import init_lcd
 from src.led import init_led
 from src.relay import init_relays
-from src.wifi import connect_wifi, check_wifi_isconnected
 from src.webserver import run_webserver
 from src.functions import (
     categorize_temp_change,
@@ -48,50 +48,47 @@ from src.functions import (
     wait_start,
 )
 
-# ==================================================
-# setup
-# ==================================================
 
-# init led
-init_led()
-
-# init lcd
-init_lcd()
-
-# connect wifi
-connect_wifi()
-
-# run webserver
-run_webserver()
-
-# init relays
-init_relays()
-
-# update temp
-update_temp()
-set_value("tempAtLastMeasurement", get_float_value("current_temp", -127.0))
-
-# print nominal temp
-print_nominal_temp()
-
-# wait start
-wait_start(get_int_value("delay_before_start_1"))
-set_relay(
-    get_int_value("RELAY_CLOSE_PIN", 15), get_int_value("init_relay_time", 2000)
-)  # open relay initial
-wait_start(get_int_value("delay_before_start_2"))
-
-
-# ==================================================
-# main
-# ==================================================
 def main():
+    print(f"main()\n")
+
+    # ==================================================
+    # setup
+    # ==================================================
+
+    # init led
+    init_led()
+
+    # init lcd
+    init_lcd()
+
+    # init relays
+    init_relays()
+
+    # update temp
+    update_temp()
+    set_value("tempAtLastMeasurement", get_float_value("current_temp", -127.0))
+
+    # print nominal temp
+    print_nominal_temp()
+
+    # wait start
+    wait_start(get_int_value("delay_before_start_1"))
+    set_relay(
+        get_int_value("RELAY_CLOSE_PIN", 15), get_int_value("init_relay_time", 2000)
+    )  # open relay initial
+    wait_start(get_int_value("delay_before_start_2"))
+
     previous_millis = 0
     interval = get_int_value("interval")
     update_time = get_int_value("update_time")
 
+    # ==================================================
+    # main
+    # ==================================================
     while True:
         current_millis = time.ticks_ms()
+        print("current_millis: " + str(current_millis))
 
         # adjust temp category
         if current_millis - int(
@@ -136,13 +133,13 @@ def main():
                 # create config backup
                 create_config_backup()
 
-                # connect wifi if wifi is not connected
-                if not check_wifi_isconnected():
-                    connect_wifi()
-
             # update previous millis
             previous_millis = current_millis
 
 
 if __name__ == "__main__":
-    main()
+    # run main() in a separate thread
+    _thread.start_new_thread(main, ())
+
+    # run webserver()
+    run_webserver()
