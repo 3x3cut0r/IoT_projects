@@ -88,7 +88,6 @@ def main():
     # ==================================================
     while True:
         current_millis = time.ticks_ms()
-        print("current_millis: " + str(current_millis))
 
         # adjust temp category
         if current_millis - int(
@@ -111,6 +110,8 @@ def main():
 
         # main
         if current_millis - previous_millis > interval:
+            print("current_millis: " + str(current_millis))
+
             # update time
             if update_time >= 0:
                 update_timer(update_time)
