@@ -1,17 +1,17 @@
 # imports
 import ujson  # https://docs.micropython.org/en/latest/library/json.html
 
-# setup file_name
+# config
+config = {}
+
+# file_name
 file_name_präfix = "../"
 file_name = "config.json"
 file_name_backup = "config_backup.json"
 
-# setup file_path
+# file_path
 file_path = file_name_präfix + file_name
 file_path_backup = file_name_präfix + file_name_backup
-
-# config
-config = {}
 
 # ==================================================
 # functions
@@ -48,7 +48,6 @@ def reset_config():
 
 # init config
 def init_config():
-    global config
     load_config()
     reset_config()
 

@@ -30,7 +30,7 @@ def get_lcd_lines():
 
 # run webserver (should be startet in a new thread)
 def run_webserver():
-    print("run_webserver()")
+    print(f"run_webserver()")
 
     # create socket
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -41,11 +41,11 @@ def run_webserver():
     while True:
         # connect wifi, if not connected
         if not check_wifi_isconnected():
-            print("connect_wifi()")
+            print(f"connect_wifi()")
             connect_wifi()
 
         else:
-            print("warte auf Verbindung...")
+            print(f"warte auf Verbindung...")
 
             # open connection
             conn, addr = s.accept()
