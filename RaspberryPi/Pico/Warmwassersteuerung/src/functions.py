@@ -67,7 +67,7 @@ def adjust_update_time_based_on_temp_category():
 
 # update current temp on lcd
 def update_temp():
-    print(f"update_temp()")
+    print(f"INFO: update_temp()")
 
     # read temp
     get_temp()
@@ -117,7 +117,7 @@ def set_relay(pin, relay_time):
 
 # open relays depending on temp
 def open_relays(time=get_int_value("relay_time", 2000)):
-    print(f"open_relays({time})")
+    print(f"INFO: open_relays({time})")
 
     if get_float_value("current_temp", -127.0) < get_float_value(
         "nominal_min_temp", 42.0
@@ -205,7 +205,7 @@ def format_time(secs):
 
 # update timer
 def update_timer(secs, message="WARTE:"):
-    print(f"update_timer(): {secs}")
+    print(f"INFO: update_timer(): {secs}")
 
     time = format_time(secs)
     cursor = 20 - len(time)
@@ -216,7 +216,7 @@ def update_timer(secs, message="WARTE:"):
 
 # wait start
 def wait_start(secs):
-    print(f"wait start ({secs}s)")
+    print(f"INFO: wait start ({secs}s)")
 
     previous_millis = time.ticks_ms()
     interval = 1000

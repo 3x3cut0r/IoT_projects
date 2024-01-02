@@ -51,12 +51,14 @@ from src.functions import (
 
 
 async def main():
-    print(f"main()")
+    print(f"INFO: main()")
 
     # ==================================================
     # setup
     # ==================================================
-    print(f"main setup()")
+    print(f"-----------------------")
+    print(f"INFO: main setup()")
+    print(f"-----------------------")
 
     # init led
     init_led()
@@ -92,7 +94,9 @@ async def main():
     # ==================================================
     # main loop
     # ==================================================
-    print(f"main loop()")
+    print(f"-----------------------")
+    print(f"INFO: main loop()")
+    print(f"-----------------------")
 
     while True:
         current_millis = time.ticks_ms()
@@ -151,6 +155,8 @@ async def main():
 
 
 if __name__ == "__main__":
+    print(f"INFO: __main__")
+
     # create asyncio event loop
     loop = asyncio.get_event_loop()
 

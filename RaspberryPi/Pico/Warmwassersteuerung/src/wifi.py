@@ -18,7 +18,7 @@ wifi_is_activated = True
 def connect_wifi():
     global wifi_is_activated
     if wifi_is_activated:
-        print(f"connect_wifi()")
+        print(f"INFO: connect_wifi()")
 
         global show_message
         ssid = get_value("wifi_ssid")
@@ -30,7 +30,7 @@ def connect_wifi():
                 wifi.active(True)
                 wifi.connect(ssid, password)
             except OSError as error:
-                print(f"wifi module error: {error}\ndisable wifi()")
+                print(f"ERROR: wifi module error: {error}\nINFO: disable wifi()")
                 wifi_is_activated = False
 
             # wait until conneciton is established
@@ -45,18 +45,17 @@ def connect_wifi():
 
             if wifi.isconnected():
                 if show_message >= 1:
-                    print("wifi connected:", wifi.ifconfig())
+                    print("INFO: wifi connected:", wifi.ifconfig())
                     print_lcd(0, 0, "WLAN wurde verbunden")
                     time.sleep(3)
                 show_message = 0
             else:
-                print(f"wifi connection failed!")
+                print(f"WARN: wifi connection failed!")
                 print_lcd(0, 0, "WLAN nicht verbunden")
-                time.sleep(3)
         else:
-            print(f"no SSID found!")
+            print(f"ERROR: no SSID found!")
             print_lcd(0, 0, "keine SSID gefunden!")
-            time.sleep(3)
+            wifi_is_activated = False
 
 
 # check wifi is active
