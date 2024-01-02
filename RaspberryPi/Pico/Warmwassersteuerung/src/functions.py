@@ -216,7 +216,7 @@ def update_timer(secs, message="WARTE:"):
 
 # wait start
 def wait_start(secs):
-    print(f"wait start {secs}s")
+    print(f"wait start ({secs}s)")
 
     previous_millis = time.ticks_ms()
     interval = 1000

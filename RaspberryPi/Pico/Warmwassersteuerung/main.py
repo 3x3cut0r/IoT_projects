@@ -36,7 +36,7 @@ from src.lcd import init_lcd
 from src.led import init_led
 from src.relay import init_relays
 from src.webserver import run_webserver
-from src.wifi import connect_wifi, check_wifi_isconnected
+from src.wifi import connect_wifi, check_wifi_isactivated, check_wifi_isconnected
 from src.functions import (
     categorize_temp_change,
     adjust_update_time_based_on_temp_category,
@@ -56,6 +56,7 @@ async def main():
     # ==================================================
     # setup
     # ==================================================
+    print(f"main setup()")
 
     # init led
     init_led()
@@ -67,7 +68,8 @@ async def main():
     init_relays()
 
     # connect wifi
-    connect_wifi()
+    while check_wifi_isactivated() and not check_wifi_isconnected():
+        connect_wifi()
 
     # update temp
     update_temp()
@@ -88,16 +90,17 @@ async def main():
     update_time = get_int_value("update_time")
 
     # ==================================================
-    # main
+    # main loop
     # ==================================================
+    print(f"main loop()")
+
     while True:
         current_millis = time.ticks_ms()
 
         # adjust temp category
-        if current_millis - int(
-            get_int_value("temp_last_measurement_time")
-            >= get_int_value("temp_sampling_interval")
-        ):
+        if current_millis - get_int_value(
+            "temp_last_measurement_time"
+        ) >= get_int_value("temp_sampling_interval"):
             update_temp()
             temp_change = get_float_value("current_temp", -127.0) - get_float_value(
                 "temp_last_measurement"
@@ -117,17 +120,15 @@ async def main():
             # update time
             if update_time >= 0:
                 update_timer(update_time)
+
+                # update temp on temp update interval
+                if update_time % get_int_value("temp_update_interval") == 0:
+                    update_temp()
+
                 update_time -= 1
 
             # check buttons
             check_buttons()
-
-            # update temp on temp update interval
-            if (
-                get_int_value("update_time") % get_int_value("temp_update_interval")
-                == 0
-            ):
-                update_temp()
 
             if update_time == 0:
                 # open relay
@@ -153,10 +154,11 @@ if __name__ == "__main__":
     # create asyncio event loop
     loop = asyncio.get_event_loop()
 
-    # run webserver()
+    # run webserver() as task
     loop.create_task(run_webserver())
 
-    # run main()
+    # run main() as task
     loop.create_task(main())
 
+    # run event loop forever
     loop.run_forever()
