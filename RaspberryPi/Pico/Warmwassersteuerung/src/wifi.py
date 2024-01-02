@@ -15,6 +15,8 @@ show_message = 1
 
 # connect wifi
 def connect_wifi():
+    print(f"connect_wifi()")
+
     global show_message
     ssid = get_value("wifi_ssid")
     if ssid is not None:
@@ -29,7 +31,7 @@ def connect_wifi():
 
         # wait until conneciton is established
         attempts = 0
-        max_attempts = get_int_value("wifi_max_attempts", 10)
+        max_attempts = get_int_value("wifi_max_attempts", 15)
         while not wifi.isconnected() and attempts < max_attempts:
             time.sleep(1)
             attempts += 1

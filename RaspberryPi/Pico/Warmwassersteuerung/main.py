@@ -17,8 +17,8 @@
 # ==================================================
 
 # micro python imports
+import uasyncio as asyncio  # https://docs.micropython.org/en/v1.14/library/uasyncio.html
 import time  # https://docs.micropython.org/en/latest/library/time.html
-import _thread  # https://docs.python.org/3.5/library/_thread.html#module-_thread
 
 # custom imports
 from src.config import (
@@ -36,6 +36,7 @@ from src.lcd import init_lcd
 from src.led import init_led
 from src.relay import init_relays
 from src.webserver import run_webserver
+from src.wifi import connect_wifi, check_wifi_isconnected
 from src.functions import (
     categorize_temp_change,
     adjust_update_time_based_on_temp_category,
@@ -49,7 +50,7 @@ from src.functions import (
 )
 
 
-def main():
+async def main():
     print(f"main()")
 
     # ==================================================
@@ -64,6 +65,9 @@ def main():
 
     # init relays
     init_relays()
+
+    # connect wifi
+    connect_wifi()
 
     # update temp
     update_temp()
@@ -112,7 +116,6 @@ def main():
         if current_millis - previous_millis > interval:
             # update time
             if update_time >= 0:
-                print(f"update_time(): {update_time}")
                 update_timer(update_time)
                 update_time -= 1
 
@@ -120,7 +123,10 @@ def main():
             check_buttons()
 
             # update temp on temp update interval
-            if update_time % get_int_value("temp_update_interval") == 0:
+            if (
+                get_int_value("update_time") % get_int_value("temp_update_interval")
+                == 0
+            ):
                 update_temp()
 
             if update_time == 0:
@@ -133,13 +139,24 @@ def main():
                 # create config backup
                 create_config_backup()
 
+                # connect wifi
+                if not check_wifi_isconnected():
+                    connect_wifi()
+
             # update previous millis
             previous_millis = current_millis
 
+        await asyncio.sleep(0.1)
+
 
 if __name__ == "__main__":
-    # run main() in a separate thread
-    _thread.start_new_thread(main, ())
+    # create asyncio event loop
+    loop = asyncio.get_event_loop()
 
     # run webserver()
-    run_webserver()
+    loop.create_task(run_webserver())
+
+    # run main()
+    loop.create_task(main())
+
+    loop.run_forever()

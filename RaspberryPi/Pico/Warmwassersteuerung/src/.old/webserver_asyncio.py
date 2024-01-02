@@ -1,8 +1,9 @@
 # imports
-import uasyncio as asyncio  # https://docs.micropython.org/en/v1.14/library/uasyncio.html
+import uasyncio as asyncio
 
 # from src.config import get_value
 from src.lcd import get_lcd_list
+from src.wifi import connect_wifi, check_wifi_isconnected
 
 # setup file_name
 file_name_präfix = "../web/"
@@ -29,7 +30,7 @@ def get_lcd_lines():
 
 # handle client
 async def handle_client(reader, writer):
-    print(f"handle_client()")
+    print("handle_client()")
     request = await reader.read(1024)
     # print("Received:", request)
 
@@ -59,5 +60,5 @@ async def handle_client(reader, writer):
 
 # run webserver
 async def run_webserver():
-    print(f"run_webserver()")
+    print("run_webserver()")
     server = await asyncio.start_server(handle_client, "0.0.0.0", 80)
