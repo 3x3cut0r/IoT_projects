@@ -69,6 +69,17 @@ def clear_lcd():
     lcd.clear()
 
 
+# convert utf-8 characters to HD44780 characters
+# (https://de.wikipedia.org/wiki/HD44780#Schrift_und_Zeichensatz)
+def convert_HD44780(string=""):
+    string = string.replace("ß", "\342")
+    string = string.replace("°", "\337")
+    string = string.replace("ä", "\341")
+    string = string.replace("ö", "\357")
+    string = string.replace("ü", "\365")
+    return string
+
+
 # ljust
 def ljust(string="", width=0, fillchar=" "):
     if len(str(string)) >= int(width):
@@ -100,46 +111,60 @@ def get_lcd_line(line=0):
 
 # set lcd line
 def set_lcd_line(line=0, cursor=0, message=""):
-    part1 = lcd_list[int(line)][: int(cursor)]
-    part2 = lcd_list[int(line)][int(cursor) :]
-    characters_to_remove = max(
-        0,
-        len(str(part1))
-        + len(str(message))
-        + len(str(part2))
-        - get_int_value("LCD_COLS", 20),
-    )
-    part2 = part2[:-characters_to_remove]
-    lcd_list[int(line)] = str(part1) + str(message) + str(part2)
+    line = int(line)
+    cursor = int(cursor)
+    message = str(message)
+    current_line = lcd_list[line]
+
+    # set parts
+    part1 = current_line[:cursor]
+    part2 = message
+    part3 = current_line[(cursor + len(message)) :]
+
+    lcd_list[line] = str(part1 + part2 + part3)[: get_int_value("LCD_COLS", 20)]
 
 
 # print lcd
 def print_lcd(line=0, cursor=0, message=""):
+    line = int(line)
+    cursor = int(cursor)
+    message = str(message)
+
+    # fill message
+    message = str(fill(message, cursor))
+
     # set lcd line
     set_lcd_line(line, cursor, message)
 
+    # convert utf-8 characters to HD44780 characters
+    message = convert_HD44780(message)
+
     # print lcd
-    lcd.move_to(int(cursor), int(line))  # lcd.move_to(col, row)
-    lcd.putstr(str(fill(message, cursor)))
+    lcd.move_to(cursor, line)  # lcd.move_to(col, row)
+    lcd.putstr(message)
     lcd.hide_cursor()
 
 
 # print lcd custom character
 def print_lcd_char(line=0, cursor=0, char=0):
+    line = int(line)
+    cursor = int(cursor)
+    char = int(char)
+
     # get char for lcd_list
     char_string = ""
-    if int(char) == 0:
+    if char == 0:
         char_string = "↑"
-    elif int(char) == 1:
+    elif char == 1:
         char_string = "↓"
     else:
         char_string = "-"
 
-    current_line = get_lcd_line(int(line))
+    current_line = get_lcd_line(line)
     set_lcd_list(
-        int(line),
-        current_line[: int(cursor)] + char_string + current_line[int(cursor) + 1 :],
+        line,
+        current_line[:cursor] + char_string + current_line[cursor + 1 :],
     )
 
-    lcd.move_to(int(cursor), int(line))  # lcd.move_to(col, row)
-    lcd.putchar(chr(int(char)))
+    lcd.move_to(cursor, line)  # lcd.move_to(col, row)
+    lcd.putchar(chr(char))

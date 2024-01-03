@@ -74,10 +74,10 @@ def update_temp():
 
     # print temp on lcd
     current_temp_string = str(
-        "{:.1f} \337C".format(get_float_value("current_temp", -127.0, 1))
+        "{:.1f} °C".format(get_float_value("current_temp", -127.0, 1))
     )
     temp_pos = get_int_value("LCD_COLS", 4) - len(current_temp_string)
-    print_lcd(0, 0, ("Aktuell:"))
+    print_lcd(0, 0, "Aktuell:")
     print_lcd(0, temp_pos, current_temp_string)
 
 
@@ -105,10 +105,10 @@ def set_relay(pin, relay_time):
     # Schalte nur, wenn die Temperatur ausgelesen werden kann
     if 0 < get_float_value("current_temp", -127.0) <= 120:
         if int(pin) == get_int_value("RELAY_OPEN_PIN", 14):
-            print_lcd(3, 0, "\357ffne Ventil     >>>")
+            print_lcd(3, 0, "öffne Ventil     >>>")
             open_relay(relay_time)
         elif int(pin) == get_int_value("RELAY_CLOSE_PIN", 15):
-            print_lcd(3, 0, "schlie\342e Ventil: <<<")
+            print_lcd(3, 0, "schließe Ventil: <<<")
             close_relay(relay_time)
     else:
         print_lcd(3, 0, "Fehler: Temp Fehler!")
