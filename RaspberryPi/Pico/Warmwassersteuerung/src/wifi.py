@@ -18,10 +18,10 @@ wifi_is_activated = True
 def connect_wifi():
     global wifi_is_activated
     if wifi_is_activated:
-        print(f"INFO: connect_wifi()")
-
         global show_message
         ssid = get_value("wifi_ssid")
+        print(f"INFO: connect_wifi(ssid = {ssid})")
+
         if ssid is not None:
             password = get_value("wifi_password", "password")
 
