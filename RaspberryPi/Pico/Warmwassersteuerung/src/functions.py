@@ -67,8 +67,6 @@ def adjust_update_time_based_on_temp_category():
 
 # update current temp on lcd
 def update_temp():
-    print(f"INFO: update_temp()")
-
     # read temp
     get_temp()
 
@@ -76,6 +74,8 @@ def update_temp():
     current_temp_string = str(
         "{:.1f} °C".format(get_float_value("current_temp", -127.0, 1))
     )
+    print(f"INFO: update_temp({current_temp_string})")
+
     temp_pos = get_int_value("LCD_COLS", 4) - len(current_temp_string)
     print_lcd(0, 0, "Aktuell:")
     print_lcd(0, temp_pos, current_temp_string)
@@ -90,7 +90,7 @@ def print_nominal_temp():
     )
 
     # format the nominal temperature string
-    nominal_temp = f"{nominal_min_temp:.1f} - {nominal_max_temp:.1f} \337C"
+    nominal_temp = f"{nominal_min_temp:.1f} - {nominal_max_temp:.1f} °C"
 
     # calculate the position for displaying the temperature
     temp_pos = get_int_value("LCD_COLS", 4) - len(nominal_temp)
@@ -205,7 +205,7 @@ def format_time(secs):
 
 # update timer
 def update_timer(secs, message="WARTE:"):
-    print(f"INFO: update_timer(): {secs}")
+    print(f"INFO: update_timer({secs})")
 
     time = format_time(secs)
     cursor = 20 - len(time)
@@ -216,7 +216,7 @@ def update_timer(secs, message="WARTE:"):
 
 # wait start
 def wait_start(secs):
-    print(f"INFO: wait start ({secs}s)")
+    print(f"INFO: wait start ({secs})")
 
     previous_millis = time.ticks_ms()
     interval = 1000
