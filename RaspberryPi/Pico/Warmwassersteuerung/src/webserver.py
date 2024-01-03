@@ -73,5 +73,7 @@ async def handle_client(reader, writer):
 
 # run webserver
 async def run_webserver():
-    print(f"INFO: run_webserver()")
-    server = await asyncio.start_server(handle_client, "0.0.0.0", 80)
+    host = "0.0.0.0"
+    port = 80
+    print(f"INFO: run_webserver({host}, {port})")
+    server = await asyncio.start_server(handle_client, host, port)
