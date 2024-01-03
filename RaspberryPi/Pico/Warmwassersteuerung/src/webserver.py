@@ -1,4 +1,5 @@
 # imports
+import re
 import uasyncio as asyncio  # https://docs.micropython.org/en/v1.14/library/uasyncio.html
 
 # from src.config import get_value
@@ -10,6 +11,11 @@ file_name_präfix = "../web/"
 # ==================================================
 # functions
 # ==================================================
+
+
+# convert html
+def convert_html(string=""):
+    return string.replace(" ", "&nbsp;")
 
 
 # load file
@@ -24,14 +30,22 @@ def load_file(file_name, mode="r"):
 # get lcd lines
 def get_lcd_lines():
     lcd_lines = get_lcd_list()
-    return "".join(["<div class='lcd-line'>" + line + "</div>" for line in lcd_lines])
+    return "".join(
+        ["<div class='lcd-line'>" + convert_html(line) + "</div>" for line in lcd_lines]
+    )
 
 
 # handle client
 async def handle_client(reader, writer):
-    print(f"handle_client()")
     request = await reader.read(1024)
-    # print("Received:", request)
+    match = re.search(b"^(GET|POST|PUT|DELETE|HEAD|OPTIONS|PATCH) /[^ ]*", request)
+
+    if match:
+        result = match.group(0)
+    else:
+        result = b""
+
+    print(f"handle_client() - {result}")
 
     request_str = str(request, "utf-8")
     response_content = ""
