@@ -204,7 +204,7 @@ def format_time(secs):
 
 
 # update timer
-def update_timer(secs, message="WARTE:"):
+def update_timer(secs, message="Warte:"):
     print(f"INFO: update_timer({secs})")
 
     time = format_time(secs)
@@ -232,7 +232,7 @@ def wait_start(secs):
                 update_temp()
 
             # update timer
-            update_timer(secs, "STARTE IN:")
+            update_timer(secs, "Starte in:")
 
             # decrease secs
             secs -= 1
