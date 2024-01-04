@@ -37,16 +37,18 @@ def get_lcd_lines():
 
 # handle client
 async def handle_client(reader, writer):
+    # get request
     request = await reader.read(1024)
-    match = re.search(b"^(GET|POST|PUT|DELETE|HEAD|OPTIONS|PATCH) /[^ ]*", request)
 
+    # prepare print message
+    match = re.search(b"^(GET|POST|PUT|DELETE|HEAD|OPTIONS|PATCH) /[^ ]*", request)
     if match:
         result = match.group(0)
     else:
         result = b""
-
     print(f"handle_client() - {result}")
 
+    # format request
     request_str = str(request, "utf-8")
     response_content = ""
     content_type = "text/html"
@@ -64,7 +66,7 @@ async def handle_client(reader, writer):
         response_content = load_file("styles.css")
         content_type = "text/css"
 
-    # Response
+    # send response
     response = f"HTTP/1.1 200 OK\nContent-Type: {content_type}\n\n" + response_content
     writer.write(response.encode("utf-8"))
     await writer.drain()
