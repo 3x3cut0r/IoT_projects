@@ -65,6 +65,22 @@ def adjust_update_time_based_on_temp_category():
         )  # temp measurement takes place normally
 
 
+# convert utf-8 characters to HD44780 characters
+# get dual number from the HD44780 table: https://de.wikipedia.org/wiki/HD44780#Schrift_und_Zeichensatz
+# convert dual number to octal number: https://www.arndt-bruenner.de/mathe/scripts/Zahlensysteme.htm
+def convert_utf8(string=""):
+    replacements = {
+        "ß": "\u00DF",  # Unicode for ß
+        "°": "\u00B0",  # Unicode for °
+        "ä": "\u00E4",  # Unicode for ä
+        "ö": "\u00F6",  # Unicode for ö
+        "ü": "\u00FC",  # Unicode for ü
+    }
+    for original, replacement in replacements.items():
+        string = string.replace(original, replacement)
+    return string
+
+
 # update current temp on lcd
 def update_temp():
     # read temp
@@ -74,7 +90,7 @@ def update_temp():
     current_temp_string = str(
         "{:.1f} °C".format(get_float_value("current_temp", -127.0, 1))
     )
-    print(f"INFO: update_temp({current_temp_string})")
+    print(f"INFO: update_temp({convert_utf8(current_temp_string)})")
 
     temp_pos = get_int_value("LCD_COLS", 4) - len(current_temp_string)
     print_lcd(0, 0, "Aktuell:")
