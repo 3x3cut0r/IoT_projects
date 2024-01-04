@@ -53,12 +53,12 @@ from src.functions import (
 async def main():
     print(f"INFO: main()")
 
-    # ==================================================
+    # ========================================
     # setup
-    # ==================================================
-    print(f"-----------------------")
+    # ========================================
+    print(f"--------------------------------")
     print(f"INFO: main setup()")
-    print(f"-----------------------")
+    print(f"--------------------------------")
 
     # init led
     init_led()
@@ -94,9 +94,9 @@ async def main():
     # ==================================================
     # main loop
     # ==================================================
-    print(f"-----------------------")
+    print(f"--------------------------------")
     print(f"INFO: main loop()")
-    print(f"-----------------------")
+    print(f"--------------------------------")
 
     while True:
         current_millis = time.ticks_ms()
@@ -150,6 +150,7 @@ async def main():
 
             # update previous millis
             previous_millis = current_millis
+            set_value("previous_millis", previous_millis)
 
         await asyncio.sleep(0.1)
 
