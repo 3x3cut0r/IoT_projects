@@ -33,6 +33,6 @@
     "RELAY_OPEN_PIN": 14,
     "RELAY_CLOSE_PIN": 15,
     "BUTTON_TEMP_UP_PIN": 2,
-    "BUTOTN_TEMP_DOWN_PIN": 3,
+    "BUTTON_TEMP_DOWN_PIN": 3,
     "LED": 1
 }
