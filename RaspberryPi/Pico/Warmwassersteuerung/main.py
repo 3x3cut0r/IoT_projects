@@ -17,7 +17,7 @@
 # ==================================================
 
 # micro python imports
-import uasyncio as asyncio  # https://docs.micropython.org/en/v1.14/library/uasyncio.html
+import uasyncio as asyncio  # https://docs.micropython.org/en/latest/library/asyncio.html
 import time  # https://docs.micropython.org/en/latest/library/time.html
 
 # custom imports
