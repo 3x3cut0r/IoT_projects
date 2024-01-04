@@ -69,14 +69,19 @@ def clear_lcd():
     lcd.clear()
 
 
-# convert utf-8 characters to HD44780 characters
-# (https://de.wikipedia.org/wiki/HD44780#Schrift_und_Zeichensatz)
-def convert_HD44780(string=""):
-    string = string.replace("ß", "\342")
-    string = string.replace("°", "\337")
-    string = string.replace("ä", "\341")
-    string = string.replace("ö", "\357")
-    string = string.replace("ü", "\365")
+# convert utf-8 characters to HD44780A00 characters
+# get dual number from the HD44780A00 table: https://de.wikipedia.org/wiki/HD44780#Schrift_und_Zeichensatz
+# convert dual number to octal number: https://www.arndt-bruenner.de/mathe/scripts/Zahlensysteme.htm
+def convert_HD44780A00(string=""):
+    replacements = {
+        "ß": "\342",  # HD44780A00 for ß
+        "°": "\337",  # HD44780A00 for °
+        "ä": "\341",  # HD44780A00 for ä
+        "ö": "\357",  # HD44780A00 for ö
+        "ü": "\365",  # HD44780A00 for ü
+    }
+    for original, replacement in replacements.items():
+        string = string.replace(original, replacement)
     return string
 
 
@@ -136,8 +141,8 @@ def print_lcd(line=0, cursor=0, message=""):
     # set lcd line
     set_lcd_line(line, cursor, message)
 
-    # convert utf-8 characters to HD44780 characters
-    message = convert_HD44780(message)
+    # convert utf-8 characters to HD44780A00 characters
+    message = convert_HD44780A00(message)
 
     # print lcd
     lcd.move_to(cursor, line)  # lcd.move_to(col, row)
