@@ -1,6 +1,6 @@
 # imports
 import re
-import uasyncio as asyncio  # https://docs.micropython.org/en/v1.14/library/uasyncio.html
+import uasyncio as asyncio  # https://docs.micropython.org/en/latest/library/asyncio.html
 
 # from src.config import get_value
 from src.lcd import get_lcd_list
@@ -76,4 +76,4 @@ async def run_webserver():
     host = "0.0.0.0"
     port = 80
     print(f"INFO: run_webserver({host}, {port})")
-    server = await asyncio.start_server(handle_client, host, port)
+    server = await asyncio.start_server(handle_client, host, port)  # type: ignore
