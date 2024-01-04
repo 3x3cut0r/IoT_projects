@@ -26,16 +26,19 @@ def load_config(file_path=file_path):
     try:
         with open(file_path, "r") as file:
             config = ujson.load(file)
+            return config
 
     except OSError:
         # try loading config_backup.json instead
         try:
             with open(file_path_backup, "r") as file:
                 config = ujson.load(file)
+                return config
 
         except OSError:
             # set empty object
             config = {}
+            return config
 
 
 # reset config
