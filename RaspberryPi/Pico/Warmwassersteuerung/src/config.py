@@ -56,8 +56,12 @@ def init_config():
 
 
 # save config
-def save_config(file_path=file_path):
+def save_config(file_path=file_path, new_config=None):
     global config
+
+    # overwrite config with new_config if given
+    if new_config is not None:
+        config = new_config
 
     # write config to file
     try:
