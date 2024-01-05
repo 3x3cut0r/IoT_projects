@@ -17,8 +17,9 @@
 # ==================================================
 
 # micro python imports
-import uasyncio as asyncio  # https://docs.micropython.org/en/latest/library/asyncio.html
+import gc  # https://docs.micropython.org/en/latest/library/gc.html
 import time  # https://docs.micropython.org/en/latest/library/time.html
+import uasyncio as asyncio  # https://docs.micropython.org/en/latest/library/asyncio.html
 
 # custom imports
 from src.config import (
@@ -124,6 +125,9 @@ async def main():
             # update time
             if update_time >= 0:
                 update_timer(update_time)
+
+                # print mem alloc
+                print("INFO: mem_alloc(): {} Bytes".format(gc.mem_alloc()))
 
                 # update temp on temp update interval
                 if update_time % get_int_value("temp_update_interval") == 0:
