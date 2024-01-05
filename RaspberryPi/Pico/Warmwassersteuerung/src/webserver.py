@@ -1,10 +1,11 @@
 # imports
-import re
+import gc  # https://docs.micropython.org/en/latest/library/gc.html
+import re  # https://docs.micropython.org/en/latest/library/re.html
 from io import StringIO
 import uasyncio as asyncio  # https://docs.micropython.org/en/latest/library/asyncio.html
 
 # load config
-from src.config import load_config
+from src.config import load_config, save_config
 from src.lcd import get_lcd_list
 
 # setup file_name
@@ -36,6 +37,52 @@ def get_lcd_lines():
     for line in lcd_lines:
         buffer.write("<div class='lcd-line'>" + convert_html(line) + "</div>")
     return buffer.getvalue()
+
+
+# get index.html
+def get_index_html():
+    content = load_file("index.html")
+    content = content.replace("<!--LCD_LINES-->", get_lcd_lines())
+    content = replace_placeholder(content)
+    return content
+
+
+# parse for data
+def parse_form_data(body):
+    print(body)
+    parsed_data = {}
+    for pair in body.split("&"):
+        if "=" in pair:
+            key, value = pair.split("=")
+            parsed_data[key] = value
+    return parsed_data
+
+
+# handle index.html
+def handle_post(request_str):
+    # find start of body
+    content_start = request_str.find("\r\n\r\n") + 4
+    body = request_str[content_start:]
+
+    # parse form data
+    form_data = parse_form_data(body)
+
+    # load current config
+    config = load_config()
+
+    # update config
+    for key in form_data:
+        if key in config:
+            config[key] = form_data[key]
+        else:
+            print("WARN: key " + key + " not found in config.json")
+
+    # save config
+    save_config(new_config=config)
+
+    response_content = f"INFO: config.json successfully updated"
+    print(response_content)
+    return response_content
 
 
 # replace placeholder
@@ -108,10 +155,12 @@ async def handle_client(reader, writer):
     requested_path = request_str.split(" ")[1]
 
     # index.html
-    if requested_path == "/" or requested_path == "index.html":
-        response_content = load_file("index.html")
-        response_content = response_content.replace("<!--LCD_LINES-->", get_lcd_lines())
-        response_content = replace_placeholder(response_content)
+    if requested_path == "/" or requested_path == "/index.html":
+        response_content = get_index_html()
+
+    # save_config
+    elif requested_path == "/save_config" and "POST" in request_str.split(" ")[0]:
+        response_content = handle_post(request_str)
 
     # styles.css
     elif requested_path == "/styles.css":
@@ -121,6 +170,7 @@ async def handle_client(reader, writer):
     # send response
     response = f"HTTP/1.1 200 OK\nContent-Type: {content_type}\n\n" + response_content
     writer.write(response.encode("utf-8"))
+    gc.collect()
     await writer.drain()
     await writer.wait_closed()
 
