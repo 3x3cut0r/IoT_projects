@@ -1,23 +1,24 @@
 # imports
-from machine import I2C, Pin
+from machine import (
+    I2C,
+    Pin,
+)  # https://docs.micropython.org/en/latest/library/machine.html
 from src.machine_i2c_lcd import I2cLcd  # I2C LCD
-
-# load config
-from src.config import get_value, get_int_value
+from src.config import config  # Config() instance
 
 # setup i2c
-sda_pin = Pin(get_int_value("LCD_PIN_SDA", 20))
-scl_pin = Pin(get_int_value("LCD_PIN_SCL", 21))
-i2c = I2C(0, sda=sda_pin, scl=scl_pin, freq=get_int_value("LCD_FREQ", 100000))
+sda_pin = Pin(config.get_int_value("LCD_PIN_SDA", 20))
+scl_pin = Pin(config.get_int_value("LCD_PIN_SCL", 21))
+i2c = I2C(0, sda=sda_pin, scl=scl_pin, freq=config.get_int_value("LCD_FREQ", 100000))
 
 # setup lcd
-lcd_addr = int(str(get_value("LCD_ADDR", "0x27")), 16)
-lcd_cols = get_int_value("LCD_COLS", 16)
-lcd_rows = get_int_value("LCD_ROWS", 2)
+lcd_addr = int(str(config.get_value("LCD_ADDR", "0x27")), 16)
+lcd_cols = config.get_int_value("LCD_COLS", 16)
+lcd_rows = config.get_int_value("LCD_ROWS", 2)
 lcd = I2cLcd(i2c, lcd_addr, lcd_rows, lcd_cols)
 lcd_list = [
-    "".join([" " for _ in range(get_int_value("LCD_COLS", 16))])
-    for _ in range(get_int_value("LCD_ROWS", 2))
+    "".join([" " for _ in range(config.get_int_value("LCD_COLS", 16))])
+    for _ in range(config.get_int_value("LCD_ROWS", 2))
 ]
 
 # create custom characters
@@ -94,7 +95,7 @@ def ljust(string="", width=0, fillchar=" "):
 
 # fill string with spaces up to 20 chars
 def fill(string="", cursor=0, padding=" "):
-    fill = get_int_value("LCD_COLS", 20) - int(cursor)
+    fill = config.get_int_value("LCD_COLS", 20) - int(cursor)
     return ljust(str(string), fill, str(padding))
 
 
@@ -126,7 +127,7 @@ def set_lcd_line(line=0, cursor=0, message=""):
     part2 = message
     part3 = current_line[(cursor + len(message)) :]
 
-    lcd_list[line] = str(part1 + part2 + part3)[: get_int_value("LCD_COLS", 20)]
+    lcd_list[line] = str(part1 + part2 + part3)[: config.get_int_value("LCD_COLS", 20)]
 
 
 # print lcd

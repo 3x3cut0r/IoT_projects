@@ -1,11 +1,6 @@
 # imports
-from machine import Pin
-
-# load config
-from src.config import get_int_value
-
-# setup temperature sensor
-led = Pin("LED", Pin.OUT)
+from machine import Pin  # https://docs.micropython.org/en/latest/library/machine.html
+from src.config import config  # Config() instance
 
 # ==================================================
 # functions
@@ -14,12 +9,11 @@ led = Pin("LED", Pin.OUT)
 
 # init led
 def init_led():
-    led.value(get_int_value("LED"))
+    led = Pin("LED", Pin.OUT)
+    led.value(config.get_int_value("LED", True))
 
 
 # set led
 def set_led(value):
-    if int(value) == 0:
-        led.value(0)
-    else:
-        led.value(1)
+    led = Pin("LED", Pin.OUT)
+    led.value(bool(value))

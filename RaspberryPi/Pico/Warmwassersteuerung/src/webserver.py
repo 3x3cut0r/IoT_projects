@@ -3,9 +3,7 @@ import gc  # https://docs.micropython.org/en/latest/library/gc.html
 import re  # https://docs.micropython.org/en/latest/library/re.html
 from io import StringIO
 import uasyncio as asyncio  # https://docs.micropython.org/en/latest/library/asyncio.html
-
-# load config
-from src.config import load_config, save_config
+from src.config import config  # Config() instance
 from src.lcd import get_lcd_list
 
 # setup file_name
@@ -67,18 +65,15 @@ def handle_post(request_str):
     # parse form data
     form_data = parse_form_data(body)
 
-    # load current config
-    config = load_config()
-
     # update config
     for key in form_data:
         if key in config:
-            config[key] = form_data[key]
+            config.set_value(key, form_data[key])
         else:
             print("WARN: key " + key + " not found in config.json")
 
     # save config
-    save_config(new_config=config)
+    config.save_config()
 
     response_content = f"INFO: config.json successfully updated"
     print(response_content)
@@ -87,8 +82,6 @@ def handle_post(request_str):
 
 # replace placeholder
 def replace_placeholder(content=""):
-    config = load_config()
-
     placeholders = {
         "wifi_ssid": str,
         "wifi_country": str,
@@ -129,7 +122,7 @@ def replace_placeholder(content=""):
 
     for key, value_type in placeholders.items():
         placeholder = f"<!--{key}-->"
-        value = config.get(key, "")
+        value = config.get_value(key, "")
         content = content.replace(placeholder, str(value))
 
     return content

@@ -1,11 +1,11 @@
 # imports
 import network
 import time
-from src.config import get_value, get_int_value
+from src.config import config  # Config() instance
 from src.lcd import print_lcd
 
 wifi = network.WLAN(network.STA_IF)
-network.country(get_value("wifi_country", "DE"))
+network.country(config.get_value("wifi_country", "DE"))
 show_message = 1
 wifi_is_activated = True
 
@@ -19,11 +19,11 @@ def connect_wifi():
     global wifi_is_activated
     if wifi_is_activated:
         global show_message
-        ssid = get_value("wifi_ssid")
+        ssid = config.get_value("wifi_ssid")
         print(f"INFO: connect_wifi(ssid = {ssid})")
 
         if ssid is not None:
-            password = get_value("wifi_password", "password")
+            password = config.get_value("wifi_password", "password")
 
             # activate and connect wifi
             try:
@@ -35,7 +35,7 @@ def connect_wifi():
 
             # wait until conneciton is established
             attempts = 0
-            max_attempts = get_int_value("wifi_max_attempts", 10)
+            max_attempts = config.get_int_value("wifi_max_attempts", 10)
             while (
                 wifi_is_activated and not wifi.isconnected() and attempts < max_attempts
             ):
