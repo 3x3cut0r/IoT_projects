@@ -6,288 +6,84 @@
         <link rel="stylesheet" type="text/css" href="styles.css" />
         <link href="data:image/x-icon;base64,AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAbAAACnAUBJ98BAASnAAAAIwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMAAABxAAAC5DIEvf9FBP3/NwTP/wIACukAAAByAAAACgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABACAAm/IQKH/w4BSv8LAUP/HwKF/xMCWf8MAUX/IwKN/wMAF9EAAAAhAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGALAOt/0wF//8eAn3/HAJ6/zoE2P8kA5T/HgJ//0sE//81BMj/AQAEpwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA0j8E6v81BMv/BQEn/0ME9v9CBPX/RwT//xMCWv82BM3/RwT//wMBFN4AAAAAAAAAAAAAAAAAAAAAAAAARw4CSf8OAkz/AwEX/wUBJP8rA6b/QgT0/zMDxP8FAST/BQEp/x4CgP8LAUT9AAAAQwAAAAAAAAAAAAAAAAAAAaA9BOL/CgE//ykDo/9CBPX/JgOa/wUBKf8bAnP/PgTn/ywDrf8IATf/OwTc/wAAAZ0AAAAAAAAAAAAAAAAAAAGCMQO8/x0Cev8+BOT/QgTz/0ME+f8JATr/PATe/0IE9v9ABO7/IgOL/zMEw/8AAAGHAAAAAAAAAAAAAAAAAAAAFQMAFdMFASn/IwKO/0YE//88BOD/BAEd/zYEzf9HBP//KwOn/woBO/8EAR/aAAAAGwAAAAAAAAAAAAAAAAAAAAAAAABrJgOb/xsCdv8QAk//GgJw/xsCdf8hA4b/FgJl/yECh/8lA5j/AAAAZwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGwcANN83AM//DgBH/y8Ct/9LBP//OAPU/xQAWv81AMr/BgAt3gAAABYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAQC2AFEy/wRmTP8EBh7/DwBP/wQCHf8DWkX/AF81/wAEAMsAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB/AHA2/wDIWP8AulD/AFId/wAGAP8APAv/AK9M/wDJWf8AjEL/AQMCrQAAAAAAAAAAAAAAAAAAAAAAAAAKAR8K6QDCXP8Aq1H/AJBF/wC6V/8ANRf/ALBQ/wCVRP8Ao0z/AMle/wBAHf8AAAAkAAAAAAAAAAAAAAAAAAAAGAEkDv8AoEv/AKlQ/wCvUf8AdDb/AAIBvwBcKf8ArFD/AKtR/wClT/8AQR7/AAAAPAAAAAAAAAAAAAAAAAAAAAIAAABSAQICngISBtMBBwS6AAAAbwAAAAQAAABXAQQDsQITB9MBBAOrAAAAZAAAAAkAAAAA/j8AAPwfAADwBwAA4AMAAOADAADgAwAAwAEAAMABAADgAwAA8AcAAPAHAADwBwAA8AMAAOADAADgAwAA8ccAAA==" rel="icon" type="image/x-icon">
     </head>
-    <br>
+        <br>
         <div class="lcd-display">
-            <!--LCD_LINES-->
+            <div class='lcd-line'><!--LCD_LINE_1--></div>
+            <div class='lcd-line'><!--LCD_LINE_2--></div>
+            <div class='lcd-line'><!--LCD_LINE_3--></div>
+            <div class='lcd-line'><!--LCD_LINE_4--></div>
         </div>
         <form action="/save_config" method="post">
             <table>
                 <tr><td><h3>Konfiguration</h3></td></tr>
-                <tr>
-                    <td>
-                        <label for="nominal_min_temp">Solltemperatur von (in °C):</label>
-                    </td>
-                    <td>
-                        <input
-                            type="number"
-                            id="nominal_min_temp"
-                            name="nominal_min_temp"
-                            placeholder="42.0"
-                            value="<!--nominal_min_temp-->" />
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label for="nominal_max_temp">Solltemperatur bis (in °C):</label>
-                    </td>
-                    <td>
-                        <input
-                            type="number"
-                            id="nominal_max_temp"
-                            name="nominal_max_temp"
-                            placeholder="55.0"
-                            value="<!--nominal_max_temp-->" />
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label for="delay_before_start_1">1. Verzögerung bis Start (in Sekunden):</label>
-                    </td>
-                    <td>
-                        <input type="number" id="delay_before_start_1" name="delay_before_start_1" placeholder="660" value="<!--delay_before_start_1-->" />
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label for="delay_before_start_2">2. Verzögerung bis Start (in Sekunden):</label>
-                    </td>
-                    <td>
-                        <input type="number" id="delay_before_start_2" name="delay_before_start_2" placeholder="420" value="<!--delay_before_start_2-->" />
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label for="init_relay_time">Initiale Relais Schaltzeit (in Millisekunden):</label>
-                    </td>
-                    <td>
-                        <input type="number" id="init_relay_time" name="init_relay_time" placeholder="7000" value="<!--init_relay_time-->" />
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label for="update_time">Relais werden alle x Sekunden geschalten:</label>
-                    </td>
-                    <td>
-                        <input type="number" id="update_time" name="update_time" placeholder="120" value="<!--update_time-->" />
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label for="relay_time">Relais Schaltzeit (in Millisekunden):</label>
-                    </td>
-                    <td>
-                        <input type="number" id="relay_time" name="relay_time" placeholder="1800" value="<!--relay_time-->" />
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label for="temp_update_interval">Temperatur wird alle x Sekunden gemessen:</label>
-                    </td>
-                    <td>
-                        <input type="number" id="temp_update_interval" name="temp_update_interval" placeholder="2" value="<!--temp_update_interval-->" />
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label for="lcd_i2c_backlight">LCD Hintergrundbeleuchtung (0=aus, 1=an):</label>
-                    </td>
-                    <td>
-                        <input type="number" id="lcd_i2c_backlight" name="lcd_i2c_backlight" placeholder="1" value="<!--lcd_i2c_backlight-->" />
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label for="temp_change_high_threshold">Anpassungswert (Faktor) der Relais Schaltzeit bei hoher Temperaturveränderung:</label>
-                    </td>
-                    <td>
-                        <input type="number" id="temp_change_high_threshold" name="temp_change_high_threshold" placeholder="1.0" value="<!--temp_change_high_threshold-->" />
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label for="temp_change_medium_threshold">Anpassungswert (Faktor) der Relais Schaltzeit bei mittlerer Temperaturveränderung:</label>
-                    </td>
-                    <td>
-                        <input type="number" id="temp_change_medium_threshold" name="temp_change_medium_threshold" placeholder="0.3" value="<!--temp_change_medium_threshold-->" />
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label for="wifi_max_attempts">WLAN-Modul versucht x Sekunden sich zu verbinden vor einem erneuten Versuch:</label>
-                    </td>
-                    <td>
-                        <input type="number" id="wifi_max_attempts" name="wifi_max_attempts" placeholder="10" value="<!--wifi_max_attempts-->" />
-                    </td>
-                </tr>
-                <tr>
-                    <td><br /><input type="submit" value="Speichern" /></td>
-                </tr>
-                <tr>
-                    <td><h3>Info</h3></td>
-                </tr>
-                <tr>
-                    <td>
-                        <label for="wifi_ssid">WLAN SSID:</label>
-                    </td>
-                    <td>
-                        <div id="wifi_ssid"><!--wifi_ssid--></div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div for="previous_millis">Previous Millis:</div>
-                    </td>
-                    <td>
-                        <div id="previous_millis"><!--previous_millis--></div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div for="interval">Interval:</div>
-                    </td>
-                    <td>
-                        <div id="interval"><!--interval--></div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div for="current_temp">Aktuelle Temperatur:</div>
-                    </td>
-                    <td>
-                        <div id="current_temp"><!--current_temp--></div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div for="temp_last_measurement">Temperatur der letzten (Kategorie-)Messung:</div>
-                    </td>
-                    <td>
-                        <div id="temp_last_measurement"><!--temp_last_measurement--></div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div for="temp_last_measurement_time">Zeit der letzten (Kategorie-)Messung:</div>
-                    </td>
-                    <td>
-                        <div id="temp_last_measurement_time"><!--temp_last_measurement_time--></div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div for="temp_sampling_interval">Intervall für (Kategorie-)Messung (in Millisekunden):</div>
-                    </td>
-                    <td>
-                        <div id="temp_sampling_interval"><!--temp_sampling_interval--></div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div for="temp_change_category">Kategorie der Temperaturveränderung:</div>
-                    </td>
-                    <td>
-                        <div id="temp_change_category"><!--temp_change_category--></div>
-                    </td>
-                </tr>
+                <tr><td><label for="nominal_min_temp">Solltemperatur von (in °C):</label></td>
+                    <td><input type="number" id="nominal_min_temp" name="nominal_min_temp" placeholder="42.0" value="<!--nominal_min_temp-->" /></td></tr>
+                <tr><td><label for="nominal_max_temp">Solltemperatur bis (in °C):</label></td>
+                    <td><input type="number" id="nominal_max_temp" name="nominal_max_temp" placeholder="55.0" value="<!--nominal_max_temp-->" /></td></tr>
+                <tr><td><label for="delay_before_start_1">1. Verzögerung bis Start (in Sekunden):</label></td>
+                    <td><input type="number" id="delay_before_start_1" name="delay_before_start_1" placeholder="660" value="<!--delay_before_start_1-->" /></td></tr>
+                <tr><td><label for="delay_before_start_2">2. Verzögerung bis Start (in Sekunden):</label></td>
+                    <td><input type="number" id="delay_before_start_2" name="delay_before_start_2" placeholder="420" value="<!--delay_before_start_2-->" /></td></tr>
+                <tr><td><label for="init_relay_time">Initiale Relais Schaltzeit (in Millisekunden):</label></td>
+                    <td><input type="number" id="init_relay_time" name="init_relay_time" placeholder="7000" value="<!--init_relay_time-->" /></td></tr>
+                <tr><td><label for="update_time">Relais werden alle x Sekunden geschalten:</label></td>
+                    <td><input type="number" id="update_time" name="update_time" placeholder="120" value="<!--update_time-->" /></td></tr>
+                <tr><td><label for="relay_time">Relais Schaltzeit (in Millisekunden):</label></td>
+                    <td><input type="number" id="relay_time" name="relay_time" placeholder="1800" value="<!--relay_time-->" /></td></tr>
+                <tr><td><label for="temp_update_interval">Temperatur wird alle x Sekunden gemessen:</label></td>
+                    <td><input type="number" id="temp_update_interval" name="temp_update_interval" placeholder="2" value="<!--temp_update_interval-->" /></td></tr>
+                <tr><td><label for="lcd_i2c_backlight">LCD Hintergrundbeleuchtung (0=aus, 1=an):</label></td>
+                    <td><input type="number" id="lcd_i2c_backlight" name="lcd_i2c_backlight" placeholder="1" value="<!--lcd_i2c_backlight-->" /></td></tr>
+                <tr><td><label for="temp_change_high_threshold">Anpassungswert (Faktor) der Relais Schaltzeit bei hoher Temperaturveränderung:</label></td>
+                    <td><input type="number" id="temp_change_high_threshold" name="temp_change_high_threshold" placeholder="1.0" value="<!--temp_change_high_threshold-->" /></td></tr>
+                <tr><td><label for="temp_change_medium_threshold">Anpassungswert (Faktor) der Relais Schaltzeit bei mittlerer Temperaturveränderung:</label></td>
+                    <td><input type="number" id="temp_change_medium_threshold" name="temp_change_medium_threshold" placeholder="0.3" value="<!--temp_change_medium_threshold-->" /></td></tr>
+                <tr><td><label for="wifi_max_attempts">WLAN-Modul versucht x Sekunden sich zu verbinden vor einem erneuten Versuch:</label></td>
+                    <td><input type="number" id="wifi_max_attempts" name="wifi_max_attempts" placeholder="10" value="<!--wifi_max_attempts-->" /></td></tr>
+                <tr><td><br /><input type="submit" value="Speichern" /></td></tr>
+                <tr><td><h3>Info</h3></td></tr>
+                <tr><td><label for="wifi_ssid">WLAN SSID:</label></td>
+                    <td><div id="wifi_ssid"><!--wifi_ssid--></div></td></tr>
+                <tr><td><div for="previous_millis">Previous Millis:</div></td>
+                    <td><div id="previous_millis"><!--previous_millis--></div></td></tr>
+                <tr><td><div for="interval">Interval:</div></td>
+                    <td><div id="interval"><!--interval--></div></td></tr>
+                <tr><td><div for="current_temp">Aktuelle Temperatur:</div></td>
+                    <td><div id="current_temp"><!--current_temp--></div></td></tr>
+                <tr><td><div for="temp_last_measurement">Temperatur der letzten (Kategorie-)Messung:</div></td>
+                    <td><div id="temp_last_measurement"><!--temp_last_measurement--></div></td></tr>
+                <tr><td><div for="temp_last_measurement_time">Zeit der letzten (Kategorie-)Messung:</div></td>
+                    <td><div id="temp_last_measurement_time"><!--temp_last_measurement_time--></div></td></tr>
+                <tr><td><div for="temp_sampling_interval">Intervall für (Kategorie-)Messung (in Millisekunden):</div></td>
+                    <td><div id="temp_sampling_interval"><!--temp_sampling_interval--></div></td></tr>
+                <tr><td><div for="temp_change_category">Kategorie der Temperaturveränderung:</div></td>
+                    <td><div id="temp_change_category"><!--temp_change_category--></div></td></tr>
                 <tr><td><h3>PIN Belegung</h3></td></tr>
-                <tr>
-                    <td>
-                        <div for="TEMP_SENSOR_PIN">Temperatur Sensor (PIN):</div>
-                    </td>
-                    <td>
-                        <div id="TEMP_SENSOR_PIN"><!--TEMP_SENSOR_PIN--></div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div for="TEMP_SENSOR_RESOLUTION_BIT">Temperatur Sensor Auflösung (BIT):</div>
-                    </td>
-                    <td>
-                        <div id="TEMP_SENSOR_RESOLUTION_BIT"><!--TEMP_SENSOR_RESOLUTION_BIT--></div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div for="LCD_PIN_SDA">LCD SDA (PIN):</div>
-                    </td>
-                    <td>
-                        <div id="LCD_PIN_SDA"><!--LCD_PIN_SDA--></div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div for="LCD_PIN_SCL">LCD SCL (PIN):</div>
-                    </td>
-                    <td>
-                        <div id="LCD_PIN_SCL"><!--LCD_PIN_SCL--></div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div for="LCD_ADDR">LCD Adresse:</div>
-                    </td>
-                    <td>
-                        <div id="LCD_ADDR"><!--LCD_ADDR--></div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div for="LCD_FREQ">LCD Frequenz:</div>
-                    </td>
-                    <td>
-                        <div id="LCD_FREQ"><!--LCD_FREQ--></div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div for="LCD_COLS">LCD Spalten:</div>
-                    </td>
-                    <td>
-                        <div id="LCD_COLS"><!--LCD_COLS--></div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div for="LCD_ROWS">LCD Reihen:</div>
-                    </td>
-                    <td>
-                        <div id="LCD_ROWS"><!--LCD_ROWS--></div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div for="RELAY_OPEN_PIN">Relais Öffnen (PIN):</div>
-                    </td>
-                    <td>
-                        <div id="RELAY_OPEN_PIN"><!--RELAY_OPEN_PIN--></div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div for="RELAY_CLOSE_PIN">Relais Schließen (PIN):</div>
-                    </td>
-                    <td>
-                        <div id="RELAY_CLOSE_PIN"><!--RELAY_CLOSE_PIN--></div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div for="BUTTON_TEMP_UP_PIN">Knopf Temperatur Hoch (PIN):</div>
-                    </td>
-                    <td>
-                        <div id="BUTTON_TEMP_UP_PIN"><!--BUTTON_TEMP_UP_PIN--></div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div for="BUTTON_TEMP_DOWN_PIN">Knopf Temperatur Runter (PIN):</div>
-                    </td>
-                    <td>
-                        <div id="BUTTON_TEMP_DOWN_PIN"><!--BUTTON_TEMP_DOWN_PIN--></div>
-                    </td>
-                </tr> 
-            </table>
-            <br />
+                <tr><td><div for="TEMP_SENSOR_PIN">Temperatur Sensor (PIN):</div></td>
+                    <td><div id="TEMP_SENSOR_PIN"><!--TEMP_SENSOR_PIN--></div></td></tr>
+                <tr><td><div for="TEMP_SENSOR_RESOLUTION_BIT">Temperatur Sensor Auflösung (BIT):</div></td>
+                    <td><div id="TEMP_SENSOR_RESOLUTION_BIT"><!--TEMP_SENSOR_RESOLUTION_BIT--></div></td></tr>
+                <tr><td><div for="LCD_PIN_SDA">LCD SDA (PIN):</div></td>
+                    <td><div id="LCD_PIN_SDA"><!--LCD_PIN_SDA--></div></td></tr>
+                <tr><td><div for="LCD_PIN_SCL">LCD SCL (PIN):</div></td>
+                    <td><div id="LCD_PIN_SCL"><!--LCD_PIN_SCL--></div></td></tr>
+                <tr><td><div for="LCD_ADDR">LCD Adresse:</div></td>
+                    <td><div id="LCD_ADDR"><!--LCD_ADDR--></div></td></tr>
+                <tr><td><div for="LCD_FREQ">LCD Frequenz:</div></td>
+                    <td><div id="LCD_FREQ"><!--LCD_FREQ--></div></td></tr>
+                <tr><td><div for="LCD_COLS">LCD Spalten:</div></td>
+                    <td><div id="LCD_COLS"><!--LCD_COLS--></div></td></tr>
+                <tr><td><div for="LCD_ROWS">LCD Reihen:</div></td>
+                    <td><div id="LCD_ROWS"><!--LCD_ROWS--></div></td></tr>
+                <tr><td><div for="RELAY_OPEN_PIN">Relais Öffnen (PIN):</div></td>
+                    <td><div id="RELAY_OPEN_PIN"><!--RELAY_OPEN_PIN--></div></td></tr>
+                <tr><td><div for="RELAY_CLOSE_PIN">Relais Schließen (PIN):</div></td>
+                    <td><div id="RELAY_CLOSE_PIN"><!--RELAY_CLOSE_PIN--></div></td></tr>
+                <tr><td><div for="BUTTON_TEMP_UP_PIN">Knopf Temperatur Hoch (PIN):</div></td>
+                    <td><div id="BUTTON_TEMP_UP_PIN"><!--BUTTON_TEMP_UP_PIN--></div></td></tr>
+                <tr><td><div for="BUTTON_TEMP_DOWN_PIN">Knopf Temperatur Runter (PIN):</div></td>
+                    <td><div id="BUTTON_TEMP_DOWN_PIN"><!--BUTTON_TEMP_DOWN_PIN--></div></td></tr>
+            </table><br />
         </form>
     </body>
 </html>

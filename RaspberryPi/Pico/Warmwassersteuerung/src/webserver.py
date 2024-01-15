@@ -1,13 +1,8 @@
 # imports
-import gc  # https://docs.micropython.org/en/latest/library/gc.html
 import re  # https://docs.micropython.org/en/latest/library/re.html
-from io import StringIO
 import uasyncio as asyncio  # https://docs.micropython.org/en/latest/library/asyncio.html
 from src.config import config  # Config() instance
-from src.lcd import get_lcd_list
-
-# setup file_name
-file_name_präfix = "../web/"
+from src.lcd import get_lcd_line
 
 # ==================================================
 # functions
@@ -19,30 +14,37 @@ def convert_html(string=""):
     return string.replace(" ", "&nbsp;")
 
 
-# load file
-def load_file(file_name, mode="r"):
+# get lcd line
+def get_lcd_html_line(line):
+    lcd_line = get_lcd_line(line)
+    return convert_html(lcd_line)
+
+
+# stream file
+async def stream_file(writer, file_name, chunk_size=1024):
+    file_name_präfix = "../web/"
     try:
-        with open(file_name_präfix + file_name, mode) as file:
-            return file.read()
-    except OSError:
-        return "<h1>Fehler beim Laden der Datei: " + file_name + "</h1>"
-
-
-# get lcd lines
-def get_lcd_lines():
-    lcd_lines = get_lcd_list()
-    buffer = StringIO()
-    for line in lcd_lines:
-        buffer.write("<div class='lcd-line'>" + convert_html(line) + "</div>")
-    return buffer.getvalue()
+        with open(file_name_präfix + file_name, "rb", encoding="utf-8") as file:
+            while True:
+                chunk = file.read(chunk_size)
+                if not chunk:
+                    break
+                await writer.awrite(chunk)
+    except OSError as e:
+        print("ERROR: while reading file: ", e)
 
 
 # get index.html
-def get_index_html():
-    content = load_file("index.html")
-    content = content.replace("<!--LCD_LINES-->", get_lcd_lines())
-    content = replace_placeholder(content)
-    return content
+async def get_index_html(writer):
+    file_name_präfix = "../web/"
+    file_path = file_name_präfix + "index.html"
+    line_number = 0
+
+    with open(file_path, "r") as file:
+        for line in file:
+            line_number += 1
+            line = replace_placeholder(line, line_number)
+            await writer.awrite(line.encode("utf-8"))
 
 
 # parse for data
@@ -81,48 +83,66 @@ def handle_post(request_str):
 
 
 # replace placeholder
-def replace_placeholder(content=""):
-    placeholders = {
-        "wifi_ssid": str,
-        "wifi_country": str,
-        "wifi_max_attempts": int,
-        "delay_before_start_1": int,
-        "delay_before_start_2": int,
-        "init_relay_time": int,
-        "update_time": int,
-        "relay_time": int,
-        "nominal_min_temp": float,
-        "nominal_max_temp": float,
-        "temp_update_interval": int,
-        "lcd_i2c_backlight": int,
-        "sensor_resolution_bit": int,
-        "previous_millis": int,
-        "interval": int,
-        "current_temp": float,
-        "temp_last_measurement": float,
-        "temp_last_measurement_time": int,
-        "temp_sampling_interval": int,
-        "temp_change_category": str,
-        "temp_change_high_threshold": float,
-        "temp_change_medium_threshold": float,
-        "TEMP_SENSOR_PIN": int,
-        "TEMP_SENSOR_RESOLUTION_BIT": int,
-        "LCD_PIN_SDA": int,
-        "LCD_PIN_SCL": int,
-        "LCD_ADDR": str,
-        "LCD_FREQ": int,
-        "LCD_COLS": int,
-        "LCD_ROWS": int,
-        "RELAY_OPEN_PIN": int,
-        "RELAY_CLOSE_PIN": int,
-        "BUTTON_TEMP_UP_PIN": int,
-        "BUTTON_TEMP_DOWN_PIN": int,
-        "LED": int,
+def replace_placeholder(content="", line_number=0):
+    # assign line numbers to placeholders and their keys
+    line_to_placeholder = {
+        # LCD LINE NUMBERS
+        11: ("LCD_LINE_1", get_lcd_html_line(0)),
+        12: ("LCD_LINE_2", get_lcd_html_line(1)),
+        13: ("LCD_LINE_3", get_lcd_html_line(2)),
+        14: ("LCD_LINE_4", get_lcd_html_line(3)),
+        # CONFIGURATION
+        20: ("nominal_min_temp", config.get_value("nominal_min_temp", "")),
+        22: ("nominal_max_temp", config.get_value("nominal_max_temp", "")),
+        24: ("delay_before_start_1", config.get_value("delay_before_start_1", "")),
+        26: ("delay_before_start_2", config.get_value("delay_before_start_2", "")),
+        28: ("init_relay_time", config.get_value("init_relay_time", "")),
+        30: ("update_time", config.get_value("update_time", "")),
+        32: ("relay_time", config.get_value("relay_time", "")),
+        34: ("temp_update_interval", config.get_value("temp_update_interval", "")),
+        36: ("lcd_i2c_backlight", config.get_value("lcd_i2c_backlight", "")),
+        38: (
+            "temp_change_high_threshold",
+            config.get_value("temp_change_high_threshold", ""),
+        ),
+        40: (
+            "temp_change_medium_threshold",
+            config.get_value("temp_change_medium_threshold", ""),
+        ),
+        42: ("wifi_max_attempts", config.get_value("wifi_max_attempts", "")),
+        # INFO
+        46: ("wifi_ssid", config.get_value("wifi_ssid", "")),
+        48: ("previous_millis", config.get_value("previous_millis", "")),
+        50: ("interval", config.get_value("interval", "")),
+        52: ("current_temp", config.get_value("current_temp", "")),
+        54: ("temp_last_measurement", config.get_value("temp_last_measurement", "")),
+        56: (
+            "temp_last_measurement_time",
+            config.get_value("temp_last_measurement_time", ""),
+        ),
+        58: ("temp_sampling_interval", config.get_value("temp_sampling_interval", "")),
+        60: ("temp_change_category", config.get_value("temp_change_category", "")),
+        63: ("TEMP_SENSOR_PIN", config.get_value("TEMP_SENSOR_PIN", "")),
+        65: (
+            "TEMP_SENSOR_RESOLUTION_BIT",
+            config.get_value("TEMP_SENSOR_RESOLUTION_BIT", ""),
+        ),
+        67: ("LCD_PIN_SDA", config.get_value("LCD_PIN_SDA", "")),
+        69: ("LCD_PIN_SCL", config.get_value("LCD_PIN_SCL", "")),
+        71: ("LCD_ADDR", config.get_value("LCD_ADDR", "")),
+        73: ("LCD_FREQ", config.get_value("LCD_FREQ", "")),
+        75: ("LCD_COLS", config.get_value("LCD_COLS", "")),
+        77: ("LCD_ROWS", config.get_value("LCD_ROWS", "")),
+        79: ("RELAY_OPEN_PIN", config.get_value("RELAY_OPEN_PIN", "")),
+        81: ("RELAY_CLOSE_PIN", config.get_value("RELAY_CLOSE_PIN", "")),
+        83: ("BUTTON_TEMP_UP_PIN", config.get_value("BUTTON_TEMP_UP_PIN", "")),
+        85: ("BUTTON_TEMP_DOWN_PIN", config.get_value("BUTTON_TEMP_DOWN_PIN", "")),
     }
 
-    for key, value_type in placeholders.items():
+    # replace keys
+    if line_number in line_to_placeholder:
+        key, value = line_to_placeholder[line_number]
         placeholder = f"<!--{key}-->"
-        value = config.get_value(key, "")
         content = content.replace(placeholder, str(value))
 
     return content
@@ -143,27 +163,39 @@ async def handle_client(reader, writer):
 
     # format request
     request_str = str(request, "utf-8")
-    response_content = ""
     content_type = "text/html"
     requested_path = request_str.split(" ")[1]
 
     # index.html
     if requested_path == "/" or requested_path == "/index.html":
-        response_content = get_index_html()
+        writer.write(
+            f"HTTP/1.1 200 OK\nContent-Type: {content_type}\n\n".encode("utf-8")
+        )
+        await get_index_html(writer)
 
     # save_config
     elif requested_path == "/save_config" and "POST" in request_str.split(" ")[0]:
+        writer.write(
+            f"HTTP/1.1 200 OK\nContent-Type: {content_type}\n\n".encode("utf-8")
+        )
         response_content = handle_post(request_str)
+        await writer.awrite(response_content.encode("utf-8"))
 
     # styles.css
     elif requested_path == "/styles.css":
-        response_content = load_file("styles.css")
+        content_type = "text/css"
+        writer.write(
+            f"HTTP/1.1 200 OK\nContent-Type: {content_type}\n\n".encode("utf-8")
+        )
+        await stream_file(writer, "styles.css", chunk_size=1024)
         content_type = "text/css"
 
-    # send response
-    response = f"HTTP/1.1 200 OK\nContent-Type: {content_type}\n\n" + response_content
-    writer.write(response.encode("utf-8"))
-    gc.collect()
+    # 404 Not Found
+    else:
+        response = "HTTP/1.1 404 Not Found\n\n"
+        await writer.awrite(response.encode("utf-8"))
+
+    # clean up and close
     await writer.drain()
     await writer.wait_closed()
 

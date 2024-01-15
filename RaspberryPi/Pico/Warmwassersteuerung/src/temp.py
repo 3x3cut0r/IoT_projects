@@ -1,4 +1,5 @@
 # imports
+import time  # https://docs.micropython.org/en/latest/library/time.html
 from machine import Pin  # https://docs.micropython.org/en/latest/library/machine.html
 from onewire import OneWire  # OneWire
 from ds18x20 import DS18X20  # DS180B20
@@ -37,14 +38,18 @@ class TemperatureSensor:
     def get_temp(self):
         try:
             roms = self.temp_sensor.scan()
+            if not roms:
+                raise ValueError("no sensors found")
+            time.sleep_ms(750)
+
             self.temp_sensor.convert_temp()
             # get temps
             for rom in roms:
                 temp = self.temp_sensor.read_temp(rom)
                 config.set_value("current_temp", round(temp, 1))
                 return round(temp, 1)  # return only first temp found
-        except OSError as e:
-            print("Error reading temp: ", e)
+        except (OSError, ValueError) as e:
+            print("ERROR: reading temp: ", e)
             temp = -127.0
             config.set_value("current_temp", temp)
             return temp

@@ -16,7 +16,7 @@ lcd_addr = int(str(config.get_value("LCD_ADDR", "0x27")), 16)
 lcd_cols = config.get_int_value("LCD_COLS", 16)
 lcd_rows = config.get_int_value("LCD_ROWS", 2)
 lcd = I2cLcd(i2c, lcd_addr, lcd_rows, lcd_cols)
-lcd_list = [
+lcd_lines = [
     "".join([" " for _ in range(config.get_int_value("LCD_COLS", 16))])
     for _ in range(config.get_int_value("LCD_ROWS", 2))
 ]
@@ -99,20 +99,20 @@ def fill(string="", cursor=0, padding=" "):
     return ljust(str(string), fill, str(padding))
 
 
-# get lcd list
-def get_lcd_list():
-    return lcd_list
-
-
-# set lcd list
-def set_lcd_list(line=0, message=""):
-    global lcd_list
-    lcd_list[int(line)] = str(message)
-
-
 # get lcd line
 def get_lcd_line(line=0):
-    return lcd_list[int(line)]
+    return lcd_lines[int(line)]
+
+
+# get lcd lines
+def get_lcd_lines():
+    return lcd_lines
+
+
+# set lcd lines
+def set_lcd_lines(line=0, message=""):
+    global lcd_lines
+    lcd_lines[int(line)] = str(message)
 
 
 # set lcd line
@@ -120,14 +120,14 @@ def set_lcd_line(line=0, cursor=0, message=""):
     line = int(line)
     cursor = int(cursor)
     message = str(message)
-    current_line = lcd_list[line]
+    current_line = lcd_lines[line]
 
     # set parts
     part1 = current_line[:cursor]
     part2 = message
     part3 = current_line[(cursor + len(message)) :]
 
-    lcd_list[line] = str(part1 + part2 + part3)[: config.get_int_value("LCD_COLS", 20)]
+    lcd_lines[line] = str(part1 + part2 + part3)[: config.get_int_value("LCD_COLS", 20)]
 
 
 # print lcd
@@ -157,7 +157,7 @@ def print_lcd_char(line=0, cursor=0, char=0):
     cursor = int(cursor)
     char = int(char)
 
-    # get char for lcd_list
+    # get char for lcd_lines
     char_string = ""
     if char == 0:
         char_string = "↑"
@@ -167,7 +167,7 @@ def print_lcd_char(line=0, cursor=0, char=0):
         char_string = "-"
 
     current_line = get_lcd_line(line)
-    set_lcd_list(
+    set_lcd_lines(
         line,
         current_line[:cursor] + char_string + current_line[cursor + 1 :],
     )
