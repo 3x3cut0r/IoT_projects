@@ -66,10 +66,11 @@ def handle_post(request_str):
 
     # parse form data
     form_data = parse_form_data(body)
+    print(form_data)
 
     # update config
     for key in form_data:
-        if key in config:
+        if config.get_value(key) is not None:
             config.set_value(key, form_data[key])
         else:
             print("WARN: key " + key + " not found in config.json")
