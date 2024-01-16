@@ -3,7 +3,7 @@ import re  # https://docs.micropython.org/en/latest/library/re.html
 import uasyncio as asyncio  # https://docs.micropython.org/en/latest/library/asyncio.html
 from src.config import config  # Config() instance
 from src.functions import print_nominal_temp
-from src.lcd import get_lcd_line
+from src.lcd import get_lcd_line, set_backlight
 
 # ==================================================
 # functions
@@ -146,6 +146,9 @@ def handle_post(body):
 
     # print nominal temp
     print_nominal_temp()
+
+    # set lcd backlight
+    set_backlight(config.get_value("lcd_i2c_backlight"))
 
     if error:
         response_content = f'<span style="color: orange;">WARN: Konfiguration nur teilweise aktualisiert: {error}</span>'
