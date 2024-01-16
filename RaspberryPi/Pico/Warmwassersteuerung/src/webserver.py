@@ -157,8 +157,16 @@ def handle_post(body):
         response_content = f'<span style="color: green;">INFO: Konfiguration erfolgreich aktualisiert</span>'
         print(f"INFO: config.json successfully updated")
 
-    # add back button
-    response_content = f'{response_content}<br /><br /><a href="/"><button type="button">zur&uuml;ck</button></a>'
+    # add back button and return script
+    response_content += """
+        <br /><br />
+        <a href="/"><button type="button">zur&uuml;ck</button></a>
+        <script>
+            setTimeout(function() {
+                window.location.href = '/';
+            }, 3000); // 3000 Millisekunden = 3 Sekunden
+        </script>
+    """
 
     return response_content
 
