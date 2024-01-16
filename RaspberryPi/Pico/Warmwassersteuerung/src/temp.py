@@ -32,7 +32,7 @@ class TemperatureSensor:
             for rom in roms:
                 self.temp_sensor.write_scratch(rom, resolution=resolution)  # type: ignore
         except OSError as e:
-            print("Error setting temp resolution: ", e)
+            print("ERROR: setting temp resolution: ", e)
 
     # get temperature
     def get_temp(self):
