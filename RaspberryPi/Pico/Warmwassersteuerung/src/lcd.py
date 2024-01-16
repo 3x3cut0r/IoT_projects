@@ -35,7 +35,10 @@ lcd.custom_char(1, bytearray(arrow_down))
 
 # init lcd
 def init_lcd():
-    lcd.backlight_on()
+    if config.get_bool_value("lcd_i2c_backlight", True):
+        lcd.backlight_on()
+    else:
+        lcd.backlight_off()
     lcd.hide_cursor()
     lcd.blink_cursor_off()
     lcd.clear()
@@ -45,29 +48,36 @@ def init_lcd():
 def set_backlight(value=True):
     if value:
         lcd.backlight_on()
+        print("INFO: LCD: turn backlight on")
     else:
         lcd.backlight_off()
+        print("INFO: LCD: turn backlight off")
 
 
 # show cursor
 def show_cursor(value=True):
     if value:
         lcd.show_cursor()
+        print("INFO: LCD: show cursor")
     else:
         lcd.hide_cursor()
+        print("INFO: LCD: hide cursor")
 
 
 # blink cursor
 def blink_cursor(value=True):
     if value:
         lcd.blink_cursor_on()
+        print("INFO: LCD: blink cursor on")
     else:
         lcd.blink_cursor_off()
+        print("INFO: LCD: blink cursor off")
 
 
 # clear lcd
 def clear_lcd():
     lcd.clear()
+    print("INFO: LCD: clear")
 
 
 # convert utf-8 characters to HD44780A00 characters
