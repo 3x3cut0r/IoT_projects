@@ -148,7 +148,7 @@ def handle_post(body):
     print_nominal_temp()
 
     # set lcd backlight
-    set_backlight(config.get_value("lcd_i2c_backlight"))
+    set_backlight(config.get_bool_value("lcd_i2c_backlight"))
 
     if error:
         response_content = f'<span style="color: orange;">WARN: Konfiguration nur teilweise aktualisiert: {error}</span>'
