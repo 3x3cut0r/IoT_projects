@@ -2,6 +2,7 @@
 import re  # https://docs.micropython.org/en/latest/library/re.html
 import uasyncio as asyncio  # https://docs.micropython.org/en/latest/library/asyncio.html
 from src.config import config  # Config() instance
+from src.functions import print_nominal_temp
 from src.lcd import get_lcd_line
 
 # ==================================================
@@ -142,6 +143,9 @@ def handle_post(body):
 
     # save config
     config.save_config()
+
+    # print nominal temp
+    print_nominal_temp()
 
     if error:
         response_content = f'<span style="color: orange;">WARN: Konfiguration nur teilweise aktualisiert: {error}</span>'
