@@ -135,7 +135,7 @@ async def main():
 
             if update_time == 0:
                 # open relay
-                open_relays()
+                open_relays(config.get_int_value("relay_time", 2000))
 
                 # set and adjust update_time based on temp category
                 update_time = adjust_update_time_based_on_temp_category()
