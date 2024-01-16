@@ -59,6 +59,26 @@ class Config:
     def get_value(self, key, default=None):
         return self.config.get(key, default)
 
+    # get bool value
+    def get_bool_value(self, key, default=False):
+        try:
+            value = self.config.get(str(key), bool(default))
+            if isinstance(value, bool):
+                return value
+            if isinstance(value, int):
+                if value >= 1:
+                    return True
+                else:
+                    return False
+            if isinstance(value, str):
+                if value.lower() in ["true", "1", "yes", "on"]:
+                    return True
+                elif value.lower() in ["false", "0", "no", "off", None]:
+                    return False
+            return False
+        except (ValueError, TypeError):
+            return bool(default)
+
     # get int value
     def get_int_value(self, key, default=0):
         try:
