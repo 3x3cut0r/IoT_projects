@@ -144,17 +144,15 @@ def handle_post(body):
     config.save_config()
 
     if error:
-        response_content = f"WARN: config.json teilweise aktualisiert: {error}"
+        response_content = f'<span style="color: orange;">WARN: Konfiguration nur teilweise aktualisiert: {error}</span>'
         print(f"WARN: config.json partially updated: {error}")
     else:
-        response_content = f"INFO: config.json erfolgreich aktualisiert"
+        response_content = f'<span style="color: green;">INFO: Konfiguration erfolgreich aktualisiert</span>'
         print(f"INFO: config.json successfully updated")
 
     # add back button
-    response_content = (
-        response_content
-        + '<br /><br /><a href="/"><button type="button">zur&uuml;ck</button></a>'
-    )
+    response_content = f'{response_content}<br /><br /><a href="/"><button type="button">zur&uuml;ck</button></a>'
+
     return response_content
 
 
