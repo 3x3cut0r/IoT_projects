@@ -25,9 +25,12 @@ label {
     width: 300px;
 }
 
-input,
+input {
+    width: 92px;
+}
+
 select {
-    width: 80px;
+    width: 100px;
 }
 
 .long {
