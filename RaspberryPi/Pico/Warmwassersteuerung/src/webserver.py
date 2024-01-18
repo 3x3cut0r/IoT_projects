@@ -66,15 +66,15 @@ def replace_placeholder(content="", line_number=0):
             else "",
         ),
         42: (
-            "log_level_VERBOSE",
-            " selected"
-            if str(config.get_value("log_level", "OFF")).upper() == "VERBOSE"
-            else "",
-        ),
-        43: (
             "log_level_INFO",
             " selected"
             if str(config.get_value("log_level", "OFF")).upper() == "INFO"
+            else "",
+        ),
+        43: (
+            "log_level_VERBOSE",
+            " selected"
+            if str(config.get_value("log_level", "OFF")).upper() == "VERBOSE"
             else "",
         ),
         46: (
