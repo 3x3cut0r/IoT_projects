@@ -3,6 +3,7 @@ import time  # https://docs.micropython.org/en/latest/library/time.html
 from machine import Pin  # https://docs.micropython.org/en/latest/library/machine.html
 from onewire import OneWire  # OneWire
 from ds18x20 import DS18X20  # DS180B20
+from src.log import log
 from src.config import config  # Config() instance
 
 
@@ -32,7 +33,7 @@ class TemperatureSensor:
             for rom in roms:
                 self.temp_sensor.write_scratch(rom, resolution=resolution)  # type: ignore
         except OSError as e:
-            print("ERROR: setting temp resolution: ", e)
+            log("ERROR", f"setting temp resolution: {e}")
 
     # get temperature
     def get_temp(self):
@@ -49,7 +50,7 @@ class TemperatureSensor:
                 config.set_value("current_temp", round(temp, 1))
                 return round(temp, 1)  # return only first temp found
         except (OSError, ValueError) as e:
-            print("ERROR: reading temp: ", e)
+            log("ERROR", f"reading temp: {e}")
             temp = -127.0
             config.set_value("current_temp", temp)
             return temp

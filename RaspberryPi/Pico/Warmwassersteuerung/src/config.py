@@ -49,7 +49,7 @@ class Config:
             with open(self.file_path(backup), "w") as file:
                 ujson.dump(self.config, file)
         except OSError as e:
-            print(f"Error writing to {self.file_name}: {e}")
+            print(f"ERROR: writing to {self.file_name}: {e}")
 
     # create config backup
     def create_config_backup(self):

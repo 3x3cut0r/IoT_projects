@@ -17,11 +17,12 @@
 # ==================================================
 
 # micro python imports
-# import gc  # https://docs.micropython.org/en/latest/library/gc.html
+import gc  # https://docs.micropython.org/en/latest/library/gc.html
 import time  # https://docs.micropython.org/en/latest/library/time.html
 import uasyncio as asyncio  # https://docs.micropython.org/en/latest/library/asyncio.html
 
 # custom imports
+from src.log import log
 from src.config import config
 from src.lcd import init_lcd
 from src.led import init_led
@@ -42,14 +43,14 @@ from src.functions import (
 
 
 async def main():
-    print(f"INFO: main()")
+    log("INFO", "main()")
 
     # ========================================
     # setup
     # ========================================
-    print(f"--------------------------------")
-    print(f"INFO: main setup()")
-    print(f"--------------------------------")
+    log("INFO", "--------------------------")
+    log("INFO", "main setup()")
+    log("INFO", "--------------------------")
 
     # init led
     init_led()
@@ -88,9 +89,9 @@ async def main():
     # ==================================================
     # main loop
     # ==================================================
-    print(f"--------------------------------")
-    print(f"INFO: main loop()")
-    print(f"--------------------------------")
+    log("INFO", "--------------------------")
+    log("INFO", "main loop()")
+    log("INFO", "--------------------------")
 
     while True:
         current_millis = time.ticks_ms()
@@ -122,7 +123,7 @@ async def main():
                 update_timer(update_time)
 
                 # print mem alloc
-                # print("INFO: mem_alloc(): {} Bytes".format(gc.mem_alloc()))
+                log("VERBOSE", "mem_alloc(): {} Bytes".format(gc.mem_alloc()))
 
                 # update temp on temp update interval
                 if update_time % config.get_int_value("temp_update_interval") == 0:
@@ -155,7 +156,7 @@ async def main():
 
 
 if __name__ == "__main__":
-    print(f"INFO: __main__")
+    log("INFO", "__main__")
 
     # create asyncio event loop
     loop = asyncio.get_event_loop()

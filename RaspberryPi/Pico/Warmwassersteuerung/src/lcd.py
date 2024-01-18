@@ -4,6 +4,7 @@ from machine import (
     Pin,
 )  # https://docs.micropython.org/en/latest/library/machine.html
 from src.machine_i2c_lcd import I2cLcd  # I2C LCD
+from src.log import log
 from src.config import config  # Config() instance
 
 # setup i2c
@@ -48,36 +49,36 @@ def init_lcd():
 def set_backlight(value=True):
     if value:
         lcd.backlight_on()
-        print("INFO: LCD: turn backlight on")
+        log("INFO", f"LCD: turn backlight on")
     else:
         lcd.backlight_off()
-        print("INFO: LCD: turn backlight off")
+        log("INFO", f"LCD: turn backlight off")
 
 
 # show cursor
 def show_cursor(value=True):
     if value:
         lcd.show_cursor()
-        print("INFO: LCD: show cursor")
+        log("INFO", f"LCD: show cursor")
     else:
         lcd.hide_cursor()
-        print("INFO: LCD: hide cursor")
+        log("INFO", f"hide cursor")
 
 
 # blink cursor
 def blink_cursor(value=True):
     if value:
         lcd.blink_cursor_on()
-        print("INFO: LCD: blink cursor on")
+        log("INFO", f"LCD: blink cursor on")
     else:
         lcd.blink_cursor_off()
-        print("INFO: LCD: blink cursor off")
+        log("INFO", f"LCD: blink cursor off")
 
 
 # clear lcd
 def clear_lcd():
     lcd.clear()
-    print("INFO: LCD: clear")
+    log("INFO", f"LCD: clear")
 
 
 # convert utf-8 characters to HD44780A00 characters

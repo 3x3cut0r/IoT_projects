@@ -1,6 +1,7 @@
 # imports
 import time  # https://docs.micropython.org/en/latest/library/time.html
 from machine import Pin  # https://docs.micropython.org/en/latest/library/machine.html
+from src.log import log
 from src.config import config  # Config() instance
 
 # ==================================================
@@ -31,14 +32,18 @@ def deactivate_relay(relay_pin):
 # open relay
 def open_relay(relay_time=config.get_int_value("relay_time", 2000)):
     relay_open_pin = config.get_int_value("RELAY_OPEN_PIN", 14)
+    log("INFO", f"open_relay({relay_time}): activate")
     activate_relay(relay_open_pin)
     time.sleep_ms(relay_time)  # time in seconds
     deactivate_relay(relay_open_pin)
+    log("INFO", "open_relay(): deactivate")
 
 
 # close relay
 def close_relay(relay_time=config.get_int_value("relay_time", 2000)):
     relay_close_pin = config.get_int_value("RELAY_CLOSE_PIN", 15)
+    log("INFO", f"close_relay({relay_time}): activate")
     activate_relay(relay_close_pin)
     time.sleep_ms(relay_time)  # time in seconds
     deactivate_relay(relay_close_pin)
+    log("INFO", "close_relay(): deactivate")

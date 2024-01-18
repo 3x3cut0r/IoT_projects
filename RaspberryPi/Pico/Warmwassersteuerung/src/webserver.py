@@ -1,6 +1,7 @@
 # imports
 import re  # https://docs.micropython.org/en/latest/library/re.html
 import uasyncio as asyncio  # https://docs.micropython.org/en/latest/library/asyncio.html
+from src.log import log
 from src.config import config  # Config() instance
 from src.functions import print_nominal_temp
 from src.lcd import get_lcd_line, set_backlight
@@ -39,43 +40,79 @@ def replace_placeholder(content="", line_number=0):
         30: ("update_time", config.get_value("update_time", "")),
         32: ("relay_time", config.get_value("relay_time", "")),
         34: ("temp_update_interval", config.get_value("temp_update_interval", "")),
-        36: ("lcd_i2c_backlight", config.get_value("lcd_i2c_backlight", "")),
-        38: (
+        36: (
+            "lcd_i2c_backlight",
+            " checked"
+            if str(config.get_value("lcd_i2c_backlight", "false")).lower()
+            in ["true", "1", "yes", "on"]
+            else "",
+        ),
+        39: (
+            "log_level_OFF",
+            " selected"
+            if str(config.get_value("log_level", "OFF")).upper() == "OFF"
+            else "",
+        ),
+        40: (
+            "log_level_ERROR",
+            " selected"
+            if str(config.get_value("log_level", "OFF")).upper() == "ERROR"
+            else "",
+        ),
+        41: (
+            "log_level_WARN",
+            " selected"
+            if str(config.get_value("log_level", "OFF")).upper() == "WARN"
+            else "",
+        ),
+        42: (
+            "log_level_VERBOSE",
+            " selected"
+            if str(config.get_value("log_level", "OFF")).upper() == "VERBOSE"
+            else "",
+        ),
+        43: (
+            "log_level_INFO",
+            " selected"
+            if str(config.get_value("log_level", "OFF")).upper() == "INFO"
+            else "",
+        ),
+        46: (
             "temp_change_high_threshold",
             config.get_value("temp_change_high_threshold", ""),
         ),
-        40: (
+        48: (
             "temp_change_medium_threshold",
             config.get_value("temp_change_medium_threshold", ""),
         ),
-        42: ("wifi_max_attempts", config.get_value("wifi_max_attempts", "")),
+        50: ("wifi_max_attempts", config.get_value("wifi_max_attempts", "")),
         # INFO
-        46: ("wifi_ssid", config.get_value("wifi_ssid", "")),
-        48: ("previous_millis", config.get_value("previous_millis", "")),
-        50: ("interval", config.get_value("interval", "")),
-        52: ("current_temp", config.get_value("current_temp", "")),
-        54: ("temp_last_measurement", config.get_value("temp_last_measurement", "")),
-        56: (
+        54: ("wifi_ssid", config.get_value("wifi_ssid", "")),
+        56: ("previous_millis", config.get_value("previous_millis", "")),
+        58: ("interval", config.get_value("interval", "")),
+        60: ("current_temp", config.get_value("current_temp", "")),
+        62: ("temp_last_measurement", config.get_value("temp_last_measurement", "")),
+        64: (
             "temp_last_measurement_time",
             config.get_value("temp_last_measurement_time", ""),
         ),
-        58: ("temp_sampling_interval", config.get_value("temp_sampling_interval", "")),
-        60: ("temp_change_category", config.get_value("temp_change_category", "")),
-        63: ("TEMP_SENSOR_PIN", config.get_value("TEMP_SENSOR_PIN", "")),
-        65: (
+        66: ("temp_sampling_interval", config.get_value("temp_sampling_interval", "")),
+        68: ("temp_change_category", config.get_value("temp_change_category", "")),
+        71: ("TEMP_SENSOR_PIN", config.get_value("TEMP_SENSOR_PIN", "")),
+        73: (
             "TEMP_SENSOR_RESOLUTION_BIT",
             config.get_value("TEMP_SENSOR_RESOLUTION_BIT", ""),
         ),
-        67: ("LCD_PIN_SDA", config.get_value("LCD_PIN_SDA", "")),
-        69: ("LCD_PIN_SCL", config.get_value("LCD_PIN_SCL", "")),
-        71: ("LCD_ADDR", config.get_value("LCD_ADDR", "")),
-        73: ("LCD_FREQ", config.get_value("LCD_FREQ", "")),
-        75: ("LCD_COLS", config.get_value("LCD_COLS", "")),
-        77: ("LCD_ROWS", config.get_value("LCD_ROWS", "")),
-        79: ("RELAY_OPEN_PIN", config.get_value("RELAY_OPEN_PIN", "")),
-        81: ("RELAY_CLOSE_PIN", config.get_value("RELAY_CLOSE_PIN", "")),
-        83: ("BUTTON_TEMP_UP_PIN", config.get_value("BUTTON_TEMP_UP_PIN", "")),
-        85: ("BUTTON_TEMP_DOWN_PIN", config.get_value("BUTTON_TEMP_DOWN_PIN", "")),
+        75: ("LCD_PIN_SDA", config.get_value("LCD_PIN_SDA", "")),
+        77: ("LCD_PIN_SCL", config.get_value("LCD_PIN_SCL", "")),
+        79: ("LCD_ADDR", config.get_value("LCD_ADDR", "")),
+        81: ("LCD_FREQ", config.get_value("LCD_FREQ", "")),
+        83: ("LCD_COLS", config.get_value("LCD_COLS", "")),
+        85: ("LCD_ROWS", config.get_value("LCD_ROWS", "")),
+        87: ("RELAY_OPEN_PIN", config.get_value("RELAY_OPEN_PIN", "")),
+        89: ("RELAY_CLOSE_PIN", config.get_value("RELAY_CLOSE_PIN", "")),
+        91: ("BUTTON_TEMP_UP_PIN", config.get_value("BUTTON_TEMP_UP_PIN", "")),
+        93: ("BUTTON_TEMP_DOWN_PIN", config.get_value("BUTTON_TEMP_DOWN_PIN", "")),
     }
 
     # replace keys
@@ -98,7 +135,7 @@ async def stream_file(writer, file_name, chunk_size=1024):
                     break
                 await writer.awrite(chunk)
     except OSError as e:
-        print("ERROR: while reading file: ", e)
+        log("ERROR", f"while reading file: {e}")
 
 
 # get index.html
@@ -130,7 +167,7 @@ def parse_form_data(body):
 def handle_post(body):
     # parse form data
     form_data = parse_form_data(body)
-    print(f"INFO: POST request: data:\n{form_data}")
+    log("INFO", f"POST request: data:\n{form_data}")
 
     error = False
 
@@ -152,10 +189,10 @@ def handle_post(body):
 
     if error:
         response_content = f'<span style="color: orange;">WARN: Konfiguration nur teilweise aktualisiert: {error}</span>'
-        print(f"WARN: config.json partially updated: {error}")
+        log("WARN", f"config.json partially updated: {error}")
     else:
         response_content = f'<span style="color: green;">INFO: Konfiguration erfolgreich aktualisiert</span>'
-        print(f"INFO: config.json successfully updated")
+        log("WARN", "config.json successfully updated")
 
     # add back button and return script
     response_content += """
@@ -206,7 +243,7 @@ async def handle_client(reader, writer):
         result = match.group(0)
     else:
         result = ""
-    print(f"handle_client() - {result}")
+    log("INFO", f"handle_client() - {result}")
 
     content_type = "text/html"
     requested_path = request_header.split(" ")[1]
@@ -249,5 +286,5 @@ async def handle_client(reader, writer):
 async def run_webserver():
     host = "0.0.0.0"
     port = 80
-    print(f"INFO: run_webserver({host}, {port})")
+    log("INFO", f"run_webserver({host}, {port})")
     server = await asyncio.start_server(handle_client, host, port)  # type: ignore

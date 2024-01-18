@@ -1,5 +1,6 @@
 # imports
 import time  # https://docs.micropython.org/en/latest/library/time.html
+from src.log import log
 from src.button import check_button
 from src.config import config  # Config() instance
 from src.lcd import print_lcd, print_lcd_char
@@ -93,7 +94,7 @@ def update_temp():
     current_temp_string = f"{current_temp:.1f} °C"
     current_temp_string_utf8 = convert_utf8(current_temp_string)
 
-    print(f"INFO: update_temp({current_temp_string_utf8})")
+    log("VERBOSE", f"update_temp({current_temp_string_utf8})")
 
     temp_pos = lcd_cols - len(current_temp_string)
     print_lcd(0, 0, "Aktuell:")
@@ -144,8 +145,6 @@ def set_relay(pin, relay_time):
 
 # open relays depending on temp
 def open_relays(relay_time=config.get_int_value("relay_time", 2000)):
-    print(f"INFO: open_relays({relay_time})")
-
     # load config
     current_temp = config.get_float_value("current_temp", -127.0)
     nominal_min_temp = config.get_float_value("nominal_min_temp", 42.0)
@@ -236,7 +235,7 @@ def format_time(secs):
 
 # update timer
 def update_timer(secs, message="Warte:"):
-    print(f"INFO: update_timer({secs})")
+    log("VERBOSE", f"update_timer({secs})")
 
     time = format_time(secs)
     cursor = 20 - len(time)
@@ -247,7 +246,7 @@ def update_timer(secs, message="Warte:"):
 
 # wait start
 def wait_start(secs):
-    print(f"INFO: wait start ({secs})")
+    log("INFO", f"wait start ({secs})")
 
     # load config
     previous_millis = time.ticks_ms()

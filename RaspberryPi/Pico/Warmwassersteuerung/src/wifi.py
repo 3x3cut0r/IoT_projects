@@ -1,6 +1,7 @@
 # imports
 import network
 import time
+from src.log import log
 from src.config import config  # Config() instance
 from src.lcd import print_lcd
 
@@ -20,7 +21,7 @@ def connect_wifi():
     if wifi_is_activated:
         global show_message
         ssid = config.get_value("wifi_ssid")
-        print(f"INFO: connect_wifi(ssid = {ssid})")
+        log("INFO", f"connect_wifi(ssid = {ssid})")
 
         if ssid is not None:
             password = config.get_value("wifi_password", "password")
@@ -30,7 +31,8 @@ def connect_wifi():
                 wifi.active(True)
                 wifi.connect(ssid, password)
             except OSError as error:
-                print(f"ERROR: wifi module error: {error}\nINFO: disable wifi()")
+                log("ERROR", f"wifi module error: {error}")
+                log("ERROR", "disable wifi()")
                 wifi_is_activated = False
 
             # wait until conneciton is established
@@ -45,15 +47,15 @@ def connect_wifi():
 
             if wifi.isconnected():
                 if show_message >= 1:
-                    print("INFO: wifi connected:", wifi.ifconfig())
+                    log("INFO", f"wifi connected: {wifi.ifconfig()}")
                     print_lcd(0, 0, "WLAN wurde verbunden")
                     time.sleep(3)
                 show_message = 0
             else:
-                print(f"WARN: wifi connection failed!")
+                log("WARN", "wifi connection failed!")
                 print_lcd(0, 0, "WLAN nicht verbunden")
         else:
-            print(f"ERROR: no SSID found!")
+            log("ERROR", f"no SSID found!")
             print_lcd(0, 0, "keine SSID gefunden!")
             wifi_is_activated = False
 
