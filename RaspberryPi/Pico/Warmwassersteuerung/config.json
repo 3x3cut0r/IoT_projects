@@ -12,7 +12,7 @@
     "nominal_max_temp": 55.0,
     "temp_update_interval": 2,
     "lcd_i2c_backlight": 1,
-    "log_level": "INFO",
+    "log_level": "OFF",
     "sensor_resolution_bit": 9,
     "previous_millis": 0,
     "interval": 1000,
