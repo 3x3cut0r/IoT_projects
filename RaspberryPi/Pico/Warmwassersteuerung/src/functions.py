@@ -235,7 +235,7 @@ def format_time(secs):
 
 # update timer
 def update_timer(secs, message="Warte:"):
-    log("VERBOSE", f"update_timer({secs})")
+    log("INFO", f"update_timer({secs})")
 
     time = format_time(secs)
     cursor = 20 - len(time)
