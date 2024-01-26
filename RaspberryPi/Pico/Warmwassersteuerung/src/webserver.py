@@ -192,7 +192,7 @@ def handle_post(body):
         log("WARN", f"config.json partially updated: {error}")
     else:
         response_content = f'<span style="color: green;">INFO: Konfiguration erfolgreich aktualisiert</span>'
-        log("WARN", "config.json successfully updated")
+        log("INFO", "config.json successfully updated")
 
     # add back button and return script
     response_content += """
