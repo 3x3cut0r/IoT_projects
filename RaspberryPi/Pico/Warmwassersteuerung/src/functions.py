@@ -94,7 +94,7 @@ def update_temp():
     current_temp_string = f"{current_temp:.1f} °C"
     current_temp_string_utf8 = convert_utf8(current_temp_string)
 
-    log("VERBOSE", f"update_temp({current_temp_string_utf8})")
+    log("INFO", f"update_temp({current_temp_string_utf8})")
 
     temp_pos = lcd_cols - len(current_temp_string)
     print_lcd(0, 0, "Aktuell:")
