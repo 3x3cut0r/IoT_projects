@@ -1,16 +1,16 @@
 # ==================================================
-# Warmwassersteuerung
+# Hot water control
 # ==================================================
 #
-# Komponenten:
-#   - 4 Zeilen LCD
-#   - 2 Ventile
+# Components:
+#   - 4 line LCD
+#   - 2 Relays
 #   - 2 Buttons
-#   - 1 DS18B20 I2C Temperatursensor
+#   - 1 DS18B20 I2C temperature sensor
 #
 #   Copyright (C) 2023, 3x3cut0r
 #
-#   Veröffentlicht unter der MIT Lizenz.
+#   Published under the MIT license.
 
 # ==================================================
 # imports
