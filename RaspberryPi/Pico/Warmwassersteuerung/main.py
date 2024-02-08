@@ -28,7 +28,6 @@ from src.lcd import init_lcd
 from src.led import init_led
 from src.relay import init_relays
 from src.webserver import run_webserver
-from src.wifi import connect_wifi, check_wifi_isactivated, check_wifi_isconnected
 from src.functions import (
     categorize_temp_change,
     adjust_update_time_based_on_temp_category,
@@ -60,10 +59,6 @@ async def main():
 
     # init relays
     init_relays()
-
-    # connect wifi
-    while check_wifi_isactivated() and not check_wifi_isconnected():
-        connect_wifi()
 
     # update temp
     update_temp()
@@ -143,10 +138,6 @@ async def main():
 
                 # create config backup
                 config.create_config_backup()
-
-                # connect wifi
-                if not check_wifi_isconnected():
-                    connect_wifi()
 
             # update previous millis
             previous_millis = current_millis

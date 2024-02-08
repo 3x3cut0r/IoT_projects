@@ -5,6 +5,8 @@ from src.log import log
 from src.config import config  # Config() instance
 from src.functions import print_nominal_temp
 from src.lcd import get_lcd_line, set_backlight
+from src.wifi import wifi, connect_wifi, check_wifi_isconnected
+
 
 # ==================================================
 # functions
@@ -42,40 +44,52 @@ def replace_placeholder(content="", line_number=0):
         34: ("temp_update_interval", config.get_value("temp_update_interval", "")),
         36: (
             "lcd_i2c_backlight",
-            " checked"
-            if str(config.get_value("lcd_i2c_backlight", "false")).lower()
-            in ["true", "1", "yes", "on"]
-            else "",
+            (
+                " checked"
+                if str(config.get_value("lcd_i2c_backlight", "false")).lower()
+                in ["true", "1", "yes", "on"]
+                else ""
+            ),
         ),
         39: (
             "log_level_OFF",
-            " selected"
-            if str(config.get_value("log_level", "OFF")).upper() == "OFF"
-            else "",
+            (
+                " selected"
+                if str(config.get_value("log_level", "OFF")).upper() == "OFF"
+                else ""
+            ),
         ),
         40: (
             "log_level_ERROR",
-            " selected"
-            if str(config.get_value("log_level", "OFF")).upper() == "ERROR"
-            else "",
+            (
+                " selected"
+                if str(config.get_value("log_level", "OFF")).upper() == "ERROR"
+                else ""
+            ),
         ),
         41: (
             "log_level_WARN",
-            " selected"
-            if str(config.get_value("log_level", "OFF")).upper() == "WARN"
-            else "",
+            (
+                " selected"
+                if str(config.get_value("log_level", "OFF")).upper() == "WARN"
+                else ""
+            ),
         ),
         42: (
             "log_level_INFO",
-            " selected"
-            if str(config.get_value("log_level", "OFF")).upper() == "INFO"
-            else "",
+            (
+                " selected"
+                if str(config.get_value("log_level", "OFF")).upper() == "INFO"
+                else ""
+            ),
         ),
         43: (
             "log_level_VERBOSE",
-            " selected"
-            if str(config.get_value("log_level", "OFF")).upper() == "VERBOSE"
-            else "",
+            (
+                " selected"
+                if str(config.get_value("log_level", "OFF")).upper() == "VERBOSE"
+                else ""
+            ),
         ),
         46: (
             "temp_change_high_threshold",
@@ -124,6 +138,26 @@ def replace_placeholder(content="", line_number=0):
     return content
 
 
+# parse for data
+def parse_form_data(body):
+    parsed_data = {}
+    for pair in body.split("&"):
+        if "=" in pair:
+            key, value = pair.split("=", 1)
+            parsed_data[key] = value
+        else:
+            parsed_data[pair] = None
+    return parsed_data
+
+
+# manage wifi connection
+async def manage_wifi_connection():
+    while True:
+        if not check_wifi_isconnected():
+            connect_wifi()
+        await asyncio.sleep(60)
+
+
 # stream file
 async def stream_file(writer, file_name, chunk_size=1024):
     file_name_präfix = "../web/"
@@ -149,18 +183,6 @@ async def get_index_html(writer):
             line_number += 1
             line = replace_placeholder(line, line_number)
             await writer.awrite(line.encode("utf-8"))
-
-
-# parse for data
-def parse_form_data(body):
-    parsed_data = {}
-    for pair in body.split("&"):
-        if "=" in pair:
-            key, value = pair.split("=", 1)
-            parsed_data[key] = value
-        else:
-            parsed_data[pair] = None
-    return parsed_data
 
 
 # handle post from index.html
@@ -286,5 +308,11 @@ async def handle_client(reader, writer):
 async def run_webserver():
     host = "0.0.0.0"
     port = 80
+    asyncio.create_task(manage_wifi_connection())
     log("INFO", f"run_webserver({host}, {port})")
     server = await asyncio.start_server(handle_client, host, port)  # type: ignore
+
+
+if __name__ == "__main__":
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(run_webserver())
