@@ -154,8 +154,8 @@ def parse_form_data(body):
 async def manage_wifi_connection():
     while True:
         if not check_wifi_isconnected():
-            connect_wifi()
-        await asyncio.sleep(60)
+            await connect_wifi()
+        await asyncio.sleep(30)
 
 
 # stream file

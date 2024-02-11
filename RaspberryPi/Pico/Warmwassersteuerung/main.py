@@ -70,12 +70,12 @@ async def main():
     print_nominal_temp()
 
     # wait start
-    wait_start(config.get_int_value("delay_before_start_1"))
+    await wait_start(config.get_int_value("delay_before_start_1"))
     set_relay(
         config.get_int_value("RELAY_CLOSE_PIN", 15),
         config.get_int_value("init_relay_time", 2000),
     )  # open relay initial
-    wait_start(config.get_int_value("delay_before_start_2"))
+    await wait_start(config.get_int_value("delay_before_start_2"))
 
     previous_millis = 0
     interval = config.get_int_value("interval")
@@ -127,7 +127,7 @@ async def main():
                 update_time -= 1
 
             # check buttons
-            check_buttons()
+            await check_buttons()
 
             if update_time == 0:
                 # open relay

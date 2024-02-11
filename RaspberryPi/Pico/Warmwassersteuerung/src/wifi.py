@@ -1,6 +1,6 @@
 # imports
 import network
-import time
+import uasyncio as asyncio  # https://docs.micropython.org/en/latest/library/asyncio.html
 from src.log import log
 from src.config import config  # Config() instance
 from src.lcd import print_lcd
@@ -16,7 +16,7 @@ wifi_is_activated = True
 
 
 # connect wifi
-def connect_wifi():
+async def connect_wifi():
     global wifi_is_activated
     if wifi_is_activated:
         global show_message
@@ -41,7 +41,7 @@ def connect_wifi():
             while (
                 wifi_is_activated and not wifi.isconnected() and attempts < max_attempts
             ):
-                time.sleep(1)
+                await asyncio.sleep(1)
                 attempts += 1
                 print_lcd(0, 0, "verbinde WLAN ... {:02d}".format(attempts))
 
@@ -49,7 +49,7 @@ def connect_wifi():
                 if show_message >= 1:
                     log("INFO", f"wifi connected: {wifi.ifconfig()}")
                     print_lcd(0, 0, "WLAN wurde verbunden")
-                    time.sleep(3)
+                    await asyncio.sleep(3)
                 show_message = 0
             else:
                 log("WARN", "wifi connection failed!")

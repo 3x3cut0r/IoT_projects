@@ -1,5 +1,6 @@
 # imports
 import time  # https://docs.micropython.org/en/latest/library/time.html
+import uasyncio as asyncio  # https://docs.micropython.org/en/latest/library/asyncio.html
 from src.log import log
 from src.button import check_button
 from src.config import config  # Config() instance
@@ -174,7 +175,7 @@ def update_temp_display(rate, message, symbol):
 
 
 # update nominal temp
-def update_nominal_temp(button_pin):
+async def update_nominal_temp(button_pin):
     button_long = 0
     rate = 0.1
 
@@ -204,7 +205,7 @@ def update_nominal_temp(button_pin):
         print_nominal_temp()
 
         # Adjust rate and sleep
-        time.sleep(0.5)
+        await asyncio.sleep(0.5)
         button_long += 1
         if button_long == 5:
             rate = 1
@@ -216,10 +217,10 @@ def update_nominal_temp(button_pin):
 
 
 # check buttons
-def check_buttons():
+async def check_buttons():
     # update nomianl temp
-    update_nominal_temp(config.get_int_value("BUTTON_TEMP_UP_PIN", 2))
-    update_nominal_temp(config.get_int_value("BUTTON_TEMP_DOWN_PIN", 3))
+    await update_nominal_temp(config.get_int_value("BUTTON_TEMP_UP_PIN", 2))
+    await update_nominal_temp(config.get_int_value("BUTTON_TEMP_DOWN_PIN", 3))
 
 
 # format time
@@ -245,7 +246,7 @@ def update_timer(secs, message="Warte:"):
 
 
 # wait start
-def wait_start(secs):
+async def wait_start(secs):
     log("INFO", f"wait start ({secs})")
 
     # load config
@@ -257,7 +258,7 @@ def wait_start(secs):
         current_millis = time.ticks_ms()
         if time.ticks_diff(current_millis, previous_millis) > interval:
             # check buttons
-            check_buttons()
+            await check_buttons()
 
             # temp update on interval
             if secs % temp_update_interval == 0:
@@ -269,3 +270,5 @@ def wait_start(secs):
             # decrease secs
             secs -= 1
             previous_millis = current_millis
+
+        await asyncio.sleep(0.1)
