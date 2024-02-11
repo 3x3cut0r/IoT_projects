@@ -13,21 +13,36 @@ scl_pin = Pin(config.get_int_value("LCD_PIN_SCL", 21))
 i2c = I2C(0, sda=sda_pin, scl=scl_pin, freq=config.get_int_value("LCD_FREQ", 100000))
 
 # setup lcd
+lcd = None
 lcd_addr = int(str(config.get_value("LCD_ADDR", "0x27")), 16)
 lcd_cols = config.get_int_value("LCD_COLS", 16)
 lcd_rows = config.get_int_value("LCD_ROWS", 2)
-lcd = I2cLcd(i2c, lcd_addr, lcd_rows, lcd_cols)
+try:
+    # load lcd
+    lcd = I2cLcd(i2c, lcd_addr, lcd_rows, lcd_cols)
+
+    # create custom characters
+    arrow_up = [0b00100, 0b01110, 0b11111, 0b00100, 0b00100, 0b00100, 0b00100, 0b00100]
+    arrow_down = [
+        0b00100,
+        0b00100,
+        0b00100,
+        0b00100,
+        0b00100,
+        0b11111,
+        0b01110,
+        0b00100,
+    ]
+    lcd.custom_char(0, bytearray(arrow_up))
+    lcd.custom_char(1, bytearray(arrow_down))
+
+except OSError as e:
+    log("ERROR", f"LCD: could not be loaded: {e}")
+
 lcd_lines = [
     "".join([" " for _ in range(config.get_int_value("LCD_COLS", 16))])
     for _ in range(config.get_int_value("LCD_ROWS", 2))
 ]
-
-# create custom characters
-arrow_up = [0b00100, 0b01110, 0b11111, 0b00100, 0b00100, 0b00100, 0b00100, 0b00100]
-arrow_down = [0b00100, 0b00100, 0b00100, 0b00100, 0b00100, 0b11111, 0b01110, 0b00100]
-lcd.custom_char(0, bytearray(arrow_up))
-lcd.custom_char(1, bytearray(arrow_down))
-
 
 # ==================================================
 # functions
@@ -36,49 +51,56 @@ lcd.custom_char(1, bytearray(arrow_down))
 
 # init lcd
 def init_lcd():
-    if config.get_bool_value("lcd_i2c_backlight", True):
-        lcd.backlight_on()
+    if lcd is not None:
+        if config.get_bool_value("lcd_i2c_backlight", True):
+            lcd.backlight_on()
+        else:
+            lcd.backlight_off()
+        lcd.hide_cursor()
+        lcd.blink_cursor_off()
+        lcd.clear()
     else:
-        lcd.backlight_off()
-    lcd.hide_cursor()
-    lcd.blink_cursor_off()
-    lcd.clear()
+        log("ERROR", f"LCD: could not be initialized")
 
 
 # set backlight
 def set_backlight(value=True):
-    if value:
-        lcd.backlight_on()
-        log("INFO", f"LCD: turn backlight on")
-    else:
-        lcd.backlight_off()
-        log("INFO", f"LCD: turn backlight off")
+    if lcd is not None:
+        if value:
+            lcd.backlight_on()
+            log("INFO", f"LCD: turn backlight on")
+        else:
+            lcd.backlight_off()
+            log("INFO", f"LCD: turn backlight off")
 
 
 # show cursor
 def show_cursor(value=True):
-    if value:
-        lcd.show_cursor()
-        log("INFO", f"LCD: show cursor")
-    else:
-        lcd.hide_cursor()
-        log("INFO", f"hide cursor")
+    if lcd is not None:
+        if value:
+            lcd.show_cursor()
+            log("INFO", f"LCD: show cursor")
+        else:
+            lcd.hide_cursor()
+            log("INFO", f"hide cursor")
 
 
 # blink cursor
 def blink_cursor(value=True):
-    if value:
-        lcd.blink_cursor_on()
-        log("INFO", f"LCD: blink cursor on")
-    else:
-        lcd.blink_cursor_off()
-        log("INFO", f"LCD: blink cursor off")
+    if lcd is not None:
+        if value:
+            lcd.blink_cursor_on()
+            log("INFO", f"LCD: blink cursor on")
+        else:
+            lcd.blink_cursor_off()
+            log("INFO", f"LCD: blink cursor off")
 
 
 # clear lcd
 def clear_lcd():
-    lcd.clear()
-    log("INFO", f"LCD: clear")
+    if lcd is not None:
+        lcd.clear()
+        log("INFO", f"LCD: clear")
 
 
 # convert utf-8 characters to HD44780A00 characters
@@ -157,9 +179,10 @@ def print_lcd(line=0, cursor=0, message=""):
     message = convert_HD44780A00(message)
 
     # print lcd
-    lcd.move_to(cursor, line)  # lcd.move_to(col, row)
-    lcd.putstr(message)
-    lcd.hide_cursor()
+    if lcd is not None:
+        lcd.move_to(cursor, line)  # lcd.move_to(col, row)
+        lcd.putstr(message)
+        lcd.hide_cursor()
 
 
 # print lcd custom character
@@ -183,5 +206,6 @@ def print_lcd_char(line=0, cursor=0, char=0):
         current_line[:cursor] + char_string + current_line[cursor + 1 :],
     )
 
-    lcd.move_to(cursor, line)  # lcd.move_to(col, row)
-    lcd.putchar(chr(char))
+    if lcd is not None:
+        lcd.move_to(cursor, line)  # lcd.move_to(col, row)
+        lcd.putchar(chr(char))
