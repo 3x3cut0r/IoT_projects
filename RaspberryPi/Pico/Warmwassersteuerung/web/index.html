@@ -33,7 +33,8 @@
                 <tr><td><label for="temp_update_interval">Temperatur wird alle x Sekunden gemessen:</label></td>
                     <td><input type="number" id="temp_update_interval" name="temp_update_interval" placeholder="2" value="<!--temp_update_interval-->" /></td></tr>
                 <tr><td><label for="lcd_i2c_backlight">LCD Hintergrundbeleuchtung (an/aus):</label></td>
-                    <td><input type="checkbox" id="lcd_i2c_backlight" name="lcd_i2c_backlight" value="true"<!--lcd_i2c_backlight-->/></td></tr>
+                    <td><input type="checkbox" id="lcd_i2c_backlight" onclick="updateBacklightHiddenField(this.checked);"<!--lcd_i2c_backlight-->/></td>
+                    <td><input type="hidden" name="lcd_i2c_backlight" id="lcd_i2c_backlight_value" value="<!--lcd_i2c_backlight-->"/></td></tr>
                 <tr><td><label for="log_level">Log Level:</label></td>
                     <td><select name="log_level" id="log_level">
                         <option value="OFF"<!--log_level_OFF-->>OFF</option>
@@ -93,5 +94,10 @@
                     <td><div id="BUTTON_TEMP_DOWN_PIN"><!--BUTTON_TEMP_DOWN_PIN--></div></td></tr>
             </table><br />
         </form>
+        <script>
+            function updateBacklightHiddenField(checked) {
+                document.getElementById('lcd_i2c_backlight_value').value = checked ? "true" : "false";
+            }
+        </script>
     </body>
 </html>
