@@ -144,6 +144,7 @@ async def main():
 
                 # allocate memory
                 gc.mem_free()
+                log("INFO", "gc.mem_free({} Bytes)".format(gc.mem_alloc()))
 
             # update previous millis
             previous_millis = current_millis
