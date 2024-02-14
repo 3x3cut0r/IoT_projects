@@ -63,7 +63,7 @@ async def main():
     # update temp
     update_temp()
     config.set_value(
-        "tempAtLastMeasurement", config.get_float_value("current_temp", -127.0)
+        "temp_last_measurement", config.get_float_value("current_temp", -127.0)
     )
 
     # print nominal temp
