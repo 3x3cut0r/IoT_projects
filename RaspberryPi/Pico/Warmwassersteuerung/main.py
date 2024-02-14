@@ -81,6 +81,9 @@ async def main():
     interval = config.get_int_value("interval")
     update_time = config.get_int_value("update_time")
 
+    # open relay
+    open_relays(config.get_int_value("relay_time", 2000))
+
     # ==================================================
     # main loop
     # ==================================================
@@ -138,6 +141,9 @@ async def main():
 
                 # create config backup
                 config.create_config_backup()
+
+                # allocate memory
+                gc.mem_free()
 
             # update previous millis
             previous_millis = current_millis
