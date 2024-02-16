@@ -165,13 +165,16 @@ def open_relays(relay_time=config.get_int_value("relay_time", 2000)):
 
 
 # update temp display
-def update_temp_display(rate, message, symbol):
+async def update_temp_display(rate, message, symbol):
     if rate >= 3:
         print_lcd(2, 0, f"{message}   {symbol * 3}")
     elif rate >= 0.5:
         print_lcd(2, 0, f"{message}    {symbol * 2}")
     else:
         print_lcd(2, 0, f"{message}     {symbol}")
+
+    await asyncio.sleep(2)
+    print_lcd(2, 0, f"                    ")
 
 
 # update nominal temp
@@ -191,13 +194,13 @@ async def update_nominal_temp(button_pin):
         if button_pin == temp_up_pin:
             nominal_min_temp += rate
             nominal_max_temp += rate
-            update_temp_display(rate, "TempUp Pressed", "+")
+            await update_temp_display(rate, "TempUp Pressed", "+")
 
         # decrease temp on temp down button
         elif button_pin == temp_down_pin:
             nominal_min_temp -= rate
             nominal_max_temp -= rate
-            update_temp_display(rate, "TempDown Pressed", "-")
+            await update_temp_display(rate, "TempDown Pressed", "-")
 
         # Update config values and print nominal temp
         config.set_value("nominal_min_temp", nominal_min_temp)
