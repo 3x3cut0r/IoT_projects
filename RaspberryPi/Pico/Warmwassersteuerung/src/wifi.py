@@ -48,15 +48,15 @@ async def connect_wifi():
             if wifi.isconnected():
                 if show_message >= 1:
                     log("INFO", f"wifi connected: {wifi.ifconfig()}")
-                    print_lcd(0, 0, "WLAN wurde verbunden")
+                    print_lcd(2, 0, "WLAN wurde verbunden")
                     await asyncio.sleep(3)
                 show_message = 0
             else:
                 log("WARN", "wifi connection failed!")
-                print_lcd(0, 0, "WLAN nicht verbunden")
+                print_lcd(2, 0, "WLAN nicht verbunden")
         else:
             log("ERROR", f"no SSID found!")
-            print_lcd(0, 0, "keine SSID gefunden!")
+            print_lcd(2, 0, "keine SSID gefunden!")
             wifi_is_activated = False
 
 
