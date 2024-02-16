@@ -254,7 +254,7 @@ async def wait_start(secs):
 
     # load config
     previous_millis = time.ticks_ms()
-    interval = 1000
+    interval = config.get_int_value("interval")
     temp_update_interval = config.get_int_value("temp_update_interval", 5)
 
     while secs >= 0:
