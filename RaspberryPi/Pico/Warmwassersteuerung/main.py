@@ -117,7 +117,7 @@ async def main():
         # main
         if current_millis - previous_millis > interval:
             # update time
-            if update_time >= 0:
+            if update_time > 0:
                 update_timer(update_time)
 
                 # print mem alloc
@@ -132,7 +132,7 @@ async def main():
             # check buttons
             await check_buttons()
 
-            if update_time == 0:
+            if update_time <= 0:
                 # open relay
                 open_relays(config.get_int_value("relay_time", 2000))
 
