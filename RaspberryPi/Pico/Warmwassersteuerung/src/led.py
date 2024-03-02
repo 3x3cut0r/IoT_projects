@@ -18,7 +18,7 @@ def set_led(value):
         else:
             log("INFO", f"LED: off")
 
-    except OSError as e:
+    except Exception as e:
         log("ERROR", f"LED: could not be set: {e}")
 
 
