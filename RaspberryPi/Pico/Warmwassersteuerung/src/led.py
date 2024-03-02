@@ -10,12 +10,16 @@ from src.config import config  # Config() instance
 
 # set led
 def set_led(value):
-    led = Pin("LED", Pin.OUT)
-    led.value(bool(value))
-    if value:
-        log("INFO", f"LED: on")
-    else:
-        log("INFO", f"LED: off")
+    try:
+        led = Pin("LED", Pin.OUT)
+        led.value(bool(value))
+        if value:
+            log("INFO", f"LED: on")
+        else:
+            log("INFO", f"LED: off")
+
+    except OSError as e:
+        log("ERROR", f"LED: could not be set: {e}")
 
 
 # init led
