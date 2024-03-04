@@ -100,42 +100,44 @@ def replace_placeholder(content="", line_number=0):
                 else ""
             ),
         ),
-        47: (
-            "temp_change_high_threshold",
-            config.get_value("temp_change_high_threshold", ""),
+        47: ("interval", config.get_value("interval", "")),
+        49: ("temp_sampling_interval", config.get_value("temp_sampling_interval", "")),
+        51: (
+            "temp_change_high_threshold_temp",
+            config.get_float_value("temp_change_high_threshold_temp", ""),
         ),
-        49: (
-            "temp_change_medium_threshold",
-            config.get_value("temp_change_medium_threshold", ""),
+        53: (
+            "temp_change_high_threshold_multiplier",
+            config.get_float_value("temp_change_high_threshold_multiplier", ""),
         ),
-        51: ("wifi_max_attempts", config.get_value("wifi_max_attempts", "")),
+        55: ("wifi_max_attempts", config.get_value("wifi_max_attempts", "")),
         # INFO
-        55: ("wifi_ssid", config.get_value("wifi_ssid", "")),
-        57: ("previous_millis", config.get_value("previous_millis", "")),
-        59: ("interval", config.get_value("interval", "")),
-        61: ("current_temp", config.get_value("current_temp", "")),
-        63: ("temp_last_measurement", config.get_value("temp_last_measurement", "")),
-        65: (
+        59: ("wifi_ssid", config.get_value("wifi_ssid", "")),
+        61: ("previous_millis", config.get_value("previous_millis", "")),
+
+        63: ("current_temp", config.get_value("current_temp", "")),
+        65: ("temp_last_measurement", config.get_value("temp_last_measurement", "")),
+        67: (
             "temp_last_measurement_time",
             config.get_value("temp_last_measurement_time", ""),
         ),
-        67: ("temp_sampling_interval", config.get_value("temp_sampling_interval", "")),
         69: ("temp_change_category", config.get_value("temp_change_category", "")),
         72: ("TEMP_SENSOR_PIN", config.get_value("TEMP_SENSOR_PIN", "")),
-        74: (
+        74: ("TEMP_SENSOR2_PIN", config.get_value("TEMP_SENSOR2_PIN", "")),
+        76: (
             "TEMP_SENSOR_RESOLUTION_BIT",
             config.get_value("TEMP_SENSOR_RESOLUTION_BIT", ""),
         ),
-        76: ("LCD_PIN_SDA", config.get_value("LCD_PIN_SDA", "")),
-        78: ("LCD_PIN_SCL", config.get_value("LCD_PIN_SCL", "")),
-        80: ("LCD_ADDR", config.get_value("LCD_ADDR", "")),
-        82: ("LCD_FREQ", config.get_value("LCD_FREQ", "")),
-        84: ("LCD_COLS", config.get_value("LCD_COLS", "")),
-        86: ("LCD_ROWS", config.get_value("LCD_ROWS", "")),
-        88: ("RELAY_OPEN_PIN", config.get_value("RELAY_OPEN_PIN", "")),
-        90: ("RELAY_CLOSE_PIN", config.get_value("RELAY_CLOSE_PIN", "")),
-        92: ("BUTTON_TEMP_UP_PIN", config.get_value("BUTTON_TEMP_UP_PIN", "")),
-        94: ("BUTTON_TEMP_DOWN_PIN", config.get_value("BUTTON_TEMP_DOWN_PIN", "")),
+        78: ("LCD_PIN_SDA", config.get_value("LCD_PIN_SDA", "")),
+        80: ("LCD_PIN_SCL", config.get_value("LCD_PIN_SCL", "")),
+        82: ("LCD_ADDR", config.get_value("LCD_ADDR", "")),
+        84: ("LCD_FREQ", config.get_value("LCD_FREQ", "")),
+        86: ("LCD_COLS", config.get_value("LCD_COLS", "")),
+        88: ("LCD_ROWS", config.get_value("LCD_ROWS", "")),
+        90: ("RELAY_OPEN_PIN", config.get_value("RELAY_OPEN_PIN", "")),
+        92: ("RELAY_CLOSE_PIN", config.get_value("RELAY_CLOSE_PIN", "")),
+        94: ("BUTTON_TEMP_UP_PIN", config.get_value("BUTTON_TEMP_UP_PIN", "")),
+        96: ("BUTTON_TEMP_DOWN_PIN", config.get_value("BUTTON_TEMP_DOWN_PIN", "")),
     }
 
     # replace keys

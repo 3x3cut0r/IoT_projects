@@ -43,10 +43,14 @@
                         <option value="INFO"<!--log_level_INFO-->>INFO</option>
                         <option value="VERBOSE"<!--log_level_VERBOSE-->>VERBOSE</option>
                     </select></td></tr>
-                <tr><td><label for="temp_change_high_threshold">Anpassungswert (Faktor) der Relais Schaltzeit bei hoher Temperaturveränderung:</label></td>
-                    <td><input type="number" id="temp_change_high_threshold" name="temp_change_high_threshold" placeholder="1.0" value="<!--temp_change_high_threshold-->" /></td></tr>
-                <tr><td><label for="temp_change_medium_threshold">Anpassungswert (Faktor) der Relais Schaltzeit bei mittlerer Temperaturveränderung:</label></td>
-                    <td><input type="number" id="temp_change_medium_threshold" name="temp_change_medium_threshold" placeholder="0.3" value="<!--temp_change_medium_threshold-->" /></td></tr>
+                <tr><td><label for="interval">Intervall Anpassungswert (in Millisekunden). Verringere den Wert, falls die reale Zeit schneller vergeht als angezeigt:</label></td>
+                    <td><input type="number" id="interval" name="interval" placeholder="1000" value="<!--interval-->" /></td></tr>
+                <tr><td><label for="temp_sampling_interval">Intervall für (Kategorie-)Messung (in Millisekunden):</label></td>
+                    <td><input type="number" id="temp_sampling_interval" name="temp_sampling_interval" placeholder="10000" value="<!--temp_sampling_interval-->" /></td></tr>
+                <tr><td><label for="temp_change_high_threshold_temp">Temperaturabweichung (in &deg;C), ab der die Kategorie auf HIGH gesetzt wird:</label></td>
+                    <td><input type="number" id="temp_change_high_threshold_temp" name="temp_change_high_threshold_temp" placeholder="1.0" value="<!--temp_change_high_threshold_temp-->" /></td></tr>
+                <tr><td><label for="temp_change_high_threshold_multiplier">Multiplikator für Relais Schaltzeit bei Kategorie: HIGH:</label></td>
+                    <td><input type="number" id="temp_change_high_threshold_multiplier" name="temp_change_high_threshold_multiplier" placeholder="0.5" value="<!--temp_change_high_threshold_multiplier-->" /></td></tr>
                 <tr><td><label for="wifi_max_attempts">WLAN-Modul versucht x Sekunden sich zu verbinden vor einem erneuten Versuch:</label></td>
                     <td><input type="number" id="wifi_max_attempts" name="wifi_max_attempts" placeholder="10" value="<!--wifi_max_attempts-->" /></td></tr>
                 <tr><td><br /><input type="submit" value="Speichern" /></td></tr>
@@ -55,21 +59,19 @@
                     <td><div id="wifi_ssid"><!--wifi_ssid--></div></td></tr>
                 <tr><td><div for="previous_millis">Previous Millis:</div></td>
                     <td><div id="previous_millis"><!--previous_millis--></div></td></tr>
-                <tr><td><div for="interval">Interval:</div></td>
-                    <td><div id="interval"><!--interval--></div></td></tr>
                 <tr><td><div for="current_temp">Aktuelle Temperatur:</div></td>
                     <td><div id="current_temp"><!--current_temp--></div></td></tr>
                 <tr><td><div for="temp_last_measurement">Temperatur der letzten (Kategorie-)Messung:</div></td>
                     <td><div id="temp_last_measurement"><!--temp_last_measurement--></div></td></tr>
                 <tr><td><div for="temp_last_measurement_time">Zeit der letzten (Kategorie-)Messung:</div></td>
                     <td><div id="temp_last_measurement_time"><!--temp_last_measurement_time--></div></td></tr>
-                <tr><td><div for="temp_sampling_interval">Intervall für (Kategorie-)Messung (in Millisekunden):</div></td>
-                    <td><div id="temp_sampling_interval"><!--temp_sampling_interval--></div></td></tr>
                 <tr><td><div for="temp_change_category">Kategorie der Temperaturveränderung:</div></td>
                     <td><div id="temp_change_category"><!--temp_change_category--></div></td></tr>
                 <tr><td><h3>PIN Belegung</h3></td></tr>
                 <tr><td><div for="TEMP_SENSOR_PIN">Temperatur Sensor (PIN):</div></td>
                     <td><div id="TEMP_SENSOR_PIN"><!--TEMP_SENSOR_PIN--></div></td></tr>
+                <tr><td><div for="TEMP_SENSOR2_PIN">Temperatur Sensor 2 (PIN):</div></td>
+                    <td><div id="TEMP_SENSOR2_PIN"><!--TEMP_SENSOR2_PIN--></div></td></tr>
                 <tr><td><div for="TEMP_SENSOR_RESOLUTION_BIT">Temperatur Sensor Auflösung (BIT):</div></td>
                     <td><div id="TEMP_SENSOR_RESOLUTION_BIT"><!--TEMP_SENSOR_RESOLUTION_BIT--></div></td></tr>
                 <tr><td><div for="LCD_PIN_SDA">LCD SDA (PIN):</div></td>
