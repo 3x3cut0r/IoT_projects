@@ -5,7 +5,7 @@ from src.log import log
 from src.config import config  # Config() instance
 from src.functions import print_nominal_temp
 from src.lcd import get_lcd_line, set_backlight
-from src.wifi import wifi, connect_wifi, check_wifi_isconnected
+from src.wifi import connect_wifi, check_wifi_isconnected
 
 
 # ==================================================
