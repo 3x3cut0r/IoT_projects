@@ -41,7 +41,7 @@ except OSError as e:
 
 lcd_lines = [
     "".join([" " for _ in range(config.get_int_value("LCD_COLS", 16))])
-    for _ in range(config.get_int_value("LCD_ROWS", 2))
+    for _ in range(config.get_int_value("LCD_ROWS", 4))
 ]
 
 # ==================================================
