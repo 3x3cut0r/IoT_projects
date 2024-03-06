@@ -65,7 +65,7 @@ function Copy-ProjectFiles {
     Write-Host "Projektdateien kopiert"
 }
 
-function Copy-ProjectFiles {
+function List-ProjectFiles {
     Write-Host "Liste Projektdateien..."
     python -m mpremote connect $port ls
     python -m mpremote connect $port ls :src
@@ -82,3 +82,5 @@ Remove-ProjectFiles
 if ($clean) { exit }
 
 Copy-ProjectFiles
+
+List-ProjectFiles
