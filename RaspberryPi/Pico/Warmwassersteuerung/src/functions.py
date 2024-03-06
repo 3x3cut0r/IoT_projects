@@ -16,14 +16,15 @@ from src.temp import temp_sensor  # TemperatureSensor() instance
 # categorize temp change
 def categorize_temp_change(temp_change=0.0):
     # load config
-    high_threshold = config.get_float_value("temp_change_high_threshold", 1.0)
-    medium_threshold = config.get_float_value("temp_change_medium_threshold", 0.3)
+    high_threshold = config.get_float_value("temp_change_high_threshold_temp", 1.0)
+    # medium_threshold = config.get_float_value("temp_change_medium_threshold", 0.3)
+    
     abs_temp_change = abs(temp_change)
 
     if abs_temp_change >= high_threshold:
         category = "HIGH"  # TempChangeCategory.HIGH
-    elif abs_temp_change >= medium_threshold:
-        category = "MEDIUM"  # TempChangeCategory.MEDIUM
+    # elif abs_temp_change >= medium_threshold:
+    #     category = "MEDIUM"  # TempChangeCategory.MEDIUM
     else:
         category = "LOW"  # TempChangeCategory.LOW
 
@@ -41,13 +42,9 @@ def adjust_relay_time_based_on_temp_category():
     relay_time = config.get_int_value("relay_time", 2000)
 
     if temp_category == "HIGH":
-        return int(
-            relay_time * 0.3
-        )  # shorter opening time for rapid temperature changes
-    elif temp_category == "MEDIUM":
-        return int(
-            relay_time * 0.6
-        )  # moderate opening time for normal temperature changes
+        return int(relay_time * 0.3)  # shorter opening time for rapid temperature changes
+    # elif temp_category == "MEDIUM":
+    #     return int(relay_time * 0.6)  # moderate opening time for normal temperature changes
     else:
         return relay_time  # normal opening time for slow temperature changes
 
@@ -59,9 +56,9 @@ def adjust_update_time_based_on_temp_category():
     update_time = config.get_int_value("update_time", 120)
 
     if temp_category == "HIGH":
-        return int(update_time / 2.0)  # temp measurement takes place very often
-    elif temp_category == "MEDIUM":
-        return int(update_time / 1.3)  # temp measurement takes place more often
+        return int(update_time * config.get_float_value("temp_change_high_threshold_multiplier", 0.5))  # temp measurement takes place very often
+    # elif temp_category == "MEDIUM":
+    #     return return int(update_time * config.get_float_value("temp_change_medium_threshold_multiplier", 0.75))  # temp measurement takes place more often
     else:
         return update_time  # temp measurement takes place normally
 
@@ -84,7 +81,7 @@ def convert_utf8(string=""):
 
 # update current temp on lcd
 def update_temp():
-    # read temp
+    # read and set temp
     temp_sensor.get_temp()
 
     # get current temperature and LCD columns once

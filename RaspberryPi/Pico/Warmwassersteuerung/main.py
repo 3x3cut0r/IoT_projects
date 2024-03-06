@@ -98,6 +98,8 @@ async def main():
         if current_millis - config.get_int_value(
             "temp_last_measurement_time"
         ) >= config.get_int_value("temp_sampling_interval"):
+          
+            # update temp
             update_temp()
             temp_change = config.get_float_value(
                 "current_temp", -127.0
