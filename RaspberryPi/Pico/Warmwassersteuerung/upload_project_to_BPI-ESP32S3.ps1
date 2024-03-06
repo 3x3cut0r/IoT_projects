@@ -12,7 +12,7 @@ if (-not $port) {
     exit
 }
 
-function Remove-ProjectFiles {
+function RemoveProjectFiles {
     Write-Host "Entferne Projektdateien..."
     python -m mpremote connect $port rm :boot.py
     python -m mpremote connect $port rm :main.py
@@ -39,7 +39,7 @@ function Remove-ProjectFiles {
     Write-Host "Projektdateien entfernt"
 }
 
-function Copy-ProjectFiles {
+function CopyProjectFiles {
     Write-Host "Kopiere Projektdateien..."
     python -m mpremote connect $port cp ./main.py :main.py
     if ($config) {
@@ -65,7 +65,7 @@ function Copy-ProjectFiles {
     Write-Host "Projektdateien kopiert"
 }
 
-function List-ProjectFiles {
+function ListProjectFiles {
     Write-Host "Liste Projektdateien..."
     python -m mpremote connect $port ls
     python -m mpremote connect $port ls :src
@@ -77,10 +77,10 @@ if (-not $port) {
     exit
 }
 
-Remove-ProjectFiles
+RemoveProjectFiles
 
 if ($clean) { exit }
 
-Copy-ProjectFiles
+CopyProjectFiles
 
-List-ProjectFiles
+ListProjectFiles
