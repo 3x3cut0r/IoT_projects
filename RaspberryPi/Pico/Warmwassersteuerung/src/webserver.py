@@ -104,17 +104,16 @@ def replace_placeholder(content="", line_number=0):
         49: ("temp_sampling_interval", config.get_value("temp_sampling_interval", "")),
         51: (
             "temp_change_high_threshold_temp",
-            config.get_float_value("temp_change_high_threshold_temp", ""),
+            config.get_float_value("temp_change_high_threshold_temp", 1.0),
         ),
         53: (
             "temp_change_high_threshold_multiplier",
-            config.get_float_value("temp_change_high_threshold_multiplier", ""),
+            config.get_float_value("temp_change_high_threshold_multiplier", 0.5),
         ),
         55: ("wifi_max_attempts", config.get_value("wifi_max_attempts", "")),
         # INFO
         59: ("wifi_ssid", config.get_value("wifi_ssid", "")),
         61: ("previous_millis", config.get_value("previous_millis", "")),
-
         63: ("current_temp", config.get_value("current_temp", "")),
         65: ("temp_last_measurement", config.get_value("temp_last_measurement", "")),
         67: (
