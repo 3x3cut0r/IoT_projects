@@ -200,7 +200,7 @@ TempChangeCategory tempChangeCat = LOW_TEMP; // Kategorie des letzten TEMP_SAMPL
 
 // Temp Thresholds
 float tempChangeHighThreshold = 1.0; // gibt hohe Temperaturveränderung des letzten TEMP_SAMPLING_INTERVALs an
-float tempChangeMediumThreshold = 0.3; // gibt niedrigere Temperaturveränderung des letzten TEMP_SAMPLING_INTERVALs an
+// float tempChangeMediumThreshold = 0.3; // gibt niedrigere Temperaturveränderung des letzten TEMP_SAMPLING_INTERVALs an
 
 // Buttons
 const int BUTTON_TEMP_UP_PIN = 2; // PIN des Buttons Solltemperatur senken
@@ -292,11 +292,11 @@ TempChangeCategory categorizeTemperatureChange(float tempChange) {
     lcd.setCursor(11, 2);
     lcd.write(byte(tempChange > 0 ? 0 : 1));
     return HIGH_TEMP;
-  } else if (abs(tempChange) >= tempChangeMediumThreshold) {
-    printLCD(2, 0, "Temperatur    MEDIUM");
-    lcd.setCursor(11, 2);
-    lcd.write(byte(tempChange > 0 ? 0 : 1));
-    return MEDIUM_TEMP;
+  // } else if (abs(tempChange) >= tempChangeMediumThreshold) {
+  //   printLCD(2, 0, "Temperatur    MEDIUM");
+  //   lcd.setCursor(11, 2);
+  //   lcd.write(byte(tempChange > 0 ? 0 : 1));
+  //   return MEDIUM_TEMP;
   } else {
     printLCD(2, 0, "Temperatur       LOW");
     lcd.setCursor(11, 2);
@@ -311,9 +311,9 @@ TempChangeCategory categorizeTemperatureChange(float tempChange) {
 int adjustRelayTimeBasedOnTempCategory(unsigned int relayTime) {
   switch (tempChangeCat) {
     case HIGH_TEMP:
-      return relayTime = (unsigned int) (relayTime * 0.3); // Kürzere Öffnungszeit für schnelle Temperaturänderungen
-    case MEDIUM_TEMP:
-      return relayTime = (unsigned int) (relayTime * 0.6); // Moderate Öffnungszeit
+      return relayTime = (unsigned int) (relayTime * 0.5); // Kürzere Öffnungszeit für schnelle Temperaturänderungen
+    // case MEDIUM_TEMP:
+    //   return relayTime = (unsigned int) (relayTime * 0.75); // Moderate Öffnungszeit
     case LOW_TEMP:
       return relayTime = (unsigned int) (relayTime * 1.0); // Längere Öffnungszeit für langsame Änderungen
   }
@@ -325,11 +325,11 @@ int adjustRelayTimeBasedOnTempCategory(unsigned int relayTime) {
 int adjustUpdateTimeBasedOnTempCategory(unsigned int updateTime) {
   switch (tempChangeCat) {
     case HIGH_TEMP:
-      return updateTime = (unsigned int) (updateTime / 2.0); // Temperaturmessung findet sehr oft statt
-    case MEDIUM_TEMP:
-      return updateTime = (unsigned int) (updateTime / 1.3); // Temperaturmessung findet öfter statt
+      return updateTime = (unsigned int) (updateTime * 0.5); // Temperaturmessung findet sehr oft statt
+    // case MEDIUM_TEMP:
+    //  return updateTime = (unsigned int) (updateTime * 0.75); // Temperaturmessung findet öfter statt
     case LOW_TEMP:
-      return updateTime = (unsigned int) (updateTime / 1.0); // Temperaturmessung findet normal statt
+      return updateTime = (unsigned int) (updateTime * 1.0); // Temperaturmessung findet normal statt
   }
 }
 
@@ -660,7 +660,11 @@ void loop() {
       openRelais(RELAIS_TIME);
 
       // reset Timer und berücksichtige Temperaturveränderung
-      updateTime = adjustUpdateTimeBasedOnTempCategory(UPDATE_TIME);
+      // updateTime = adjustUpdateTimeBasedOnTempCategory(UPDATE_TIME);
+      updateTime = UPDATE_TIME;
+      if (currentTemp >= 60) {
+        updateTime *= 0.5;
+      }
 
       // update nominalTemp
       updateNominalMinTempInEEPROM();
