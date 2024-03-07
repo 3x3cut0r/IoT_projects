@@ -45,7 +45,7 @@ function CopyProjectFiles {
     python -m mpremote connect $port cp ./main.py :main.py
     if ($config) {
         Write-Host "Kopiere config.json"
-        python -m mpremote connect $port cp ./config.py :config.json
+        python -m mpremote connect $port cp ./config.json :config.json
     }
     python -m mpremote connect $port mkdir src
     python -m mpremote connect $port cp ./src/button.py :src/button.py
