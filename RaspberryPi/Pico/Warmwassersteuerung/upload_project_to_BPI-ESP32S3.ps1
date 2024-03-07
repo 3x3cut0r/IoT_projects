@@ -18,8 +18,9 @@ function RemoveProjectFiles {
     python -m mpremote connect $port rm :main.py
     if ($config) {
         Write-Host "Entferne config.json"
-        python -m mpremote connect $port rm :config.py
+        python -m mpremote connect $port rm :config.json
     }
+    python -m mpremote connect $port rm :config_backup.json
     python -m mpremote connect $port rm :src/button.py
     python -m mpremote connect $port rm :src/config.py
     python -m mpremote connect $port rm :src/functions.py
@@ -44,7 +45,7 @@ function CopyProjectFiles {
     python -m mpremote connect $port cp ./main.py :main.py
     if ($config) {
         Write-Host "Kopiere config.json"
-        python -m mpremote connect $port cp ./config.py :config.py
+        python -m mpremote connect $port cp ./config.py :config.json
     }
     python -m mpremote connect $port mkdir src
     python -m mpremote connect $port cp ./src/button.py :src/button.py
