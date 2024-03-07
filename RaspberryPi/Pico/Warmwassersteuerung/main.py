@@ -78,8 +78,8 @@ async def main():
     await wait_start(config.get_int_value("delay_before_start_2"))
 
     previous_millis = 0
-    interval = config.get_int_value("interval")
-    update_time = config.get_int_value("update_time")
+    interval = config.get_int_value("interval", 1000)
+    update_time = config.get_int_value("update_time", 120)
 
     # open relay
     open_relays(config.get_int_value("relay_time", 2000))
@@ -98,7 +98,7 @@ async def main():
         if current_millis - config.get_int_value(
             "temp_last_measurement_time"
         ) >= config.get_int_value("temp_sampling_interval"):
-          
+
             # update temp
             update_temp()
             temp_change = config.get_float_value(
@@ -126,7 +126,7 @@ async def main():
                 log("VERBOSE", "mem_alloc(): {} Bytes".format(gc.mem_alloc()))
 
                 # update temp on temp update interval
-                if update_time % config.get_int_value("temp_update_interval") == 0:
+                if update_time % config.get_int_value("temp_update_interval", 5) == 0:
                     update_temp()
 
                 update_time -= 1
