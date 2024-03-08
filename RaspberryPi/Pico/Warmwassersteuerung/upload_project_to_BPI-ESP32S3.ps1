@@ -42,6 +42,7 @@ function RemoveProjectFiles {
 
 function CopyProjectFiles {
     Write-Host "Kopiere Projektdateien..."
+    python -m mpremote connect $port cp ./boot.py :boot.py
     python -m mpremote connect $port cp ./main.py :main.py
     if ($config) {
         Write-Host "Kopiere config.json"
