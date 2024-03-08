@@ -59,6 +59,9 @@ async def connect_wifi():
             print_lcd(2, 0, "keine SSID gefunden!")
             wifi_is_activated = False
 
+        await asyncio.sleep(5)
+        print_lcd(2, 0, " ")
+
 
 # check wifi is active
 def check_wifi_isactivated():
