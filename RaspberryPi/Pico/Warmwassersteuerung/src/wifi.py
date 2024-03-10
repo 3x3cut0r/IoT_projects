@@ -43,7 +43,7 @@ async def connect_wifi():
             ):
                 await asyncio.sleep(1)
                 attempts += 1
-                print_lcd(0, 0, "verbinde WLAN ... {:02d}".format(attempts))
+                print_lcd(2, 0, "verbinde WLAN ... {:02d}".format(attempts))
 
             if wifi.isconnected():
                 if show_message >= 1:
