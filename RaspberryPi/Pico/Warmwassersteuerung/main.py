@@ -156,16 +156,21 @@ async def main():
 
 
 if __name__ == "__main__":
-    log("INFO", "__main__")
+    try:
+        log("INFO", "__main__")
 
-    # create asyncio event loop
-    loop = asyncio.get_event_loop()
+        # create asyncio event loop
+        loop = asyncio.get_event_loop()
 
-    # run webserver() as task
-    loop.create_task(run_webserver())
+        # run webserver() as task
+        loop.create_task(run_webserver())
 
-    # run main() as task
-    loop.create_task(main())
+        # run main() as task
+        loop.create_task(main())
 
-    # run event loop forever
-    loop.run_forever()
+        # run event loop forever
+        loop.run_forever()
+
+    except Exception as e:
+        with open("error.log", "a", encoding="utf-8") as file:
+            file.write(f"ERROR: {str(e)}\n")
