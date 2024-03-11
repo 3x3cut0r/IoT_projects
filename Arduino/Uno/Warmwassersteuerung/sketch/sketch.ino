@@ -1,5 +1,5 @@
 /**
-  Heizungssteuerung
+  Warmwassersteuerung
   mit 4 Zeilen Display
   und Soll-Temperatur-Bedienung
 
