@@ -23,13 +23,13 @@ class Config:
     def load_config(self):
         # try loading config.json
         try:
-            with open(self.file_path(), "r") as file:
+            with open(self.file_path(), "r", encoding="utf-8") as file:
                 self.config = ujson.load(file)
                 return self.config
         except OSError:
             # try loading config_backup.json
             try:
-                with open(self.file_path(backup=True), "r") as file:
+                with open(self.file_path(backup=True), "r", encoding="utf-8") as file:
                     self.config = ujson.load(file)
                     return self.config
             except OSError:
@@ -46,7 +46,7 @@ class Config:
     # save config
     def save_config(self, backup=False):
         try:
-            with open(self.file_path(backup), "w") as file:
+            with open(self.file_path(backup), "w", encoding="utf-8") as file:
                 ujson.dump(self.config, file)
         except OSError as e:
             print(f"ERROR: writing to {self.file_name}: {e}")
