@@ -1,5 +1,5 @@
 # imports
-import time  # https://docs.micropython.org/en/latest/library/time.html
+import uasyncio as asyncio  # https://docs.micropython.org/en/latest/library/asyncio.html
 from machine import Pin  # https://docs.micropython.org/en/latest/library/machine.html
 from onewire import OneWire  # OneWire
 from ds18x20 import DS18X20  # DS180B20
@@ -11,9 +11,9 @@ from src.config import config  # Config() instance
 # class TemperatureSensor
 # ==================================================
 class TemperatureSensor:
-    def __init__(self):
+    def __init__(self, pin_number=config.get_int_value("TEMP_SENSOR_PIN", 4)):
         # set temp sensor pin
-        self.temp_sensor_pin = Pin(config.get_int_value("TEMP_SENSOR_PIN", 16))
+        self.temp_sensor_pin = Pin(pin_number)
         self.temp_sensor = DS18X20(OneWire(self.temp_sensor_pin))
         # self.set_resolution(config.get_int_value("TEMP_SENSOR_RESOLUTION_BIT", 9))
 
@@ -36,12 +36,12 @@ class TemperatureSensor:
             log("ERROR", f"setting temp resolution: {e}")
 
     # get temperature
-    def get_temp(self):
+    async def get_temp(self):
         try:
             roms = self.temp_sensor.scan()
             if not roms:
                 raise ValueError("no sensors found")
-            time.sleep_ms(750)
+            await asyncio.sleep_ms(750)
 
             self.temp_sensor.convert_temp()
             # get temps
@@ -57,4 +57,5 @@ class TemperatureSensor:
 
 
 # instance TemperatureSensor()
-temp_sensor = TemperatureSensor()
+temp_sensor = TemperatureSensor(config.get_int_value("TEMP_SENSOR_PIN", 4))
+temp_sensor_2 = TemperatureSensor(config.get_int_value("TEMP_SENSOR_2_PIN", 6))

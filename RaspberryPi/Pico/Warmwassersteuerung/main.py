@@ -61,7 +61,7 @@ async def main():
     init_relays()
 
     # update temp
-    update_temp()
+    await update_temp()
     config.set_value(
         "temp_last_measurement", config.get_float_value("current_temp", -127.0)
     )
@@ -71,8 +71,8 @@ async def main():
 
     # wait start
     await wait_start(config.get_int_value("delay_before_start_1"))
-    set_relay(
-        config.get_int_value("RELAY_CLOSE_PIN", 15),
+    await set_relay(
+        config.get_int_value("RELAY_CLOSE_PIN", 13),
         config.get_int_value("init_relay_time", 2000),
     )  # open relay initial
     await wait_start(config.get_int_value("delay_before_start_2"))
@@ -82,7 +82,7 @@ async def main():
     update_time = config.get_int_value("update_time", 120)
 
     # open relay
-    open_relays(config.get_int_value("relay_time", 2000))
+    await open_relays(config.get_int_value("relay_time", 2000))
 
     # ==================================================
     # main loop
@@ -100,7 +100,7 @@ async def main():
         ) >= config.get_int_value("temp_sampling_interval"):
 
             # update temp
-            update_temp()
+            await update_temp()
             temp_change = config.get_float_value(
                 "current_temp", -127.0
             ) - config.get_float_value("temp_last_measurement")
@@ -127,7 +127,7 @@ async def main():
 
                 # update temp on temp update interval
                 if update_time % config.get_int_value("temp_update_interval", 5) == 0:
-                    update_temp()
+                    await update_temp()
 
                 update_time -= 1
 
@@ -136,7 +136,7 @@ async def main():
 
             if update_time <= 0:
                 # open relay
-                open_relays(config.get_int_value("relay_time", 2000))
+                await open_relays(config.get_int_value("relay_time", 2000))
 
                 # set and adjust update_time based on temp category
                 update_time = adjust_update_time_based_on_temp_category()
