@@ -11,11 +11,22 @@ from src.config import config  # Config() instance
 # class TemperatureSensor
 # ==================================================
 class TemperatureSensor:
-    def __init__(self, pin_number=config.get_int_value("TEMP_SENSOR_PIN", 4)):
-        # set temp sensor pin
+    def __init__(
+        self,
+        pin_number,
+        resolution,
+    ):
+        if pin_number is None:
+            pin_number = config.get_int_value("TEMP_SENSOR_PIN", 4)
+        if resolution is None:
+            resolution = config.get_int_value("TEMP_SENSOR_RESOLUTION_BIT", 11)
+
+        # init temp sensor
         self.temp_sensor_pin = Pin(pin_number)
         self.temp_sensor = DS18X20(OneWire(self.temp_sensor_pin))
-        # self.set_resolution(config.get_int_value("TEMP_SENSOR_RESOLUTION_BIT", 9))
+        self.resolution = resolution
+        self.resolution_time = int(750 / (2 ** (12 - resolution)))
+        self.set_resolution()
 
     # set temp sensor resolution
     # bits   resolution        time
@@ -23,32 +34,51 @@ class TemperatureSensor:
     #   10      0,25 °C   187,50 ms
     #   11     0,125 °C   375,00 ms
     #   12   0,00626 °C   750,00 ms
-    def set_resolution(self, resolution):
+    def set_resolution(self):
         try:
             # set temp resolution
             resolution = max(
-                9, min(resolution, 12)
-            )  # Beschränken Sie die Auflösung auf gültige Werte
+                9, min(self.resolution, 12)
+            )  # limits the resolution to valid values
+
+            # scan for available temp sensors
             roms = self.temp_sensor.scan()
+
+            # set resolution
             for rom in roms:
-                self.temp_sensor.write_scratch(rom, resolution=resolution)  # type: ignore
+                if resolution == 9:
+                    byte_string = b"\x00\x00\x1f"
+                elif resolution == 10:
+                    byte_string = b"\x00\x00\x3f"
+                elif resolution == 11:
+                    byte_string = b"\x00\x00\x5f"
+                else:
+                    byte_string = b"\x00\x00\x7f"
+                self.temp_sensor.write_scratch(rom, byte_string)
+
         except OSError as e:
             log("ERROR", f"setting temp resolution: {e}")
 
     # get temperature
     async def get_temp(self):
         try:
+            # scan for available temp sensors
             roms = self.temp_sensor.scan()
             if not roms:
                 raise ValueError("no sensors found")
-            await asyncio.sleep_ms(750)
 
+            # start measurement
             self.temp_sensor.convert_temp()
-            # get temps
+
+            # wait for measurement
+            await asyncio.sleep_ms(self.resolution_time)
+
+            # get temps from measurements
             for rom in roms:
                 temp = self.temp_sensor.read_temp(rom)
                 config.set_value("current_temp", round(temp, 1))
                 return round(temp, 1)  # return only first temp found
+
         except (OSError, ValueError) as e:
             log("ERROR", f"reading temp: {e}")
             temp = -127.0
@@ -57,5 +87,11 @@ class TemperatureSensor:
 
 
 # instance TemperatureSensor()
-temp_sensor = TemperatureSensor(config.get_int_value("TEMP_SENSOR_PIN", 4))
-temp_sensor_2 = TemperatureSensor(config.get_int_value("TEMP_SENSOR_2_PIN", 6))
+temp_sensor = TemperatureSensor(
+    config.get_int_value("TEMP_SENSOR_PIN", 4),
+    config.get_int_value("TEMP_SENSOR_RESOLUTION_BIT", 11),
+)
+temp_sensor_2 = TemperatureSensor(
+    config.get_int_value("TEMP_SENSOR_2_PIN", 6),
+    config.get_int_value("TEMP_SENSOR_RESOLUTION_BIT", 11),
+)
