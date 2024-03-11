@@ -137,10 +137,10 @@ async def set_relay(pin, relay_time):
     if 0 < current_temp <= 120:
         if pin == relay_open_pin:
             print_lcd(3, 0, "öffne Ventil     >>>")
-            open_relay(relay_time)
+            await open_relay(relay_time)
         elif pin == relay_close_pin:
             print_lcd(3, 0, "schließe Ventil: <<<")
-            close_relay(relay_time)
+            await close_relay(relay_time)
     else:
         print_lcd(3, 0, "Fehler: Temp Fehler!")
         await asyncio.sleep(2)
