@@ -8,8 +8,8 @@ from src.log import log
 from src.config import config  # Config() instance
 
 # setup i2c
-sda_pin = Pin(config.get_int_value("LCD_PIN_SDA", 20))
-scl_pin = Pin(config.get_int_value("LCD_PIN_SCL", 21))
+sda_pin = Pin(config.get_int_value("LCD_PIN_SDA", 8))
+scl_pin = Pin(config.get_int_value("LCD_PIN_SCL", 9))
 i2c = I2C(0, sda=sda_pin, scl=scl_pin, freq=config.get_int_value("LCD_FREQ", 100000))
 
 # setup lcd
