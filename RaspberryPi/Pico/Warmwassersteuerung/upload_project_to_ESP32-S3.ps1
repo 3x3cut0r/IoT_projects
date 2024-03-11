@@ -1,6 +1,7 @@
 # .\upload_project_to_BPI-ESP32S3.ps1 -port COM1 -config
 
 param(
+    [switch]$copy,
     [string]$port,
     [switch]$config,
     [switch]$clean
@@ -79,7 +80,7 @@ if (-not $port) {
     exit
 }
 
-RemoveProjectFiles
+if (-not $copy) { RemoveProjectFiles }
 
 if ($clean) { exit }
 
