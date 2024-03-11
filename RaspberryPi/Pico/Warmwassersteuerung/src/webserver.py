@@ -188,7 +188,7 @@ async def get_index_html(writer):
     file_path = file_name_präfix + "index.html"
     line_number = 0
 
-    with open(file_path, "r") as file:
+    with open(file_path, "r", encoding="utf-8") as file:
         for line in file:
             line_number += 1
             line = replace_placeholder(line, line_number)
@@ -324,5 +324,11 @@ async def run_webserver():
 
 
 if __name__ == "__main__":
+    # create asyncio event loop
     loop = asyncio.get_event_loop()
-    loop.run_until_complete(run_webserver())
+
+    # run webserver() as task
+    loop.create_task(run_webserver())
+
+    # run event loop forever
+    loop.run_forever()
