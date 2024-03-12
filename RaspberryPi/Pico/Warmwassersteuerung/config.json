@@ -26,7 +26,7 @@
     "temp_change_high_threshold_multiplier": 0.5,
     "TEMP_SENSOR_PIN": 4,
     "TEMP_SENSOR_2_PIN": 6,
-    "TEMP_SENSOR_RESOLUTION_BIT": 9,
+    "TEMP_SENSOR_RESOLUTION_BIT": 11,
     "LCD_PIN_SDA": 8,
     "LCD_PIN_SCL": 9,
     "LCD_ADDR": "0x27",
