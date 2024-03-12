@@ -127,7 +127,7 @@ def ljust(string="", width=0, fillchar=" "):
 
 
 # fill string with spaces up to 20 chars
-def fill(string="", cursor=0, padding=" "):
+def fill_lcd(string="", cursor=0, padding=" "):
     fill = config.get_int_value("LCD_COLS", 20) - int(cursor)
     return ljust(str(string), fill, str(padding))
 
@@ -164,13 +164,14 @@ def set_lcd_line(line=0, cursor=0, message=""):
 
 
 # print lcd
-def print_lcd(line=0, cursor=0, message=""):
+def print_lcd(line=0, cursor=0, message="", fill=True):
     line = int(line)
     cursor = int(cursor)
     message = str(message)
 
     # fill message
-    message = str(fill(message, cursor))
+    if fill:
+        message = str(fill_lcd(message, cursor))
 
     # set lcd line
     set_lcd_line(line, cursor, message)
