@@ -108,10 +108,10 @@ async def update_temp(sensor_number=1):
     # ....................
     # temp 2     temp 1
     # -127.0 °C  -127.0 °C
-    temp_pos = lcd_cols - len(current_temp_string)
+    temp_pos = max(lcd_cols - len(current_temp_string), 0)
     if sensor_number > 1:
-        temp_pos = int(lcd_cols / 2) - len(current_temp_string)
-    print_lcd(0, temp_pos, current_temp_string_utf8)
+        temp_pos = max(int(lcd_cols / 2) - len(current_temp_string), 0)
+    print_lcd(0, temp_pos, current_temp_string_utf8, False)
 
 
 # print nominal temp
@@ -278,6 +278,7 @@ async def wait_start(secs):
             # temp update on interval
             if secs % temp_update_interval == 0:
                 await update_temp()
+                await update_temp(2)
 
             # update timer
             update_timer(secs, "Starte in:")
