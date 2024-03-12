@@ -79,7 +79,7 @@ class TemperatureSensor:
                 return round(temp, 1)  # return only first temp found
 
         except (OSError, ValueError) as e:
-            log("ERROR", f"reading temp: {e}")
+            log("ERROR", f"reading temp on PIN {self.temp_sensor_pin}: {e}")
             temp = -127.0
             config.set_value("current_temp", temp)
             return temp
