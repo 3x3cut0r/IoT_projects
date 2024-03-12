@@ -11,11 +11,16 @@ from src.config import config  # Config() instance
 # class TemperatureSensor
 # ==================================================
 class TemperatureSensor:
+    instance_counter = 0
+
     def __init__(
         self,
         pin_number,
         resolution,
     ):
+        TemperatureSensor.instance_counter += 1
+        self.sensor_number = TemperatureSensor.instance_counter
+
         if pin_number is None:
             pin_number = config.get_int_value("TEMP_SENSOR_PIN", 4)
         if resolution is None:
@@ -80,7 +85,10 @@ class TemperatureSensor:
                 return round(temp, 1)  # return only first temp found
 
         except (OSError, ValueError) as e:
-            log("ERROR", f"reading temp on PIN {self.pin_number}: {e}")
+            log(
+                "ERROR",
+                f"reading temp on sensor {self.sensor_number} (pin {self.pin_number}): {e}",
+            )
             temp = -127.0
             config.set_value("current_temp", temp)
             return temp
