@@ -122,7 +122,7 @@ def replace_placeholder(content="", line_number=0):
         ),
         69: ("temp_change_category", config.get_value("temp_change_category", "")),
         72: ("TEMP_SENSOR_PIN", config.get_value("TEMP_SENSOR_PIN", "")),
-        74: ("TEMP_SENSOR2_PIN", config.get_value("TEMP_SENSOR2_PIN", "")),
+        74: ("TEMP_SENSOR_2_PIN", config.get_value("TEMP_SENSOR_2_PIN", "")),
         76: (
             "TEMP_SENSOR_RESOLUTION_BIT",
             config.get_value("TEMP_SENSOR_RESOLUTION_BIT", ""),
