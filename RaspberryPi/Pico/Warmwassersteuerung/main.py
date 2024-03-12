@@ -62,6 +62,7 @@ async def main():
 
     # update temp
     await update_temp()
+    await update_temp(2)
     config.set_value(
         "temp_last_measurement", config.get_float_value("current_temp", -127.0)
     )
@@ -128,6 +129,7 @@ async def main():
                 # update temp on temp update interval
                 if update_time % config.get_int_value("temp_update_interval", 5) == 0:
                     await update_temp()
+                    await update_temp(2)
 
                 update_time -= 1
 

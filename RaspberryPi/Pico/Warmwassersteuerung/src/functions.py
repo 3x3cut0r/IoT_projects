@@ -6,7 +6,7 @@ from src.button import check_button
 from src.config import config  # Config() instance
 from src.lcd import print_lcd, print_lcd_char
 from src.relay import open_relay, close_relay
-from src.temp import temp_sensor  # TemperatureSensor() instance
+from src.temp import temp_sensor, temp_sensor_2  # TemperatureSensor() instance
 
 # ==================================================
 # functions
@@ -85,22 +85,34 @@ def convert_utf8(string=""):
 
 
 # update current temp on lcd
-async def update_temp():
-    # read and set temp
-    await temp_sensor.get_temp()
+async def update_temp(sensor_number=1):
+    # set sensor postfix
+    sensor_postfix = ""
+    if sensor_number > 1:
+        sensor_postfix += f"_{sensor_postfix}"
 
-    # get current temperature and LCD columns once
-    current_temp = config.get_float_value("current_temp", -127.0, 1)
-    lcd_cols = config.get_int_value("LCD_COLS", 4)
+    # read temp
+    current_temp = await globals()[f"current_temp{sensor_postfix}"].get_temp()
+
+    # set temp
+    config.set_value(f"current_temp{sensor_postfix}", current_temp)
+
+    # set LCD columns once
+    lcd_cols = config.get_int_value("LCD_COLS", 20)
 
     # format the temperature string
     current_temp_string = f"{current_temp:.1f} °C"
     current_temp_string_utf8 = convert_utf8(current_temp_string)
 
-    log("INFO", f"update_temp({current_temp_string_utf8})")
+    log("INFO", f"update_temp{sensor_postfix}({current_temp_string_utf8})")
 
+    # print temp on LCD
+    # ....................
+    # temp 2     temp 1
+    # -127.0 °C  -127.0 °C
     temp_pos = lcd_cols - len(current_temp_string)
-    print_lcd(0, 0, "Aktuell:")
+    if sensor_number > 1:
+        temp_pos = int(lcd_cols / 2) - len(current_temp_string)
     print_lcd(0, temp_pos, current_temp_string_utf8)
 
 

@@ -17,6 +17,7 @@
     "previous_millis": 0,
     "interval": 950,
     "current_temp": -127.0,
+    "current_temp_2": -127.0,
     "temp_last_measurement": -127.0,
     "temp_last_measurement_time": 0,
     "temp_sampling_interval": 10000,

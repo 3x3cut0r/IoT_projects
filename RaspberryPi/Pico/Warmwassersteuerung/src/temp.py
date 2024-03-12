@@ -76,7 +76,6 @@ class TemperatureSensor:
             # get temps from measurements
             for rom in roms:
                 temp = self.temp_sensor.read_temp(rom)
-                config.set_value("current_temp", round(temp, 1))
                 return round(temp, 1)  # return only first temp found
 
         except (OSError, ValueError) as e:
