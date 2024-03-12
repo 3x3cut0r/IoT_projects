@@ -20,6 +20,7 @@ class TemperatureSensor:
             pin_number = config.get_int_value("TEMP_SENSOR_PIN", 4)
         if resolution is None:
             resolution = config.get_int_value("TEMP_SENSOR_RESOLUTION_BIT", 11)
+        self.pin_number = pin_number
 
         # init temp sensor
         self.temp_sensor_pin = Pin(pin_number)
@@ -79,7 +80,7 @@ class TemperatureSensor:
                 return round(temp, 1)  # return only first temp found
 
         except (OSError, ValueError) as e:
-            log("ERROR", f"reading temp on PIN {self.temp_sensor_pin}: {e}")
+            log("ERROR", f"reading temp on PIN {self.pin_number}: {e}")
             temp = -127.0
             config.set_value("current_temp", temp)
             return temp
