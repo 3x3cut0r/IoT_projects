@@ -87,12 +87,10 @@ def convert_utf8(string=""):
 # update current temp on lcd
 async def update_temp(sensor_number=1):
     # set sensor postfix
-    sensor_postfix = ""
-    if sensor_number > 1:
-        sensor_postfix += f"_{sensor_postfix}"
+    sensor_postfix = f"_{sensor_number}" if sensor_number > 1 else ""
 
     # read temp
-    current_temp = await globals()[f"current_temp{sensor_postfix}"].get_temp()
+    current_temp = await globals()[f"temp_sensor{sensor_postfix}"].get_temp()
 
     # set temp
     config.set_value(f"current_temp{sensor_postfix}", current_temp)
