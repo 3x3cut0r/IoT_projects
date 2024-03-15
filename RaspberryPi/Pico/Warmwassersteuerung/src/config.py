@@ -7,17 +7,16 @@ import ujson  # https://docs.micropython.org/en/latest/library/json.html
 # ==================================================
 class Config:
     def __init__(self, file_name="config.json", file_name_backup="config_backup.json"):
-        self.file_name_prefix = "../"
-        self.file_name = file_name
-        self.file_name_backup = file_name_backup
+        self.root_path = "/"
+        self.file_name = self.root_path + file_name
+        self.file_name_backup = self.root_path + file_name_backup
         self.config = {}
         self.load_config()
         self.reset_config()
 
     # file path
     def file_path(self, backup=False):
-        file_name = self.file_name_backup if backup else self.file_name
-        return self.file_name_prefix + file_name
+        return self.file_name_backup if backup else self.file_name
 
     # load config
     def load_config(self):

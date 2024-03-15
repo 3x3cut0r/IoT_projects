@@ -184,8 +184,8 @@ async def stream_file(writer, file_name, chunk_size=1024):
 
 # get index.html
 async def get_index_html(writer):
-    file_name_präfix = "../web/"
-    file_path = file_name_präfix + "index.html"
+    web_path = "/web/"
+    file_path = web_path + "index.html"
     line_number = 0
 
     with open(file_path, "r", encoding="utf-8") as file:
