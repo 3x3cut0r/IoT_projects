@@ -17,9 +17,9 @@
             <table>
                 <tr><td><h3>Konfiguration</h3></td></tr>
                 <tr><td><label for="nominal_min_temp">Solltemperatur von (in °C):</label></td>
-                    <td><input type="number" id="nominal_min_temp" name="nominal_min_temp" placeholder="42.0" value="<!--nominal_min_temp-->" /></td></tr>
+                    <td><input type="number" id="nominal_min_temp" name="nominal_min_temp" placeholder="42.0" value="<!--nominal_min_temp-->" step="0.5" /></td></tr>
                 <tr><td><label for="nominal_max_temp">Solltemperatur bis (in °C):</label></td>
-                    <td><input type="number" id="nominal_max_temp" name="nominal_max_temp" placeholder="55.0" value="<!--nominal_max_temp-->" /></td></tr>
+                    <td><input type="number" id="nominal_max_temp" name="nominal_max_temp" placeholder="55.0" value="<!--nominal_max_temp-->" step="0.5" /></td></tr>
                 <tr><td><label for="delay_before_start_1">1. Verzögerung bis Start (in Sekunden):</label></td>
                     <td><input type="number" id="delay_before_start_1" name="delay_before_start_1" placeholder="660" value="<!--delay_before_start_1-->" /></td></tr>
                 <tr><td><label for="delay_before_start_2">2. Verzögerung bis Start (in Sekunden):</label></td>
@@ -48,7 +48,7 @@
                 <tr><td><label for="temp_sampling_interval">Intervall für (Kategorie-)Messung (in Millisekunden):</label></td>
                     <td><input type="number" id="temp_sampling_interval" name="temp_sampling_interval" placeholder="10000" value="<!--temp_sampling_interval-->" /></td></tr>
                 <tr><td><label for="temp_change_high_threshold_temp">Temperaturabweichung (in &deg;C), ab der die Kategorie auf HIGH gesetzt wird:</label></td>
-                    <td><input type="number" id="temp_change_high_threshold_temp" name="temp_change_high_threshold_temp" placeholder="1.0" value="<!--temp_change_high_threshold_temp-->" /></td></tr>
+                    <td><input type="number" id="temp_change_high_threshold_temp" name="temp_change_high_threshold_temp" placeholder="1.0" value="<!--temp_change_high_threshold_temp-->" step="0.1" /></td></tr>
                 <tr><td><label for="temp_change_high_threshold_multiplier">Multiplikator für Relais Schaltzeit bei Kategorie: HIGH:</label></td>
                     <td><input type="number" id="temp_change_high_threshold_multiplier" name="temp_change_high_threshold_multiplier" placeholder="0.5" value="<!--temp_change_high_threshold_multiplier-->" /></td></tr>
                 <tr><td><label for="wifi_max_attempts">WLAN-Modul versucht x Sekunden sich zu verbinden vor einem erneuten Versuch:</label></td>
