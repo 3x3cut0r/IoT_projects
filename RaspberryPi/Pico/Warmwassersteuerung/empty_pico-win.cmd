@@ -6,5 +6,6 @@ ampy --port COM10 rm config.json
 ampy --port COM10 rm config_backup.json
 ampy --port COM10 rmdir src
 ampy --port COM10 rmdir web
+ampy --port COM10 rmdir .old
 echo "deleting files ... DONE"
 ampy --port COM10 ls
