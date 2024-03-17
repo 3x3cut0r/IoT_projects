@@ -68,7 +68,7 @@ const unsigned int INIT_RELAIS_TIME = 7000;
  * Maximaler Wert entspricht 18h 12m 15s
  * (wegen Arduino Uno Speicherbegrenzung von 32 bit (unsigned int))
  */
-const unsigned int UPDATE_TIME = 120; // Sekunden
+const unsigned int UPDATE_TIME = 125; // Sekunden
 
 /** 
  * Zeit (in Millisekunden)
@@ -311,7 +311,7 @@ TempChangeCategory categorizeTemperatureChange(float tempChange) {
 int adjustRelayTimeBasedOnTempCategory(unsigned int relayTime) {
   switch (tempChangeCat) {
     case HIGH_TEMP:
-      return relayTime = (unsigned int) (relayTime * 0.5); // Kürzere Öffnungszeit für schnelle Temperaturänderungen
+      return relayTime = (unsigned int) (relayTime * 1.0); // Kürzere Öffnungszeit für schnelle Temperaturänderungen
     // case MEDIUM_TEMP:
     //   return relayTime = (unsigned int) (relayTime * 0.75); // Moderate Öffnungszeit
     case LOW_TEMP:
@@ -325,7 +325,7 @@ int adjustRelayTimeBasedOnTempCategory(unsigned int relayTime) {
 int adjustUpdateTimeBasedOnTempCategory(unsigned int updateTime) {
   switch (tempChangeCat) {
     case HIGH_TEMP:
-      return updateTime = (unsigned int) (updateTime * 0.5); // Temperaturmessung findet sehr oft statt
+      return updateTime = (unsigned int) (updateTime * 0.4); // Temperaturmessung findet sehr oft statt
     // case MEDIUM_TEMP:
     //  return updateTime = (unsigned int) (updateTime * 0.75); // Temperaturmessung findet öfter statt
     case LOW_TEMP:
@@ -633,7 +633,7 @@ void loop() {
     if (tempChange > 0) {
       tempChangeCat = categorizeTemperatureChange(tempChange);
     }
-    
+
     // aktualisiere letzte gemessene Temperatur
     tempAtLastMeasurement = currentTemp;
 
