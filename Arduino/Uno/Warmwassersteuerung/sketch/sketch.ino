@@ -629,8 +629,11 @@ void loop() {
   if (currentMillis - lastTempMeasurementTime >= TEMP_SAMPLING_INTERVAL) {
     float currentTemp = getTemp();
     float tempChange = currentTemp - tempAtLastMeasurement;
-    tempChangeCat = categorizeTemperatureChange(tempChange);
-
+    tempChangeCat = LOW_TEMP
+    if (tempChange > 0) {
+      tempChangeCat = categorizeTemperatureChange(tempChange);
+    }
+    
     // aktualisiere letzte gemessene Temperatur
     tempAtLastMeasurement = currentTemp;
 
