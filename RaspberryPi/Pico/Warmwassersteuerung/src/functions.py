@@ -19,16 +19,19 @@ def categorize_temp_change(temp_change=0.0):
     high_threshold = config.get_float_value("temp_change_high_threshold_temp", 1.0)
     # medium_threshold = config.get_float_value("temp_change_medium_threshold", 0.3)
 
+    # set category
     abs_temp_change = abs(temp_change)
-
     if abs_temp_change >= high_threshold:
         category = "HIGH"  # TempChangeCategory.HIGH
     # elif abs_temp_change >= medium_threshold:
     #     category = "MEDIUM"  # TempChangeCategory.MEDIUM
     else:
         category = "LOW"  # TempChangeCategory.LOW
+    config.set_value("temp_change_category", category)
 
+    # temp increasing?
     arrow_direction = 0 if temp_change > 0 else 1
+    config.set_value("temp_increasing", 0 if temp_change <= 0 else 1)
     print_lcd(2, 0, f"Temperatur   {category}")
     print_lcd_char(2, 11, arrow_direction)
 
@@ -38,34 +41,42 @@ def categorize_temp_change(temp_change=0.0):
 # adjust relay time based on temp category
 def adjust_relay_time_based_on_temp_category():
     # load config
-    temp_category = config.get_value("temp_change_category", "LOW")
     relay_time = config.get_int_value("relay_time", 2000)
+    temp_increasing = config.get_bool_value("temp_increasing", False)
 
-    if temp_category == "HIGH":
-        return int(
-            relay_time * 0.3
-        )  # shorter opening time for rapid temperature changes
-    # elif temp_category == "MEDIUM":
-    #     return int(relay_time * 0.6)  # moderate opening time for normal temperature changes
-    else:
-        return relay_time  # normal opening time for slow temperature changes
+    # only on temp_increasing = true
+    if temp_increasing:
+
+        temp_category = config.get_value("temp_change_category", "LOW")
+        if temp_category == "HIGH":
+            return int(
+                relay_time * 0.5
+            )  # shorter opening time for rapid temperature changes
+        # elif temp_category == "MEDIUM":
+        #     return int(relay_time * 0.75)  # moderate opening time for normal temperature changes
+
+    return relay_time  # normal opening time for slow temperature changes
 
 
 # adjust update time based on temp category
 def adjust_update_time_based_on_temp_category():
     # load config
-    temp_category = config.get_value("temp_change_category", "LOW")
     update_time = config.get_int_value("update_time", 120)
+    temp_increasing = config.get_bool_value("temp_increasing", False)
 
-    if temp_category == "HIGH":
-        return int(
-            update_time
-            * config.get_float_value("temp_change_high_threshold_multiplier", 0.5)
-        )  # temp measurement takes place very often
-    # elif temp_category == "MEDIUM":
-    #     return return int(update_time * config.get_float_value("temp_change_medium_threshold_multiplier", 0.75))  # temp measurement takes place more often
-    else:
-        return update_time  # temp measurement takes place normally
+    # only on temp_increasing = true
+    if temp_increasing:
+
+        temp_category = config.get_value("temp_change_category", "LOW")
+        if temp_category == "HIGH":
+            return int(
+                update_time
+                * config.get_float_value("temp_change_high_threshold_multiplier", 0.5)
+            )  # temp measurement takes place very often
+        # elif temp_category == "MEDIUM":
+        #     return return int(update_time * config.get_float_value("temp_change_medium_threshold_multiplier", 0.75))  # temp measurement takes place more often
+
+    return update_time  # temp measurement takes place normally
 
 
 # convert utf-8 characters to HD44780 characters
@@ -233,9 +244,11 @@ async def update_nominal_temp(button_pin):
 
 # check buttons
 async def check_buttons():
-    # update nomianl temp
-    await update_nominal_temp(config.get_int_value("BUTTON_TEMP_UP_PIN", 1))
-    await update_nominal_temp(config.get_int_value("BUTTON_TEMP_DOWN_PIN", 2))
+    # check if buttons_activated = 1
+    if config.get_bool_value("buttons_activated", False):
+        # update nomianl temp
+        await update_nominal_temp(config.get_int_value("BUTTON_TEMP_UP_PIN", 1))
+        await update_nominal_temp(config.get_int_value("BUTTON_TEMP_DOWN_PIN", 2))
 
 
 # format time

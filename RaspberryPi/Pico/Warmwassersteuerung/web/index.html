@@ -35,6 +35,9 @@
                 <tr><td><label for="lcd_i2c_backlight">LCD Hintergrundbeleuchtung (an/aus):</label></td>
                     <td><input type="checkbox" id="lcd_i2c_backlight" onclick="updateBacklightHiddenField(this.checked);"<!--lcd_i2c_backlight-->/></td>
                     <td><input type="hidden" name="lcd_i2c_backlight" id="lcd_i2c_backlight_value" value="<!--lcd_i2c_backlight-->"/></td></tr>
+                <tr><td><label for="buttons_activated">Buttons (aktivieren/deaktivieren):</label></td>
+                    <td><input type="checkbox" id="buttons_activated" onclick="updateButtonsHiddenField(this.checked);"<!--buttons_activated-->/></td>
+                    <td><input type="hidden" name="buttons_activated" id="buttons_activated_value" value="<!--buttons_activated-->"/></td></tr>
                 <tr><td><label for="log_level">Log Level:</label></td>
                     <td><select name="log_level" id="log_level">
                         <option value="OFF"<!--log_level_OFF-->>OFF</option>
@@ -59,10 +62,12 @@
                     <td><div id="wifi_ssid"><!--wifi_ssid--></div></td></tr>
                 <tr><td><div for="previous_millis">Previous Millis:</div></td>
                     <td><div id="previous_millis"><!--previous_millis--></div></td></tr>
-                <tr><td><div for="current_temp">Aktuelle Temperatur:</div></td>
+                <tr><td><div for="current_temp">Temperatur aktuell:</div></td>
                     <td><div id="current_temp"><!--current_temp--></div></td></tr>
                 <tr><td><div for="temp_last_measurement">Temperatur der letzten (Kategorie-)Messung:</div></td>
                     <td><div id="temp_last_measurement"><!--temp_last_measurement--></div></td></tr>
+                <tr><td><div for="temp_increasing">Temperatur steigend (0=nein, 1=ja):</div></td>
+                    <td><div id="temp_increasing"><!--temp_increasing--></div></td></tr> 
                 <tr><td><div for="temp_last_measurement_time">Zeit der letzten (Kategorie-)Messung:</div></td>
                     <td><div id="temp_last_measurement_time"><!--temp_last_measurement_time--></div></td></tr>
                 <tr><td><div for="temp_change_category">Kategorie der Temperaturveränderung:</div></td>
@@ -99,6 +104,9 @@
         <script>
             function updateBacklightHiddenField(checked) {
                 document.getElementById('lcd_i2c_backlight_value').value = checked ? "true" : "false";
+            }
+            function updateButtonsHiddenField(checked) {
+                document.getElementById('buttons_activated_value').value = checked ? "true" : "false";
             }
         </script>
     </body>
