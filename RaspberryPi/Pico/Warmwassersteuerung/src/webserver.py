@@ -132,13 +132,13 @@ def replace_placeholder(content="", line_number=0):
         # INFO
         62: ("wifi_ssid", config.get_value("wifi_ssid", "")),
         64: ("previous_millis", config.get_value("previous_millis", "")),
-        66: ("current_temp", config.get_value("current_temp", "")),
-        68: ("temp_last_measurement", config.get_value("temp_last_measurement", "")),
-        70: ("temp_increasing", config.get_value("temp_increasing", "")),
-        72: (
+        66: (
             "temp_last_measurement_time",
             config.get_value("temp_last_measurement_time", ""),
         ),
+        68: ("current_temp", config.get_value("current_temp", "")),
+        70: ("temp_last_measurement", config.get_value("temp_last_measurement", "")),
+        72: ("temp_increasing", config.get_value("temp_increasing", "")),
         74: ("temp_change_category", config.get_value("temp_change_category", "")),
         77: ("TEMP_SENSOR_PIN", config.get_value("TEMP_SENSOR_PIN", "")),
         79: ("TEMP_SENSOR_2_PIN", config.get_value("TEMP_SENSOR_2_PIN", "")),
