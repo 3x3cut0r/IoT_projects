@@ -344,7 +344,7 @@ async def run_webserver():
 
     except Exception as e:
         with open("/error.log", "a", encoding="utf-8") as file:
-            file.write(f"ERROR: {str(e)}\n")
+            file.write(f"ERROR: webserver.py: {str(e)}\n")
 
 
 if __name__ == "__main__":
