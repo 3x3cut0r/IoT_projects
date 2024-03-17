@@ -335,11 +335,16 @@ async def handle_client(reader, writer):
 
 # run webserver
 async def run_webserver():
-    host = "0.0.0.0"
-    port = 80
-    asyncio.create_task(manage_wifi_connection())
-    log("INFO", f"run_webserver({host}, {port})")
-    server = await asyncio.start_server(handle_client, host, port)  # type: ignore
+    try:
+        host = "0.0.0.0"
+        port = 80
+        asyncio.create_task(manage_wifi_connection())
+        log("INFO", f"run_webserver({host}, {port})")
+        server = await asyncio.start_server(handle_client, host, port)  # type: ignore
+
+    except Exception as e:
+        with open("/error.log", "a", encoding="utf-8") as file:
+            file.write(f"ERROR: {str(e)}\n")
 
 
 if __name__ == "__main__":
