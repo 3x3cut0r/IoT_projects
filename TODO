@@ -1,0 +1,4 @@
+Warmwassersteuerung:
+  - Tempanpassung nur bei steigender Temperatur
+  - Fehler bei zweiter Temperatur auf LCD unterdrücken
+  - Aktiviere Buttons implementieren
