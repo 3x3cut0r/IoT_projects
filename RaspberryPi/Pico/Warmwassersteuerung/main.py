@@ -118,6 +118,9 @@ async def main():
 
                 # update last measurement temp time
                 config.set_value("temp_last_measurement_time", current_millis)
+                
+                # release memory
+                gc.collect()
 
             # main
             if current_millis - previous_millis > interval:
@@ -151,9 +154,8 @@ async def main():
                     # create config backup
                     config.create_config_backup()
 
-                    # allocate memory
-                    gc.mem_free()
-                    log("INFO", "gc.mem_free({} Bytes)".format(gc.mem_alloc()))
+                    # print allocated memory
+                    log("INFO", "gc.mem_alloc(): {} Bytes".format(gc.mem_alloc()))
 
                 # update previous millis
                 previous_millis = current_millis
