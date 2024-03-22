@@ -2,7 +2,8 @@
 import time  # https://docs.micropython.org/en/latest/library/time.html
 import uasyncio as asyncio  # https://docs.micropython.org/en/latest/library/asyncio.html
 from src.log import log
-from src.button import check_button
+
+# from src.button import check_button
 from src.config import config  # Config() instance
 from src.lcd import print_lcd, print_lcd_char
 from src.relay import open_relay, close_relay
@@ -200,55 +201,55 @@ async def update_temp_display(rate, message, symbol):
     print_lcd(2, 0, f"                    ")
 
 
-# update nominal temp
-async def update_nominal_temp(button_pin):
-    button_long = 0
-    rate = 0.1
-
-    # load config
-    temp_up_pin = config.get_int_value("BUTTON_TEMP_UP_PIN", 1)
-    temp_down_pin = config.get_int_value("BUTTON_TEMP_DOWN_PIN", 2)
-    nominal_min_temp = config.get_float_value("nominal_min_temp", 42.0)
-    nominal_max_temp = config.get_float_value("nominal_max_temp", 58.0)
-
-    # while button is pressed
-    while check_button(button_pin):
-        # increase temp on temp up button
-        if button_pin == temp_up_pin:
-            nominal_min_temp += rate
-            nominal_max_temp += rate
-            await update_temp_display(rate, "TempUp Pressed", "+")
-
-        # decrease temp on temp down button
-        elif button_pin == temp_down_pin:
-            nominal_min_temp -= rate
-            nominal_max_temp -= rate
-            await update_temp_display(rate, "TempDown Pressed", "-")
-
-        # Update config values and print nominal temp
-        config.set_value("nominal_min_temp", nominal_min_temp)
-        config.set_value("nominal_max_temp", nominal_max_temp)
-        print_nominal_temp()
-
-        # Adjust rate and sleep
-        await asyncio.sleep(0.5)
-        button_long += 1
-        if button_long == 5:
-            rate = 1
-        elif button_long == 10:
-            rate = 1  # Adjust rate as needed
-
-    # save config
-    config.save_config()
+# # update nominal temp
+# async def update_nominal_temp(button_pin):
+#     button_long = 0
+#     rate = 0.1
+#
+#     # load config
+#     temp_up_pin = config.get_int_value("BUTTON_TEMP_UP_PIN", 1)
+#     temp_down_pin = config.get_int_value("BUTTON_TEMP_DOWN_PIN", 2)
+#     nominal_min_temp = config.get_float_value("nominal_min_temp", 42.0)
+#     nominal_max_temp = config.get_float_value("nominal_max_temp", 58.0)
+#
+#     # while button is pressed
+#     while check_button(button_pin):
+#         # increase temp on temp up button
+#         if button_pin == temp_up_pin:
+#             nominal_min_temp += rate
+#             nominal_max_temp += rate
+#             await update_temp_display(rate, "TempUp Pressed", "+")
+#
+#         # decrease temp on temp down button
+#         elif button_pin == temp_down_pin:
+#             nominal_min_temp -= rate
+#             nominal_max_temp -= rate
+#             await update_temp_display(rate, "TempDown Pressed", "-")
+#
+#         # Update config values and print nominal temp
+#         config.set_value("nominal_min_temp", nominal_min_temp)
+#         config.set_value("nominal_max_temp", nominal_max_temp)
+#         print_nominal_temp()
+#
+#         # Adjust rate and sleep
+#         await asyncio.sleep(0.5)
+#         button_long += 1
+#         if button_long == 5:
+#             rate = 1
+#         elif button_long == 10:
+#             rate = 1  # Adjust rate as needed
+#
+#     # save config
+#     config.save_config()
 
 
 # check buttons
-async def check_buttons():
-    # check if buttons_activated = 1
-    if config.get_bool_value("buttons_activated", False):
-        # update nomianl temp
-        await update_nominal_temp(config.get_int_value("BUTTON_TEMP_UP_PIN", 1))
-        await update_nominal_temp(config.get_int_value("BUTTON_TEMP_DOWN_PIN", 2))
+# async def check_buttons():
+#     # check if buttons_activated = 1
+#     if config.get_bool_value("buttons_activated", False):
+#         # update nomianl temp
+#         await update_nominal_temp(config.get_int_value("BUTTON_TEMP_UP_PIN", 1))
+#         await update_nominal_temp(config.get_int_value("BUTTON_TEMP_DOWN_PIN", 2))
 
 
 # format time
@@ -285,8 +286,8 @@ async def wait_start(secs):
     while secs >= 0:
         current_millis = time.ticks_ms()
         if time.ticks_diff(current_millis, previous_millis) > interval:
-            # check buttons
-            await check_buttons()
+            # # check buttons
+            # await check_buttons()
 
             # temp update on interval
             if secs % temp_update_interval == 0:

@@ -35,7 +35,7 @@ from src.functions import (
     print_nominal_temp,
     set_relay,
     open_relays,
-    check_buttons,
+    # check_buttons,
     update_timer,
     wait_start,
 )
@@ -138,8 +138,8 @@ async def main():
 
                     update_time -= 1
 
-                # check buttons
-                await check_buttons()
+                # # check buttons
+                # await check_buttons()
 
                 if update_time <= 0:
                     # open relay

@@ -60,15 +60,15 @@ def replace_placeholder(content="", line_number=0):
                 else "false"
             ),
         ),
-        39: (
-            "buttons_activated",
-            (
-                " checked"
-                if str(config.get_value("buttons_activated", "false")).lower()
-                in ["true", "1", "yes", "on"]
-                else ""
-            ),
-        ),
+        # 39: (
+        #     "buttons_activated",
+        #     (
+        #         " checked"
+        #         if str(config.get_value("buttons_activated", "false")).lower()
+        #         in ["true", "1", "yes", "on"]
+        #         else ""
+        #     ),
+        # ),
         40: (
             "buttons_activated",
             (

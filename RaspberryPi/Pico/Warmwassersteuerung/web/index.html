@@ -35,7 +35,7 @@
                 <tr><td><label for="lcd_i2c_backlight">LCD Hintergrundbeleuchtung (an/aus):</label></td>
                     <td><input type="checkbox" id="lcd_i2c_backlight" onclick="updateBacklightHiddenField(this.checked);"<!--lcd_i2c_backlight-->/></td>
                     <td><input type="hidden" name="lcd_i2c_backlight" id="lcd_i2c_backlight_value" value="<!--lcd_i2c_backlight-->"/></td></tr>
-                <tr><td><label for="buttons_activated">Buttons (aktivieren/deaktivieren):</label></td>
+                <tr style="display: none;"><td><label for="buttons_activated">Buttons (aktivieren/deaktivieren):</label></td>
                     <td><input type="checkbox" id="buttons_activated" onclick="updateButtonsHiddenField(this.checked);"<!--buttons_activated-->/></td>
                     <td><input type="hidden" name="buttons_activated" id="buttons_activated_value" value="<!--buttons_activated-->"/></td></tr>
                 <tr><td><label for="log_level">Log Level:</label></td>
