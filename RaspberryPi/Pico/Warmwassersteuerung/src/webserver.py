@@ -1,4 +1,5 @@
 # imports
+import gc  # https://docs.micropython.org/en/latest/library/gc.html
 import re  # https://docs.micropython.org/en/latest/library/re.html
 import uasyncio as asyncio  # https://docs.micropython.org/en/latest/library/asyncio.html
 from src.log import log
@@ -331,6 +332,9 @@ async def handle_client(reader, writer):
     # clean up and close
     await writer.drain()
     await writer.wait_closed()
+    
+    # release memory
+    gc.collect()
 
 
 # run webserver
