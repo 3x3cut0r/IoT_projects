@@ -1,32 +1,42 @@
-ampy --port COM10 ls
-echo "deleting files ..."
-ampy --port COM10 rm boot.py
-ampy --port COM10 rm main.py
-ampy --port COM10 rm config.json
-ampy --port COM10 rm config_backup.json
-ampy --port COM10 rmdir src
-ampy --port COM10 rmdir web
-ampy --port COM10 rmdir .old
-echo "deleting files ... DONE"
-ampy --port COM10 ls
-echo "copying files ..."
-ampy --port COM10 put main.py main.py
-ampy --port COM10 put config.json config.json
-ampy --port COM10 mkdir src
-ampy --port COM10 put src/button.py src/button.py
-ampy --port COM10 put src/config.py src/config.py 
-ampy --port COM10 put src/functions.py src/functions.py 
-ampy --port COM10 put src/lcd_api.py src/lcd_api.py 
-ampy --port COM10 put src/lcd.py src/lcd.py 
-ampy --port COM10 put src/led.py src/led.py 
-ampy --port COM10 put src/log.py src/log.py 
-ampy --port COM10 put src/machine_i2c_lcd.py src/machine_i2c_lcd.py 
-ampy --port COM10 put src/relay.py src/relay.py 
-ampy --port COM10 put src/temp.py src/temp.py 
-ampy --port COM10 put src/webserver.py src/webserver.py 
-ampy --port COM10 put src/wifi.py src/wifi.py 
-ampy --port COM10 mkdir web
-ampy --port COM10 put web/index.html web/index.html
-ampy --port COM10 put web/styles.css web/styles.css
-echo "copying files ... DONE"
-ampy --port COM10 ls
+@echo off
+REM empty_copy_pico-win.cmd COM10
+
+if "%1"=="" (
+    set PORT=COM10
+) else (
+    set PORT=%1
+)
+
+echo Listing files on %PORT%...
+ampy --port %PORT% ls 2>NUL
+echo Deleting files...
+ampy --port %PORT% rm boot.py 2>NUL
+ampy --port %PORT% rm main.py 2>NUL
+ampy --port %PORT% rm config.json 2>NUL
+ampy --port %PORT% rm config_backup.json 2>NUL
+ampy --port %PORT% rmdir src 2>NUL
+ampy --port %PORT% rmdir web 2>NUL
+ampy --port %PORT% rmdir .old 2>NUL
+echo Deleting files... DONE 2>NUL
+ampy --port %PORT% ls 2>NUL
+echo Copying files...
+ampy --port %PORT% put main.py main.py 2>NUL
+ampy --port %PORT% put config.json config.json 2>NUL
+ampy --port %PORT% mkdir src 2>NUL
+ampy --port %PORT% put src/button.py src/button.py 2>NUL
+ampy --port %PORT% put src/config.py src/config.py 2>NUL
+ampy --port %PORT% put src/functions.py src/functions.py 2>NUL
+ampy --port %PORT% put src/lcd_api.py src/lcd_api.py 2>NUL
+ampy --port %PORT% put src/lcd.py src/lcd.py 2>NUL
+ampy --port %PORT% put src/led.py src/led.py 2>NUL
+ampy --port %PORT% put src/log.py src/log.py 2>NUL
+ampy --port %PORT% put src/machine_i2c_lcd.py src/machine_i2c_lcd.py 2>NUL
+ampy --port %PORT% put src/relay.py src/relay.py 2>NUL
+ampy --port %PORT% put src/temp.py src/temp.py 2>NUL
+ampy --port %PORT% put src/webserver.py src/webserver.py 2>NUL
+ampy --port %PORT% put src/wifi.py src/wifi.py 2>NUL
+ampy --port %PORT% mkdir web 2>NUL
+ampy --port %PORT% put web/index.html web/index.html 2>NUL
+ampy --port %PORT% put web/styles.css web/styles.css 2>NUL
+echo Copying files... DONE
+ampy --port %PORT% ls 2>NUL
