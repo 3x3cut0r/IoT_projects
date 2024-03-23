@@ -155,8 +155,8 @@ def replace_placeholder(content="", line_number=0):
         93: ("LCD_ROWS", config.get_value("LCD_ROWS", "")),
         95: ("RELAY_OPEN_PIN", config.get_value("RELAY_OPEN_PIN", "")),
         97: ("RELAY_CLOSE_PIN", config.get_value("RELAY_CLOSE_PIN", "")),
-        99: ("BUTTON_TEMP_UP_PIN", config.get_value("BUTTON_TEMP_UP_PIN", "")),
-        101: ("BUTTON_TEMP_DOWN_PIN", config.get_value("BUTTON_TEMP_DOWN_PIN", "")),
+        # 99: ("BUTTON_TEMP_UP_PIN", config.get_value("BUTTON_TEMP_UP_PIN", "")),
+        # 101: ("BUTTON_TEMP_DOWN_PIN", config.get_value("BUTTON_TEMP_DOWN_PIN", "")),
     }
 
     # replace keys
@@ -332,7 +332,7 @@ async def handle_client(reader, writer):
     # clean up and close
     await writer.drain()
     await writer.wait_closed()
-    
+
     # release memory
     gc.collect()
 
