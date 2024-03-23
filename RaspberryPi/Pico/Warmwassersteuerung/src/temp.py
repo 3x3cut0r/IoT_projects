@@ -20,6 +20,7 @@ class TemperatureSensor:
     ):
         TemperatureSensor.instance_counter += 1
         self.sensor_number = TemperatureSensor.instance_counter
+        self.sensor_postfix = f"_{self.sensor_number}" if self.sensor_number > 1 else ""
 
         if pin_number is None:
             pin_number = config.get_int_value("TEMP_SENSOR_PIN", 4)
@@ -90,7 +91,7 @@ class TemperatureSensor:
                 f"reading temp on sensor {self.sensor_number} (pin {self.pin_number}): {e}",
             )
             temp = -127.0
-            config.set_value("current_temp", temp)
+            config.set_value(f"current_temp{self.sensor_postfix}", temp)
             return temp
 
 
