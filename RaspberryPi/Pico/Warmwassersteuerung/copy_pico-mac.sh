@@ -33,3 +33,5 @@ ampy --port $PORT put web/index.html web/index.html 2>/dev/null
 ampy --port $PORT put web/styles.css web/styles.css 2>/dev/null
 echo "copying files... DONE"
 ampy --port $PORT ls 2>/dev/null
+ampy --port $PORT ls src 2>/dev/null
+ampy --port $PORT ls web 2>/dev/null

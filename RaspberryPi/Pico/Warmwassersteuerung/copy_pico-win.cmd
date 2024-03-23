@@ -40,3 +40,5 @@ ampy --port %PORT% put web/index.html web/index.html 2>NUL
 ampy --port %PORT% put web/styles.css web/styles.css 2>NUL
 echo Copying files... DONE
 ampy --port %PORT% ls 2>NUL
+ampy --port %PORT% ls src 2>NUL
+ampy --port %PORT% ls web 2>NUL
