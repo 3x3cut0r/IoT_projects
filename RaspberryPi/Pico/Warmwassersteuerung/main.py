@@ -82,6 +82,7 @@ async def main():
         previous_millis = 0
         interval = config.get_int_value("interval", 1000)
         update_time = config.get_int_value("update_time", 120)
+        temp_update_interval = config.get_int_value("temp_update_interval", 5)
 
         # open relay
         await open_relays(config.get_int_value("relay_time", 2000))
@@ -97,8 +98,8 @@ async def main():
             current_millis = time.ticks_ms()
 
             # adjust temp category
-            if current_millis - config.get_int_value(
-                "temp_last_measurement_time"
+            if time.ticks_diff(
+                current_millis, config.get_int_value("temp_last_measurement_time")
             ) >= config.get_int_value("temp_sampling_interval"):
 
                 # update temp
@@ -118,34 +119,31 @@ async def main():
 
                 # update last measurement temp time
                 config.set_value("temp_last_measurement_time", current_millis)
-                
+
                 # release memory
                 gc.collect()
 
             # main
-            if current_millis - previous_millis > interval:
-                # update time
+            if time.ticks_diff(current_millis, previous_millis) > interval:
                 if update_time > 0:
+                    # update timer
                     update_timer(update_time)
 
-                    # print mem alloc
-                    log("VERBOSE", "mem_alloc(): {} Bytes".format(gc.mem_alloc()))
-
                     # update temp on temp update interval
-                    if (
-                        update_time % config.get_int_value("temp_update_interval", 5)
-                        == 0
-                    ):
+                    if update_time % temp_update_interval == 0:
                         await update_temp()
                         await update_temp(2)
 
                     update_time -= 1
 
-                # # check buttons
-                # await check_buttons()
+                    # # check buttons
+                    # await check_buttons()
 
-                if update_time <= 0:
-                    # open relay
+                    # print mem alloc
+                    log("VERBOSE", "mem_alloc(): {} Bytes".format(gc.mem_alloc()))
+
+                else:
+                    # open relays
                     await open_relays(config.get_int_value("relay_time", 2000))
 
                     # set and adjust update_time based on temp category
