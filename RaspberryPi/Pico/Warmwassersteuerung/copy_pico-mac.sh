@@ -1,4 +1,6 @@
 #!/bin/zsh
+# copy_pico-mac.sh /dev/cu.usbmodem11301
+
 PORT=${1:-/dev/cu.usbmodem11301}
 
 ampy --port $PORT ls

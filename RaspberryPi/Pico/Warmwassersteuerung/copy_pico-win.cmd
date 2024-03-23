@@ -1,5 +1,5 @@
 @echo off
-REM empty_copy_pico-win.cmd COM10
+REM copy_pico-win.cmd COM10
 
 if "%1"=="" (
     set PORT=COM10
@@ -7,9 +7,8 @@ if "%1"=="" (
     set PORT=%1
 )
 
-echo Listing files on %PORT%...
 ampy --port %PORT% ls 2>NUL
-echo Deleting files...
+echo "deleting files..."
 ampy --port %PORT% rm boot.py 2>NUL
 ampy --port %PORT% rm main.py 2>NUL
 ampy --port %PORT% rm config.json 2>NUL
@@ -17,9 +16,9 @@ ampy --port %PORT% rm config_backup.json 2>NUL
 ampy --port %PORT% rmdir src 2>NUL
 ampy --port %PORT% rmdir web 2>NUL
 ampy --port %PORT% rmdir .old 2>NUL
-echo Deleting files... DONE 2>NUL
+echo "deleting files... DONE" 2>NUL
 ampy --port %PORT% ls 2>NUL
-echo Copying files...
+echo "copying files..."
 ampy --port %PORT% put main.py main.py 2>NUL
 ampy --port %PORT% put config.json config.json 2>NUL
 ampy --port %PORT% mkdir src 2>NUL
@@ -38,7 +37,7 @@ ampy --port %PORT% put src/wifi.py src/wifi.py 2>NUL
 ampy --port %PORT% mkdir web 2>NUL
 ampy --port %PORT% put web/index.html web/index.html 2>NUL
 ampy --port %PORT% put web/styles.css web/styles.css 2>NUL
-echo Copying files... DONE
+echo "copying files... DONE"
 ampy --port %PORT% ls 2>NUL
 ampy --port %PORT% ls src 2>NUL
 ampy --port %PORT% ls web 2>NUL
