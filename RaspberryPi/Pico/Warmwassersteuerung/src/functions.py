@@ -96,6 +96,20 @@ def convert_utf8(string=""):
     return string
 
 
+# ljust
+def ljust(string="", width=0, fillchar=" "):
+    if len(str(string)) >= int(width):
+        return str(string)
+    return str(string + str(fillchar) * (int(width) - len(str(string))))
+
+
+# rjust
+def rjust(string="", width=0, fillchar=" "):
+    if len(str(string)) >= int(width):
+        return str(string)
+    return str(str(fillchar) * (int(width) - len(str(string))) + string)
+
+
 # update current temp on lcd
 async def update_temp(sensor_number=1):
     # set sensor postfix
@@ -112,7 +126,7 @@ async def update_temp(sensor_number=1):
     lcd_cols_half = int(lcd_cols / 2)
 
     # format the temperature string
-    current_temp_string = f"{current_temp:.1f} °C".ljust(lcd_cols_half)
+    current_temp_string = rjust(f"{current_temp:.1f} °C", lcd_cols_half)
     current_temp_string_utf8 = convert_utf8(current_temp_string)
 
     log("INFO", f"update_temp{sensor_postfix}({current_temp_string_utf8})")

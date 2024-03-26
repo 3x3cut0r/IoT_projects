@@ -4,6 +4,7 @@ from machine import (
     Pin,
 )  # https://docs.micropython.org/en/latest/library/machine.html
 from src.machine_i2c_lcd import I2cLcd  # I2C LCD
+from src.functions import ljust
 from src.log import log
 from src.config import config  # Config() instance
 
@@ -117,13 +118,6 @@ def convert_HD44780A00(string=""):
     for original, replacement in replacements.items():
         string = string.replace(original, replacement)
     return string
-
-
-# ljust
-def ljust(string="", width=0, fillchar=" "):
-    if len(str(string)) >= int(width):
-        return str(string)
-    return str(string + str(fillchar) * (int(width) - len(str(string))))
 
 
 # fill string with spaces up to 20 chars
