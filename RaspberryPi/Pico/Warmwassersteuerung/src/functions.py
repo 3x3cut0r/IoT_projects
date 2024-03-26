@@ -109,9 +109,10 @@ async def update_temp(sensor_number=1):
 
     # set LCD columns once
     lcd_cols = config.get_int_value("LCD_COLS", 20)
+    lcd_cols_half = int(lcd_cols / 2)
 
     # format the temperature string
-    current_temp_string = f"{current_temp:.1f} °C"
+    current_temp_string = f"{current_temp:.1f} °C".ljust(lcd_cols_half)
     current_temp_string_utf8 = convert_utf8(current_temp_string)
 
     log("INFO", f"update_temp{sensor_postfix}({current_temp_string_utf8})")
@@ -122,7 +123,7 @@ async def update_temp(sensor_number=1):
     # -127.0 °C  -127.0 °C
     temp_pos = max(lcd_cols - len(current_temp_string), 0)
     if sensor_number > 1:
-        temp_pos = max(int(lcd_cols / 2) - len(current_temp_string), 0)
+        temp_pos = max(lcd_cols_half - len(current_temp_string), 0)
     print_lcd(0, temp_pos, current_temp_string_utf8, False)
 
 
