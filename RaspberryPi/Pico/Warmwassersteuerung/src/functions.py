@@ -5,7 +5,7 @@ from src.log import log
 
 # from src.button import check_button
 from src.config import config  # Config() instance
-from src.lcd import print_lcd, print_lcd_char
+from src.lcd import print_lcd, print_lcd_char, rjust
 from src.relay import open_relay, close_relay
 from src.temp import temp_sensor, temp_sensor_2  # TemperatureSensor() instance
 
@@ -94,20 +94,6 @@ def convert_utf8(string=""):
     for original, replacement in replacements.items():
         string = string.replace(original, replacement)
     return string
-
-
-# ljust
-def ljust(string="", width=0, fillchar=" "):
-    if len(str(string)) >= int(width):
-        return str(string)
-    return str(string + str(fillchar) * (int(width) - len(str(string))))
-
-
-# rjust
-def rjust(string="", width=0, fillchar=" "):
-    if len(str(string)) >= int(width):
-        return str(string)
-    return str(str(fillchar) * (int(width) - len(str(string))) + string)
 
 
 # update current temp on lcd
