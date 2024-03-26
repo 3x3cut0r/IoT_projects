@@ -162,8 +162,10 @@ async def main():
             await asyncio.sleep(0.1)
 
     except Exception as e:
+        message = f"ERROR: main.py: {str(e)}\n"
+        print(message)
         with open("/error.log", "a", encoding="utf-8") as file:
-            file.write(f"ERROR: main.py: {str(e)}\n")
+            file.write(message)
 
 
 if __name__ == "__main__":

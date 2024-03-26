@@ -347,8 +347,10 @@ async def run_webserver():
         server = await asyncio.start_server(handle_client, host, port)  # type: ignore
 
     except Exception as e:
+        message = f"ERROR: webserver.py: {str(e)}\n"
+        print(message)
         with open("/error.log", "a", encoding="utf-8") as file:
-            file.write(f"ERROR: webserver.py: {str(e)}\n")
+            file.write(message)
 
 
 if __name__ == "__main__":
