@@ -284,7 +284,7 @@ async def wait_start(secs):
     interval = config.get_int_value("interval", 1000)
     temp_update_interval = config.get_int_value("temp_update_interval", 5)
 
-    while secs >= 0:
+    while secs > 0:
         current_millis = time.ticks_ms()
         if time.ticks_diff(current_millis, previous_millis) > interval:
             # # check buttons
