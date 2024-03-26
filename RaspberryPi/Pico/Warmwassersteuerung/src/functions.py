@@ -280,8 +280,8 @@ async def wait_start(secs):
     log("INFO", f"wait start ({secs})")
 
     # load config
-    previous_millis = time.ticks_ms()
-    interval = config.get_int_value("interval")
+    previous_millis = 0
+    interval = config.get_int_value("interval", 1000)
     temp_update_interval = config.get_int_value("temp_update_interval", 5)
 
     while secs >= 0:
