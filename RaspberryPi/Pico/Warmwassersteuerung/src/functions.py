@@ -287,16 +287,16 @@ async def wait_start(secs):
     while secs > 0:
         current_millis = time.ticks_ms()
         if time.ticks_diff(current_millis, previous_millis) > interval:
-            # # check buttons
-            # await check_buttons()
+            # update timer
+            update_timer(secs, "Starte in:")
 
             # temp update on interval
             if secs % temp_update_interval == 0:
                 await update_temp()
                 await update_temp(2)
 
-            # update timer
-            update_timer(secs, "Starte in:")
+            # # check buttons
+            # await check_buttons()
 
             # decrease secs
             secs -= 1
