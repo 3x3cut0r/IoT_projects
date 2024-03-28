@@ -8,15 +8,15 @@ from src.log import log
 from src.config import config  # Config() instance
 
 # setup i2c
-sda_pin = Pin(config.get_int_value("LCD_PIN_SDA", 8))
-scl_pin = Pin(config.get_int_value("LCD_PIN_SCL", 9))
+sda_pin = Pin(config.get_int_value("LCD_PIN_SDA", 20))
+scl_pin = Pin(config.get_int_value("LCD_PIN_SCL", 21))
 i2c = I2C(0, sda=sda_pin, scl=scl_pin, freq=config.get_int_value("LCD_FREQ", 100000))
 
 # setup lcd
 lcd = None
 lcd_addr = int(str(config.get_value("LCD_ADDR", "0x27")), 16)
-lcd_cols = config.get_int_value("LCD_COLS", 16)
-lcd_rows = config.get_int_value("LCD_ROWS", 2)
+lcd_cols = config.get_int_value("LCD_COLS", 20)
+lcd_rows = config.get_int_value("LCD_ROWS", 4)
 try:
     # load lcd
     lcd = I2cLcd(i2c, lcd_addr, lcd_rows, lcd_cols)
@@ -40,7 +40,7 @@ except OSError as e:
     log("ERROR", f"LCD: could not be loaded: {e}")
 
 lcd_lines = [
-    "".join([" " for _ in range(config.get_int_value("LCD_COLS", 16))])
+    "".join([" " for _ in range(config.get_int_value("LCD_COLS", 20))])
     for _ in range(config.get_int_value("LCD_ROWS", 4))
 ]
 

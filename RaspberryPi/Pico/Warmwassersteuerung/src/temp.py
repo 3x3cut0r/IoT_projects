@@ -23,7 +23,7 @@ class TemperatureSensor:
         self.sensor_postfix = f"_{self.sensor_number}" if self.sensor_number > 1 else ""
 
         if pin_number is None:
-            pin_number = config.get_int_value("TEMP_SENSOR_PIN", 4)
+            pin_number = config.get_int_value("TEMP_SENSOR_PIN", 6)
         if resolution is None:
             resolution = config.get_int_value("TEMP_SENSOR_RESOLUTION_BIT", 11)
         self.pin_number = pin_number
@@ -97,10 +97,10 @@ class TemperatureSensor:
 
 # instance TemperatureSensor()
 temp_sensor = TemperatureSensor(
-    config.get_int_value("TEMP_SENSOR_PIN", 4),
+    config.get_int_value("TEMP_SENSOR_PIN", 6),
     config.get_int_value("TEMP_SENSOR_RESOLUTION_BIT", 11),
 )
 temp_sensor_2 = TemperatureSensor(
-    config.get_int_value("TEMP_SENSOR_2_PIN", 6),
+    config.get_int_value("TEMP_SENSOR_2_PIN", 10),
     config.get_int_value("TEMP_SENSOR_RESOLUTION_BIT", 11),
 )

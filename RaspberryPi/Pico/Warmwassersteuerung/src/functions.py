@@ -42,7 +42,7 @@ def categorize_temp_change(temp_change=0.0):
 # adjust relay time based on temp category
 def adjust_relay_time_based_on_temp_category():
     # load config
-    relay_time = config.get_int_value("relay_time", 2000)
+    relay_time = config.get_int_value("relay_time", 1800)
     temp_increasing = config.get_bool_value("temp_increasing", False)
 
     # only on temp_increasing = true
@@ -51,7 +51,8 @@ def adjust_relay_time_based_on_temp_category():
         temp_category = config.get_value("temp_change_category", "LOW")
         if temp_category == "HIGH":
             return int(
-                relay_time * 0.5
+                relay_time
+                * config.get_float_value("temp_change_high_threshold_multiplier", 0.5)
             )  # shorter opening time for rapid temperature changes
         # elif temp_category == "MEDIUM":
         #     return int(relay_time * 0.75)  # moderate opening time for normal temperature changes
@@ -265,7 +266,7 @@ def format_time(secs):
 
 
 # update timer
-def update_timer(secs, message="Warte:"):
+def update_timer(secs, message="Regle in:"):
     log("INFO", f"update_timer({secs})")
 
     time = format_time(secs)
@@ -276,7 +277,7 @@ def update_timer(secs, message="Warte:"):
 
 
 # wait start
-async def wait_start(secs):
+async def wait_start(secs, lcd_text="Starte in:"):
     log("INFO", f"wait start ({secs})")
 
     # load config
@@ -288,7 +289,7 @@ async def wait_start(secs):
         current_millis = time.ticks_ms()
         if time.ticks_diff(current_millis, previous_millis) > interval:
             # update timer
-            update_timer(secs, "Starte in:")
+            update_timer(secs, lcd_text)
 
             # temp update on interval
             if secs % temp_update_interval == 0:

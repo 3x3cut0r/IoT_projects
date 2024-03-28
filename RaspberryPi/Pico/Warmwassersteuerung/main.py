@@ -71,21 +71,22 @@ async def main():
         # print nominal temp
         print_nominal_temp()
 
-        # wait start
-        await wait_start(config.get_int_value("delay_before_start_1"))
+        # wait start 1
+        await wait_start(config.get_int_value("delay_before_start_1"), "Start 1/2:")
+        # open relay initial
         await set_relay(
-            config.get_int_value("RELAY_CLOSE_PIN", 13),
-            config.get_int_value("init_relay_time", 2000),
-        )  # open relay initial
-        await wait_start(config.get_int_value("delay_before_start_2"))
+            config.get_int_value("RELAY_CLOSE_PIN", 15),
+            config.get_int_value("init_relay_time", 7000),
+        )
+        # wait start 2
+        await wait_start(config.get_int_value("delay_before_start_2"), "Start 2/2:")
+        # open relay
+        await open_relays(config.get_int_value("relay_time", 1800))
 
         previous_millis = 0
         interval = config.get_int_value("interval", 1000)
         update_time = config.get_int_value("update_time", 120)
         temp_update_interval = config.get_int_value("temp_update_interval", 5)
-
-        # open relay
-        await open_relays(config.get_int_value("relay_time", 2000))
 
         # ==================================================
         # main loop
