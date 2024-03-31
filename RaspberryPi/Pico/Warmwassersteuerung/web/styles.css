@@ -1,6 +1,5 @@
 body {
     display: block;
-    height: 100vh;
     margin: 20px;
     background-color: white;
 }
@@ -18,6 +17,11 @@ body {
 
 .lcd-line {
     margin: 3px 0;
+}
+
+table {
+    overflow-x: auto;
+    white-space: nowrap;
 }
 
 input {
