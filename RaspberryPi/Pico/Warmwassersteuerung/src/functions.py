@@ -52,10 +52,17 @@ def adjust_relay_time_based_on_temp_category():
         if temp_category == "HIGH":
             return int(
                 relay_time
-                * config.get_float_value("temp_change_high_threshold_multiplier", 0.5)
+                * config.get_float_value(
+                    "temp_change_high_threshold_relay_time_multiplier", 1.5
+                )
             )  # shorter opening time for rapid temperature changes
         # elif temp_category == "MEDIUM":
-        #     return int(relay_time * 0.75)  # moderate opening time for normal temperature changes
+        #     return int(
+        #         relay_time
+        #         * config.get_float_value(
+        #             "temp_change_medium_threshold_relay_time_multiplier", 1.25
+        #        )
+        #     )  # moderate opening time for normal temperature changes
 
     return relay_time  # normal opening time for slow temperature changes
 
@@ -73,10 +80,17 @@ def adjust_update_time_based_on_temp_category():
         if temp_category == "HIGH":
             return int(
                 update_time
-                * config.get_float_value("temp_change_high_threshold_multiplier", 0.5)
+                * config.get_float_value(
+                    "temp_change_high_threshold_update_time_multiplier", 0.5
+                )
             )  # temp measurement takes place very often
         # elif temp_category == "MEDIUM":
-        #     return return int(update_time * config.get_float_value("temp_change_medium_threshold_multiplier", 0.75))  # temp measurement takes place more often
+        #     return int(
+        #         update_time
+        #         * config.get_float_value(
+        #             "temp_change_medium_threshold_update_time_multiplier", 0.75
+        #        )
+        #     )  # moderate opening time for normal temperature changes
 
     return update_time  # temp measurement takes place normally
 

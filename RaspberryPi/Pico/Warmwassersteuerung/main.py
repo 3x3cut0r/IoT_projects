@@ -30,6 +30,7 @@ from src.relay import init_relays
 from src.webserver import run_webserver
 from src.functions import (
     categorize_temp_change,
+    adjust_relay_time_based_on_temp_category,
     adjust_update_time_based_on_temp_category,
     update_temp,
     print_nominal_temp,
@@ -110,7 +111,7 @@ async def main():
                 ) - config.get_float_value("temp_last_measurement")
 
                 # categorize temp change
-                categorize_temp_change(temp_change)
+                _ = categorize_temp_change(temp_change)
 
                 # update last measurement temp
                 config.set_value(
@@ -144,11 +145,14 @@ async def main():
                     log("VERBOSE", "mem_alloc(): {} Bytes".format(gc.mem_alloc()))
 
                 else:
-                    # open relays
-                    await open_relays(config.get_int_value("relay_time", 2000))
+                    # set and adjust relay_time based on temp category
+                    relay_time = adjust_relay_time_based_on_temp_category()
 
                     # set and adjust update_time based on temp category
                     update_time = adjust_update_time_based_on_temp_category()
+
+                    # open relays
+                    await open_relays(relay_time)
 
                     # create config backup
                     config.create_config_backup()

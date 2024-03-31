@@ -35,15 +35,15 @@ def replace_placeholder(content="", line_number=0):
         13: ("LCD_LINE_3", get_lcd_html_line(2)),
         14: ("LCD_LINE_4", get_lcd_html_line(3)),
         # CONFIGURATION
-        20: ("nominal_min_temp", config.get_value("nominal_min_temp", "")),
-        22: ("nominal_max_temp", config.get_value("nominal_max_temp", "")),
-        24: ("delay_before_start_1", config.get_value("delay_before_start_1", "")),
-        26: ("delay_before_start_2", config.get_value("delay_before_start_2", "")),
-        28: ("init_relay_time", config.get_value("init_relay_time", "")),
-        30: ("update_time", config.get_value("update_time", "")),
-        32: ("relay_time", config.get_value("relay_time", "")),
-        34: ("temp_update_interval", config.get_value("temp_update_interval", "")),
-        36: (
+        19: ("nominal_min_temp", config.get_value("nominal_min_temp", "")),
+        21: ("nominal_max_temp", config.get_value("nominal_max_temp", "")),
+        23: ("delay_before_start_1", config.get_value("delay_before_start_1", "")),
+        25: ("init_relay_time", config.get_value("init_relay_time", "")),
+        27: ("delay_before_start_2", config.get_value("delay_before_start_2", "")),
+        29: ("relay_time", config.get_value("relay_time", "")),
+        31: ("update_time", config.get_value("update_time", "")),
+        33: ("temp_update_interval", config.get_value("temp_update_interval", "")),
+        35: (
             "lcd_i2c_backlight",
             (
                 " checked"
@@ -61,15 +61,15 @@ def replace_placeholder(content="", line_number=0):
                 else "false"
             ),
         ),
-        # 39: (
-        #     "buttons_activated",
-        #     (
-        #         " checked"
-        #         if str(config.get_value("buttons_activated", "false")).lower()
-        #         in ["true", "1", "yes", "on"]
-        #         else ""
-        #     ),
-        # ),
+        38: (
+            "buttons_activated",
+            (
+                " checked"
+                if str(config.get_value("buttons_activated", "false")).lower()
+                in ["true", "1", "yes", "on"]
+                else ""
+            ),
+        ),
         40: (
             "buttons_activated",
             (
@@ -79,7 +79,7 @@ def replace_placeholder(content="", line_number=0):
                 else "false"
             ),
         ),
-        43: (
+        42: (
             "log_level_OFF",
             (
                 " selected"
@@ -87,7 +87,7 @@ def replace_placeholder(content="", line_number=0):
                 else ""
             ),
         ),
-        44: (
+        43: (
             "log_level_ERROR",
             (
                 " selected"
@@ -95,7 +95,7 @@ def replace_placeholder(content="", line_number=0):
                 else ""
             ),
         ),
-        45: (
+        44: (
             "log_level_WARN",
             (
                 " selected"
@@ -103,7 +103,7 @@ def replace_placeholder(content="", line_number=0):
                 else ""
             ),
         ),
-        46: (
+        45: (
             "log_level_INFO",
             (
                 " selected"
@@ -111,7 +111,7 @@ def replace_placeholder(content="", line_number=0):
                 else ""
             ),
         ),
-        47: (
+        46: (
             "log_level_VERBOSE",
             (
                 " selected"
@@ -119,44 +119,52 @@ def replace_placeholder(content="", line_number=0):
                 else ""
             ),
         ),
-        50: ("interval", config.get_value("interval", "")),
-        52: ("temp_sampling_interval", config.get_value("temp_sampling_interval", "")),
-        54: (
+        49: ("interval", config.get_value("interval", "")),
+        51: ("temp_sampling_interval", config.get_value("temp_sampling_interval", "")),
+        53: (
             "temp_change_high_threshold_temp",
             config.get_float_value("temp_change_high_threshold_temp", 1.0),
         ),
-        56: (
-            "temp_change_high_threshold_multiplier",
-            config.get_float_value("temp_change_high_threshold_multiplier", 0.5),
+        55: (
+            "temp_change_high_threshold_relay_time_multiplier",
+            config.get_float_value(
+                "temp_change_high_threshold_relay_time_multiplier", 1.5
+            ),
         ),
-        58: ("wifi_max_attempts", config.get_value("wifi_max_attempts", "")),
+        57: (
+            "temp_change_high_threshold_update_time_multiplier",
+            config.get_float_value(
+                "temp_change_high_threshold_update_time_multiplier", 0.5
+            ),
+        ),
+        59: ("wifi_max_attempts", config.get_value("wifi_max_attempts", "")),
         # INFO
-        62: ("wifi_ssid", config.get_value("wifi_ssid", "")),
-        64: ("previous_millis", config.get_value("previous_millis", "")),
-        66: (
+        63: ("wifi_ssid", config.get_value("wifi_ssid", "")),
+        65: ("previous_millis", config.get_value("previous_millis", "")),
+        67: (
             "temp_last_measurement_time",
             config.get_value("temp_last_measurement_time", ""),
         ),
-        68: ("current_temp", config.get_value("current_temp", "")),
-        70: ("temp_last_measurement", config.get_value("temp_last_measurement", "")),
-        72: ("temp_increasing", config.get_value("temp_increasing", "")),
-        74: ("temp_change_category", config.get_value("temp_change_category", "")),
-        77: ("TEMP_SENSOR_PIN", config.get_value("TEMP_SENSOR_PIN", "")),
-        79: ("TEMP_SENSOR_2_PIN", config.get_value("TEMP_SENSOR_2_PIN", "")),
-        81: (
+        69: ("current_temp", config.get_value("current_temp", "")),
+        71: ("temp_last_measurement", config.get_value("temp_last_measurement", "")),
+        73: ("temp_increasing", config.get_value("temp_increasing", "")),
+        75: ("temp_change_category", config.get_value("temp_change_category", "")),
+        78: ("TEMP_SENSOR_PIN", config.get_value("TEMP_SENSOR_PIN", "")),
+        80: ("TEMP_SENSOR_2_PIN", config.get_value("TEMP_SENSOR_2_PIN", "")),
+        82: (
             "TEMP_SENSOR_RESOLUTION_BIT",
             config.get_value("TEMP_SENSOR_RESOLUTION_BIT", ""),
         ),
-        83: ("LCD_PIN_SDA", config.get_value("LCD_PIN_SDA", "")),
-        85: ("LCD_PIN_SCL", config.get_value("LCD_PIN_SCL", "")),
-        87: ("LCD_ADDR", config.get_value("LCD_ADDR", "")),
-        89: ("LCD_FREQ", config.get_value("LCD_FREQ", "")),
-        91: ("LCD_COLS", config.get_value("LCD_COLS", "")),
-        93: ("LCD_ROWS", config.get_value("LCD_ROWS", "")),
-        95: ("RELAY_OPEN_PIN", config.get_value("RELAY_OPEN_PIN", "")),
-        97: ("RELAY_CLOSE_PIN", config.get_value("RELAY_CLOSE_PIN", "")),
-        # 99: ("BUTTON_TEMP_UP_PIN", config.get_value("BUTTON_TEMP_UP_PIN", "")),
-        # 101: ("BUTTON_TEMP_DOWN_PIN", config.get_value("BUTTON_TEMP_DOWN_PIN", "")),
+        84: ("LCD_PIN_SDA", config.get_value("LCD_PIN_SDA", "")),
+        86: ("LCD_PIN_SCL", config.get_value("LCD_PIN_SCL", "")),
+        88: ("LCD_ADDR", config.get_value("LCD_ADDR", "")),
+        90: ("LCD_FREQ", config.get_value("LCD_FREQ", "")),
+        92: ("LCD_COLS", config.get_value("LCD_COLS", "")),
+        94: ("LCD_ROWS", config.get_value("LCD_ROWS", "")),
+        96: ("RELAY_OPEN_PIN", config.get_value("RELAY_OPEN_PIN", "")),
+        98: ("RELAY_CLOSE_PIN", config.get_value("RELAY_CLOSE_PIN", "")),
+        100: ("BUTTON_TEMP_UP_PIN", config.get_value("BUTTON_TEMP_UP_PIN", "")),
+        102: ("BUTTON_TEMP_DOWN_PIN", config.get_value("BUTTON_TEMP_DOWN_PIN", "")),
     }
 
     # replace keys
