@@ -31,11 +31,3 @@ input {
 select {
     width: 100px;
 }
-
-tr td:first-child {
-    width: 10%;
-}
-
-.long {
-    width: 150px;
-}

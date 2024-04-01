@@ -14,6 +14,7 @@
     "lcd_i2c_backlight": 1,
     "buttons_activated": 0,
     "log_level": "OFF",
+    "boot_normal": 1,
     "previous_millis": 0,
     "interval": 950,
     "current_temp": -127.0,

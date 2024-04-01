@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="de">
     <head>
         <title>Warmwassersteuerung</title>
@@ -41,12 +41,12 @@
                     <td><label for="buttons_activated">Buttons (aktivieren / deaktivieren)</label></td>
                     <td><input type="hidden" name="buttons_activated" id="buttons_activated_value" value="<!--buttons_activated-->"/></td></tr>
                 <tr><td><select name="log_level" id="log_level">
-                        <option value="OFF"<!--log_level_OFF-->>OFF</option>
-                        <option value="ERROR"<!--log_level_ERROR-->>ERROR</option>
-                        <option value="WARN"<!--log_level_WARN-->>WARN</option>
-                        <option value="INFO"<!--log_level_INFO-->>INFO</option>
-                        <option value="VERBOSE"<!--log_level_VERBOSE-->>VERBOSE</option>
-                    </select></td>
+                            <option value="OFF"<!--log_level_OFF-->>OFF</option>
+                            <option value="ERROR"<!--log_level_ERROR-->>ERROR</option>
+                            <option value="WARN"<!--log_level_WARN-->>WARN</option>
+                            <option value="INFO"<!--log_level_INFO-->>INFO</option>
+                            <option value="VERBOSE"<!--log_level_VERBOSE-->>VERBOSE</option>
+                        </select></td>
                     <td><label for="log_level">Log Level auf der Konsole (nur sichtbar &uuml;ber USB)</label></td></tr>
                 <tr><td><input type="number" id="interval" name="interval" placeholder="1000" value="<!--interval-->" /></td>
                     <td><label for="interval">Dauer einer Sekunde (in Millisekunden). Verringere den Wert, um die Zeit mit der echten Zeit anzugleichen</label></td></tr>
@@ -105,12 +105,24 @@
                     <td><div for="BUTTON_TEMP_DOWN_PIN">Knopf Temperatur Runter (PIN)</div></td></tr>
             </table><br />
         </form>
+        <form action="/reset" method="post">
+            <table>
+                <tr><td><h3>Reset Pico</h3></td></tr>
+                <tr><td><input style="width: 104px;" type="checkbox" id="boot_normal" onclick="updateBootNormalHiddenField(this.checked);"<!--boot_normal-->/></td>
+                    <td><label for="boot_normal">An = Starte Normal mit beiden Startphasen. Aus = &Uuml;berspringe beide Startphasen.</label></td>
+                    <td><input type="hidden" name="boot_normal" id="boot_normal_value" value="<!--boot_normal-->"/></td></tr>
+                <tr><td><br /><input type="submit" value="Reset Pico" /></td></tr>
+            </table>
+        </form>
         <script>
             function updateBacklightHiddenField(checked) {
                 document.getElementById('lcd_i2c_backlight_value').value = checked ? "true" : "false";
             }
             function updateButtonsHiddenField(checked) {
                 document.getElementById('buttons_activated_value').value = checked ? "true" : "false";
+            }
+            function updateBootNormalHiddenField(checked) {
+                document.getElementById('boot_normal_value').value = checked ? "true" : "false";
             }
         </script>
     </body>

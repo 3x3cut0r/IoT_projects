@@ -2,6 +2,9 @@
 import gc  # https://docs.micropython.org/en/latest/library/gc.html
 import re  # https://docs.micropython.org/en/latest/library/re.html
 import uasyncio as asyncio  # https://docs.micropython.org/en/latest/library/asyncio.html
+from machine import (
+    reset,
+)  # https://docs.micropython.org/en/latest/library/machine.html#machine.reset
 from src.log import log
 from src.config import config  # Config() instance
 from src.functions import print_nominal_temp
@@ -165,6 +168,24 @@ def replace_placeholder(content="", line_number=0):
         100: ("RELAY_CLOSE_PIN", config.get_value("RELAY_CLOSE_PIN", "")),
         102: ("BUTTON_TEMP_UP_PIN", config.get_value("BUTTON_TEMP_UP_PIN", "")),
         104: ("BUTTON_TEMP_DOWN_PIN", config.get_value("BUTTON_TEMP_DOWN_PIN", "")),
+        111: (
+            "boot_normal",
+            (
+                " checked"
+                if str(config.get_value("boot_normal", "false")).lower()
+                in ["true", "1", "yes", "on"]
+                else ""
+            ),
+        ),
+        113: (
+            "boot_normal",
+            (
+                "true"
+                if str(config.get_value("boot_normal", "false")).lower()
+                in ["true", "1", "yes", "on"]
+                else "false"
+            ),
+        ),
     }
 
     # replace keys
@@ -224,7 +245,7 @@ async def get_index_html(writer):
 
 
 # handle post from index.html
-def handle_post(body):
+def handle_post(body, requested_path="/save_config"):
     # parse form data
     form_data = parse_form_data(body)
     log("INFO", f"POST request: data:\n{form_data}")
@@ -247,29 +268,53 @@ def handle_post(body):
     # set lcd backlight
     set_backlight(config.get_bool_value("lcd_i2c_backlight"))
 
-    if error:
-        response_content = f'<span style="color: orange;">WARN: Konfiguration nur teilweise aktualisiert: {error}</span>'
-        log("WARN", f"config.json partially updated: {error}")
-    else:
-        response_content = f'<span style="color: green;">INFO: Konfiguration erfolgreich aktualisiert</span>'
-        log("INFO", "config.json successfully updated")
+    # /save_config
+    if requested_path == "/save_config":
+        if error:
+            response_content = f'<span style="color: orange;">WARN: Konfiguration nur teilweise aktualisiert: {error}</span>'
+            log("WARN", f"config.json partially updated: {error}")
+        else:
+            response_content = f'<span style="color: green;">INFO: Konfiguration erfolgreich aktualisiert</span>'
+            log("INFO", "config.json successfully updated")
 
-    # add back button and return script
-    response_content += """
-        <br /><br />
-        <a href="/"><button type="button">zur&uuml;ck</button></a>
-        <script>
-            setTimeout(function() {
-                window.location.href = '/';
-            }, 3000); // 3000 Millisekunden = 3 Sekunden
-        </script>
-    """
+        # add back button and return script
+        response_content += """
+            <br /><br />
+            <a href="/"><button type="button">zur&uuml;ck</button></a>
+            <script>
+                setTimeout(function() {
+                    window.location.href = '/';
+                }, 3000); // 3000 Millisekunden = 3 Sekunden
+            </script>
+        """
+
+    # /reset
+    elif requested_path == "/reset":
+        if error:
+            response_content = f'<span style="color: orange;">WARN: Boot Normal Option wurde nicht richtig &uuml;bermittelt und bleibt unber&uuml;hrt: {error}</span>'
+            log("WARN", f"boot_normal NOT updated: {error}")
+        else:
+            response_content = f'<span style="color: green;">INFO: Reset erkannt. Starte neu ...</span>'
+            log("INFO", "reset()")
+
+        # add back button and return script
+        response_content += """
+            <br /><br />
+            <a href="/"><button type="button">zur&uuml;ck</button></a>
+            <script>
+                setTimeout(function() {
+                    window.location.href = '/';
+                }, 30000); // 30000 Millisekunden = 30 Sekunden
+            </script>
+        """
 
     return response_content
 
 
 # handle client
 async def handle_client(reader, writer):
+    reset_pico = False
+
     # get request
     request_lines = []
     content_length = 0
@@ -320,8 +365,17 @@ async def handle_client(reader, writer):
         writer.write(
             f"HTTP/1.1 200 OK\nContent-Type: {content_type}\n\n".encode("utf-8")
         )
-        response_content = handle_post(request_body)
+        response_content = handle_post(request_body, requested_path)
         await writer.awrite(response_content.encode("utf-8"))
+
+    # /reset
+    elif requested_path == "/reset" and "POST" in request_header.split(" ")[0]:
+        writer.write(
+            f"HTTP/1.1 200 OK\nContent-Type: {content_type}\n\n".encode("utf-8")
+        )
+        response_content = handle_post(request_body, requested_path)
+        await writer.awrite(response_content.encode("utf-8"))
+        reset_pico = True
 
     # /styles.css
     elif requested_path == "/styles.css":
@@ -344,6 +398,10 @@ async def handle_client(reader, writer):
     # release memory
     gc.collect()
 
+    # reset pico
+    if reset_pico:
+        reset()
+
 
 # run webserver
 async def run_webserver():
@@ -355,9 +413,12 @@ async def run_webserver():
         server = await asyncio.start_server(handle_client, host, port)  # type: ignore
 
     except Exception as e:
+        # print error message
         message = f"ERROR: webserver.py: {str(e)}\n"
         print(message)
-        with open("/error.log", "a", encoding="utf-8") as file:
+
+        # write error.log
+        with open("/error.log", "w", encoding="utf-8") as file:
             file.write(message)
 
 
