@@ -193,10 +193,10 @@ async def open_relays(relay_time=config.get_int_value("relay_time", 2000)):
     relay_open_pin = config.get_int_value("RELAY_OPEN_PIN", 12)
     relay_close_pin = config.get_int_value("RELAY_CLOSE_PIN", 13)
 
-    if current_temp < nominal_min_temp:
+    if current_temp > nominal_min_temp:
         # increase temp
         await set_relay(relay_open_pin, relay_time)
-    elif current_temp > nominal_max_temp:
+    elif current_temp < nominal_max_temp:
         # decrease temp
         await set_relay(relay_close_pin, relay_time)
     else:
