@@ -13,6 +13,7 @@ ampy --port %PORT% rm boot.py 2>NUL
 ampy --port %PORT% rm main.py 2>NUL
 ampy --port %PORT% rm config.json 2>NUL
 ampy --port %PORT% rm config_backup.json 2>NUL
+ampy --port %PORT% rm error.log 2>NUL
 ampy --port %PORT% rmdir src 2>NUL
 ampy --port %PORT% rmdir web 2>NUL
 ampy --port %PORT% rmdir .old 2>NUL

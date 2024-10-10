@@ -9,6 +9,7 @@ ampy --port $PORT rm boot.py 2>/dev/null
 ampy --port $PORT rm main.py 2>/dev/null
 ampy --port $PORT rm config.json 2>/dev/null
 ampy --port $PORT rm config_backup.json 2>/dev/null
+ampy --port $PORT rm error.log 2>/dev/null
 ampy --port $PORT rmdir src 2>/dev/null
 ampy --port $PORT rmdir web 2>/dev/null
 ampy --port $PORT rmdir .old 2>/dev/null
