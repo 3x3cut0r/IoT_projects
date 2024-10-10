@@ -168,8 +168,8 @@ def print_nominal_temp():
 async def set_relay(pin, relay_time):
     # load config
     current_temp = config.get_float_value("current_temp", -127.0)
-    relay_open_pin = config.get_int_value("RELAY_OPEN_PIN", 12)
-    relay_close_pin = config.get_int_value("RELAY_CLOSE_PIN", 13)
+    relay_open_pin = config.get_int_value("RELAY_OPEN_PIN", 14)
+    relay_close_pin = config.get_int_value("RELAY_CLOSE_PIN", 15)
 
     # only switch if the temperature can be read
     if 0 < current_temp <= 120:

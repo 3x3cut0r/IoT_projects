@@ -80,7 +80,7 @@ async def main():
             await wait_start(config.get_int_value("delay_before_start_1"), "Start 1/2:")
             # open relay initial
             await set_relay(
-                config.get_int_value("RELAY_CLOSE_PIN", 15),
+                config.get_int_value("RELAY_OPEN_PIN", 14),
                 config.get_int_value("init_relay_time", 7000),
             )
             # wait start 2
