@@ -30,7 +30,7 @@ def deactivate_relay(relay_pin):
 
 
 # open relay
-async def open_relay(relay_time=config.get_int_value("relay_time", 1800)):
+async def open_relay(relay_time=config.get_int_value("relay_time", 1200)):
     relay_open_pin = config.get_int_value("RELAY_OPEN_PIN", 14)
     log("INFO", f"open_relay({relay_time}): activate")
     activate_relay(relay_open_pin)
@@ -40,7 +40,7 @@ async def open_relay(relay_time=config.get_int_value("relay_time", 1800)):
 
 
 # close relay
-async def close_relay(relay_time=config.get_int_value("relay_time", 1800)):
+async def close_relay(relay_time=config.get_int_value("relay_time", 1200)):
     relay_close_pin = config.get_int_value("RELAY_CLOSE_PIN", 15)
     log("INFO", f"close_relay({relay_time}): activate")
     activate_relay(relay_close_pin)

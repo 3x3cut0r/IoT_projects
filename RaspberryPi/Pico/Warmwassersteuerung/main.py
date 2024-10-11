@@ -81,7 +81,7 @@ async def main():
             # open relay initial
             await set_relay(
                 config.get_int_value("RELAY_OPEN_PIN", 14),
-                config.get_int_value("init_relay_time", 7000),
+                config.get_int_value("init_relay_time", 5000),
             )
             # wait start 2
             await wait_start(config.get_int_value("delay_before_start_2"), "Start 2/2:")
@@ -94,7 +94,7 @@ async def main():
 
         # init time values
         previous_millis = 0
-        interval = config.get_int_value("interval", 1000)
+        interval = config.get_int_value("interval", 930)
         update_time = config.get_int_value("update_time", 120)
         temp_update_interval = config.get_int_value("temp_update_interval", 5)
 

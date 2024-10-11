@@ -42,7 +42,7 @@ def categorize_temp_change(temp_change=0.0):
 # adjust relay time based on temp category
 def adjust_relay_time_based_on_temp_category():
     # load config
-    relay_time = config.get_int_value("relay_time", 1800)
+    relay_time = config.get_int_value("relay_time", 1200)
     temp_increasing = config.get_bool_value("temp_increasing", False)
 
     # only on temp_increasing = true
@@ -146,7 +146,7 @@ async def update_temp(sensor_number=1):
 def print_nominal_temp():
     # load config
     min_temp = config.get_float_value("nominal_min_temp", 42.0)
-    max_temp = config.get_float_value("nominal_max_temp", 58.0)
+    max_temp = config.get_float_value("nominal_max_temp", 57.0)
 
     # set lower and upper bounds for nominal temperatures
     nominal_min_temp = max(0.0, min(120.0, min_temp))
@@ -185,20 +185,20 @@ async def set_relay(pin, relay_time):
 
 
 # open relays depending on temp
-async def open_relays(relay_time=config.get_int_value("relay_time", 2000)):
+async def open_relays(relay_time=config.get_int_value("relay_time", 1200)):
     # load config
     current_temp = config.get_float_value("current_temp", -127.0)
     nominal_min_temp = config.get_float_value("nominal_min_temp", 42.0)
     nominal_max_temp = config.get_float_value("nominal_max_temp", 58.0)
-    relay_open_pin = config.get_int_value("RELAY_OPEN_PIN", 12)
-    relay_close_pin = config.get_int_value("RELAY_CLOSE_PIN", 13)
+    relay_open_pin = config.get_int_value("RELAY_OPEN_PIN", 14)
+    relay_close_pin = config.get_int_value("RELAY_CLOSE_PIN", 15)
 
-    if current_temp > nominal_min_temp:
+    if current_temp < nominal_min_temp:
         # increase temp
-        await set_relay(relay_open_pin, relay_time)
-    elif current_temp < nominal_max_temp:
-        # decrease temp
         await set_relay(relay_close_pin, relay_time)
+    elif current_temp > nominal_max_temp:
+        # decrease temp
+        await set_relay(relay_open_pin, relay_time)
     else:
         # do nothing
         print_lcd(3, 0, "Soll Temp erreicht !")
