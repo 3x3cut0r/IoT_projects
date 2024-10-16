@@ -281,6 +281,8 @@ async def handle_post(body, requested_path="/save_config"):
     if requested_path == "/open_relay":
         current_temp = config.get_float_value("current_temp", -127.0)
         manual_relay_time = config.get_int_value("manual_relay_time", 1200)
+        if manual_relay_time > 10000:
+            manual_relay_time = 10000
         timer = config.get_int_value("timer")
         puffer_time = (manual_relay_time / 1000) + 3
         if error:
@@ -311,6 +313,8 @@ async def handle_post(body, requested_path="/save_config"):
     if requested_path == "/close_relay":
         current_temp = config.get_float_value("current_temp", -127.0)
         manual_relay_time = config.get_int_value("manual_relay_time", 1200)
+        if manual_relay_time > 10000:
+            manual_relay_time = 10000
         timer = config.get_int_value("timer")
         puffer_time = (manual_relay_time / 1000) + 3
         if error:
