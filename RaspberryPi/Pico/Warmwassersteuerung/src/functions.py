@@ -282,6 +282,7 @@ def format_time(secs):
 # update timer
 def update_timer(secs, message="Regle in:"):
     log("INFO", f"update_timer({secs})")
+    config.set_value("timer", secs)
 
     time = format_time(secs)
     cursor = 20 - len(time)
