@@ -154,6 +154,10 @@ async def main():
                     log("VERBOSE", "mem_alloc(): {} Bytes".format(gc.mem_alloc()))
 
                 else:
+                    # update temp
+                    await update_temp()
+                    await update_temp(2)
+
                     # set and adjust relay_time based on temp category
                     relay_time = adjust_relay_time_based_on_temp_category()
 
