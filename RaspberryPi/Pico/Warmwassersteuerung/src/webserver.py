@@ -7,7 +7,7 @@ from machine import (
 )  # https://docs.micropython.org/en/latest/library/machine.html#machine.reset
 from src.log import log
 from src.config import config  # Config() instance
-from src.functions import print_nominal_temp
+from src.functions import print_nominal_temp, set_relay
 from src.lcd import get_lcd_line, set_backlight
 from src.wifi import connect_wifi, check_wifi_isconnected
 
@@ -28,6 +28,16 @@ def get_lcd_html_line(line):
     return convert_html(lcd_line)
 
 
+# return " checked", if value is true
+def is_checked(value):
+    return " checked" if str(value).lower() in ["true", "1", "yes", "on"] else ""
+
+
+# return "true", if value is true
+def is_true(value):
+    return "true" if str(value).lower() in ["true", "1", "yes", "on"] else "false"
+
+
 # replace placeholder
 def replace_placeholder(content="", line_number=0):
     # assign line numbers to placeholders and their keys
@@ -37,52 +47,34 @@ def replace_placeholder(content="", line_number=0):
         14: ("LCD_LINE_2", get_lcd_html_line(1)),
         15: ("LCD_LINE_3", get_lcd_html_line(2)),
         16: ("LCD_LINE_4", get_lcd_html_line(3)),
+        # MANUAL CONTROL
+        22: ("manual_relay_time", config.get_value("manual_relay_time", "")),
         # CONFIGURATION
-        21: ("nominal_min_temp", config.get_value("nominal_min_temp", "")),
-        23: ("nominal_max_temp", config.get_value("nominal_max_temp", "")),
-        25: ("delay_before_start_1", config.get_value("delay_before_start_1", "")),
-        27: ("init_relay_time", config.get_value("init_relay_time", "")),
-        29: ("delay_before_start_2", config.get_value("delay_before_start_2", "")),
-        31: ("relay_time", config.get_value("relay_time", "")),
-        33: ("update_time", config.get_value("update_time", "")),
-        35: ("temp_update_interval", config.get_value("temp_update_interval", "")),
-        37: (
+        29: ("nominal_min_temp", config.get_value("nominal_min_temp", "")),
+        31: ("nominal_max_temp", config.get_value("nominal_max_temp", "")),
+        33: ("delay_before_start_1", config.get_value("delay_before_start_1", "")),
+        35: ("init_relay_time", config.get_value("init_relay_time", "")),
+        37: ("delay_before_start_2", config.get_value("delay_before_start_2", "")),
+        39: ("relay_time", config.get_value("relay_time", "")),
+        41: ("update_time", config.get_value("update_time", "")),
+        43: ("temp_update_interval", config.get_value("temp_update_interval", "")),
+        45: (
             "lcd_i2c_backlight",
-            (
-                " checked"
-                if str(config.get_value("lcd_i2c_backlight", "false")).lower()
-                in ["true", "1", "yes", "on"]
-                else ""
-            ),
+            is_checked(config.get_value("lcd_i2c_backlight", "false")),
         ),
-        39: (
+        47: (
             "lcd_i2c_backlight",
-            (
-                "true"
-                if str(config.get_value("lcd_i2c_backlight", "false")).lower()
-                in ["true", "1", "yes", "on"]
-                else "false"
-            ),
+            is_true(config.get_value("lcd_i2c_backlight", "false")),
         ),
-        40: (
+        48: (
             "buttons_activated",
-            (
-                " checked"
-                if str(config.get_value("buttons_activated", "false")).lower()
-                in ["true", "1", "yes", "on"]
-                else ""
-            ),
+            is_checked(config.get_value("buttons_activated", "false")),
         ),
-        42: (
+        50: (
             "buttons_activated",
-            (
-                "true"
-                if str(config.get_value("buttons_activated", "false")).lower()
-                in ["true", "1", "yes", "on"]
-                else "false"
-            ),
+            is_true(config.get_value("buttons_activated", "false")),
         ),
-        44: (
+        52: (
             "log_level_OFF",
             (
                 " selected"
@@ -90,7 +82,7 @@ def replace_placeholder(content="", line_number=0):
                 else ""
             ),
         ),
-        45: (
+        53: (
             "log_level_ERROR",
             (
                 " selected"
@@ -98,7 +90,7 @@ def replace_placeholder(content="", line_number=0):
                 else ""
             ),
         ),
-        46: (
+        54: (
             "log_level_WARN",
             (
                 " selected"
@@ -106,7 +98,7 @@ def replace_placeholder(content="", line_number=0):
                 else ""
             ),
         ),
-        47: (
+        55: (
             "log_level_INFO",
             (
                 " selected"
@@ -114,7 +106,7 @@ def replace_placeholder(content="", line_number=0):
                 else ""
             ),
         ),
-        48: (
+        56: (
             "log_level_VERBOSE",
             (
                 " selected"
@@ -122,53 +114,53 @@ def replace_placeholder(content="", line_number=0):
                 else ""
             ),
         ),
-        51: ("interval", config.get_value("interval", "")),
-        53: ("temp_sampling_interval", config.get_value("temp_sampling_interval", "")),
-        55: (
+        59: ("interval", config.get_value("interval", "")),
+        61: ("temp_sampling_interval", config.get_value("temp_sampling_interval", "")),
+        63: (
             "temp_change_high_threshold_temp",
             config.get_float_value("temp_change_high_threshold_temp", 1.0),
         ),
-        57: (
+        65: (
             "temp_change_high_threshold_relay_time_multiplier",
             config.get_float_value(
                 "temp_change_high_threshold_relay_time_multiplier", 1.5
             ),
         ),
-        59: (
+        67: (
             "temp_change_high_threshold_update_time_multiplier",
             config.get_float_value(
                 "temp_change_high_threshold_update_time_multiplier", 0.5
             ),
         ),
-        61: ("wifi_max_attempts", config.get_value("wifi_max_attempts", "")),
+        69: ("wifi_max_attempts", config.get_value("wifi_max_attempts", "")),
         # INFO
-        65: ("wifi_ssid", config.get_value("wifi_ssid", "")),
-        67: ("previous_millis", config.get_value("previous_millis", "")),
-        69: (
+        73: ("wifi_ssid", config.get_value("wifi_ssid", "")),
+        75: ("previous_millis", config.get_value("previous_millis", "")),
+        77: (
             "temp_last_measurement_time",
             config.get_value("temp_last_measurement_time", ""),
         ),
-        71: ("current_temp", config.get_value("current_temp", "")),
-        73: ("temp_last_measurement", config.get_value("temp_last_measurement", "")),
-        75: ("temp_increasing", config.get_value("temp_increasing", "")),
-        77: ("temp_change_category", config.get_value("temp_change_category", "")),
-        80: ("TEMP_SENSOR_PIN", config.get_value("TEMP_SENSOR_PIN", "")),
-        82: ("TEMP_SENSOR_2_PIN", config.get_value("TEMP_SENSOR_2_PIN", "")),
-        84: (
+        79: ("current_temp", config.get_value("current_temp", "")),
+        81: ("temp_last_measurement", config.get_value("temp_last_measurement", "")),
+        83: ("temp_increasing", config.get_value("temp_increasing", "")),
+        85: ("temp_change_category", config.get_value("temp_change_category", "")),
+        88: ("TEMP_SENSOR_PIN", config.get_value("TEMP_SENSOR_PIN", "")),
+        90: ("TEMP_SENSOR_2_PIN", config.get_value("TEMP_SENSOR_2_PIN", "")),
+        92: (
             "TEMP_SENSOR_RESOLUTION_BIT",
             config.get_value("TEMP_SENSOR_RESOLUTION_BIT", ""),
         ),
-        86: ("LCD_PIN_SDA", config.get_value("LCD_PIN_SDA", "")),
-        88: ("LCD_PIN_SCL", config.get_value("LCD_PIN_SCL", "")),
-        90: ("LCD_ADDR", config.get_value("LCD_ADDR", "")),
-        92: ("LCD_FREQ", config.get_value("LCD_FREQ", "")),
-        94: ("LCD_COLS", config.get_value("LCD_COLS", "")),
-        96: ("LCD_ROWS", config.get_value("LCD_ROWS", "")),
-        98: ("RELAY_OPEN_PIN", config.get_value("RELAY_OPEN_PIN", "")),
-        100: ("RELAY_CLOSE_PIN", config.get_value("RELAY_CLOSE_PIN", "")),
-        102: ("BUTTON_TEMP_UP_PIN", config.get_value("BUTTON_TEMP_UP_PIN", "")),
-        104: ("BUTTON_TEMP_DOWN_PIN", config.get_value("BUTTON_TEMP_DOWN_PIN", "")),
-        111: (
+        94: ("LCD_PIN_SDA", config.get_value("LCD_PIN_SDA", "")),
+        96: ("LCD_PIN_SCL", config.get_value("LCD_PIN_SCL", "")),
+        98: ("LCD_ADDR", config.get_value("LCD_ADDR", "")),
+        100: ("LCD_FREQ", config.get_value("LCD_FREQ", "")),
+        102: ("LCD_COLS", config.get_value("LCD_COLS", "")),
+        104: ("LCD_ROWS", config.get_value("LCD_ROWS", "")),
+        106: ("RELAY_OPEN_PIN", config.get_value("RELAY_OPEN_PIN", "")),
+        108: ("RELAY_CLOSE_PIN", config.get_value("RELAY_CLOSE_PIN", "")),
+        110: ("BUTTON_TEMP_UP_PIN", config.get_value("BUTTON_TEMP_UP_PIN", "")),
+        112: ("BUTTON_TEMP_DOWN_PIN", config.get_value("BUTTON_TEMP_DOWN_PIN", "")),
+        119: (
             "boot_normal",
             (
                 " checked"
@@ -177,7 +169,7 @@ def replace_placeholder(content="", line_number=0):
                 else ""
             ),
         ),
-        113: (
+        121: (
             "boot_normal",
             (
                 "true"
@@ -191,7 +183,7 @@ def replace_placeholder(content="", line_number=0):
     # replace keys
     if line_number in line_to_placeholder:
         key, value = line_to_placeholder[line_number]
-        placeholder = f"<!--{key}-->"
+        placeholder = f"!!!--{key}--!!!"
         content = content.replace(placeholder, str(value))
 
     return content
@@ -244,8 +236,25 @@ async def get_index_html(writer):
             await writer.awrite(line.encode("utf-8"))
 
 
+# handle relay action
+async def handle_relay_action(action, manual_relay_time, error_msg, pin_key):
+    if error_msg:
+        response_content = (
+            f'<span style="color: orange;">WARN: {action} failed: {error_msg}</span>'
+        )
+    elif config.get_int_value("timer") <= 10:
+        response_content = f'<span style="color: orange;">WARN: {action} failed: Timer is below 10.</span>'
+    else:
+        response_content = f'<span style="color: green;">INFO: {action} for {manual_relay_time}ms successful.</span>'
+        await set_relay(config.get_int_value(pin_key), manual_relay_time)
+    return response_content
+
+
 # handle post from index.html
-def handle_post(body, requested_path="/save_config"):
+async def handle_post(body, requested_path="/save_config"):
+    # response_content
+    response_content = ""
+
     # parse form data
     form_data = parse_form_data(body)
     log("INFO", f"POST request: data:\n{form_data}")
@@ -268,25 +277,74 @@ def handle_post(body, requested_path="/save_config"):
     # set lcd backlight
     set_backlight(config.get_bool_value("lcd_i2c_backlight"))
 
+    # /open_relay
+    if requested_path == "/open_relay":
+        current_temp = config.get_float_value("current_temp", -127.0)
+        manual_relay_time = config.get_int_value("manual_relay_time", 1200)
+        timer = config.get_int_value("timer")
+        puffer_time = (manual_relay_time / 1000) + 3
+        if error:
+            response_content = f'<span style="color: orange;">WARN: Ventil wurde nicht ge&ouml;ffnet: {error}</span>'
+            log(
+                "WARN",
+                f"open_relay({manual_relay_time}): manual trigger failed: {error}",
+            )
+        elif timer <= puffer_time:
+            response_content = f'<span style="color: orange;">WARN: Ventil wurde nicht ge&ouml;ffnet: der Timer ist zu nahe an 0.</span>'
+            log(
+                "ERROR",
+                f"open_relay({manual_relay_time}): manual trigger failed: Timer near by 0.",
+            )
+        elif not (0 < current_temp <= 120):
+            response_content = f'<span style="color: red;">ERROR: Ventil wurde nicht ge&ouml;ffnet: Temp Fehler!</span>'
+            log(
+                "ERROR",
+                f"open_relay({manual_relay_time}): manual trigger failed: temp error.",
+            )
+        else:
+            response_content = f'<span style="color: green;">INFO: Ventil wird f&uuml;r {manual_relay_time}ms ge&ouml;ffnet.</span>'
+            log("INFO", f"open_relay({manual_relay_time}): manual trigger")
+            relay_open_pin = config.get_int_value("RELAY_OPEN_PIN", 14)
+            await set_relay(relay_open_pin, manual_relay_time)
+
+    # /close_relay
+    if requested_path == "/close_relay":
+        current_temp = config.get_float_value("current_temp", -127.0)
+        manual_relay_time = config.get_int_value("manual_relay_time", 1200)
+        timer = config.get_int_value("timer")
+        puffer_time = (manual_relay_time / 1000) + 3
+        if error:
+            response_content = f'<span style="color: orange;">WARN: Ventil wurde nicht geschlossen: {error}</span>'
+            log(
+                "WARN",
+                f"close_relay({manual_relay_time}): manual trigger failed: {error}",
+            )
+        elif timer <= puffer_time:
+            response_content = f'<span style="color: orange;">WARN: Ventil wurde nicht geschlossen: der Timer ist zu nahe an 0.</span>'
+            log(
+                "ERROR",
+                f"close_relay({manual_relay_time}): manual trigger failed: Timer near by 0.",
+            )
+        elif not (0 < current_temp <= 120):
+            response_content = f'<span style="color: red;">ERROR: Ventil wurde nicht geschlossen: Temp Fehler!</span>'
+            log(
+                "ERROR",
+                f"close_relay({manual_relay_time}): manual trigger failed: temp error.",
+            )
+        else:
+            response_content = f'<span style="color: green;">INFO: Ventil wird f&uuml;r {manual_relay_time}ms geschlossen.</span>'
+            log("INFO", f"close_relay({manual_relay_time}): manual trigger")
+            relay_close_pin = config.get_int_value("RELAY_CLOSE_PIN", 15)
+            await set_relay(relay_close_pin, manual_relay_time)
+
     # /save_config
-    if requested_path == "/save_config":
+    elif requested_path == "/save_config":
         if error:
             response_content = f'<span style="color: orange;">WARN: Konfiguration nur teilweise aktualisiert: {error}</span>'
             log("WARN", f"config.json partially updated: {error}")
         else:
             response_content = f'<span style="color: green;">INFO: Konfiguration erfolgreich aktualisiert</span>'
             log("INFO", "config.json successfully updated")
-
-        # add back button and return script
-        response_content += """
-            <br /><br />
-            <a href="/"><button type="button">zur&uuml;ck</button></a>
-            <script>
-                setTimeout(function() {
-                    window.location.href = '/';
-                }, 3000); // 3000 Millisekunden = 3 Sekunden
-            </script>
-        """
 
     # /reset
     elif requested_path == "/reset":
@@ -297,18 +355,32 @@ def handle_post(body, requested_path="/save_config"):
             response_content = f'<span style="color: green;">INFO: Reset erkannt. Starte neu ...</span>'
             log("INFO", "reset()")
 
-        # add back button and return script
+    # add back button and return script
+    if requested_path in ["/open_relay", "/close_relay", "/save_config", "/reset"]:
         response_content += """
             <br /><br />
             <a href="/"><button type="button">zur&uuml;ck</button></a>
             <script>
                 setTimeout(function() {
                     window.location.href = '/';
-                }, 30000); // 30000 Millisekunden = 30 Sekunden
+                }, 4000); // 4000 Millisekunden = 4 Sekunden
             </script>
         """
 
     return response_content
+
+
+# send_response
+async def send_response(writer, content_type, content=None):
+    writer.write(f"HTTP/1.1 200 OK\nContent-Type: {content_type}\n\n".encode("utf-8"))
+    if content:
+        await writer.awrite(content.encode("utf-8"))
+
+
+# handle post request
+async def handle_post_request(writer, request_body, requested_path):
+    response_content = await handle_post(request_body, requested_path)
+    await send_response(writer, "text/html", response_content)
 
 
 # handle client
@@ -350,41 +422,29 @@ async def handle_client(reader, writer):
         result = ""
     log("INFO", f"handle_client() - {result}")
 
-    content_type = "text/html"
     requested_path = request_header.split(" ")[1]
 
     # /index.html
-    if requested_path == "/" or requested_path == "/index.html":
-        writer.write(
-            f"HTTP/1.1 200 OK\nContent-Type: {content_type}\n\n".encode("utf-8")
-        )
+    if requested_path in ["/", "/index.html"]:
+        await send_response(writer, "text/html")
         await get_index_html(writer)
 
-    # /save_config
-    elif requested_path == "/save_config" and "POST" in request_header.split(" ")[0]:
-        writer.write(
-            f"HTTP/1.1 200 OK\nContent-Type: {content_type}\n\n".encode("utf-8")
-        )
-        response_content = handle_post(request_body, requested_path)
-        await writer.awrite(response_content.encode("utf-8"))
+    # /open_relay, /close_relay, /save_config
+    elif (
+        requested_path in ["/open_relay", "/close_relay", "/save_config"]
+        and "POST" in request_header.split(" ")[0]
+    ):
+        await handle_post_request(writer, request_body, requested_path)
 
     # /reset
     elif requested_path == "/reset" and "POST" in request_header.split(" ")[0]:
-        writer.write(
-            f"HTTP/1.1 200 OK\nContent-Type: {content_type}\n\n".encode("utf-8")
-        )
-        response_content = handle_post(request_body, requested_path)
-        await writer.awrite(response_content.encode("utf-8"))
+        await handle_post_request(writer, request_body, requested_path)
         reset_pico = True
 
     # /styles.css
     elif requested_path == "/styles.css":
-        content_type = "text/css"
-        writer.write(
-            f"HTTP/1.1 200 OK\nContent-Type: {content_type}\n\n".encode("utf-8")
-        )
+        await send_response(writer, "text/css")
         await stream_file(writer, "styles.css", chunk_size=1024)
-        content_type = "text/css"
 
     # 404 Not Found
     else:
