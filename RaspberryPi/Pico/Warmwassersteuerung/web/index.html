@@ -19,7 +19,7 @@
             <table>
                 <tr><td colspan="3"><h3>Steuerung Steuerung</h3></td></tr>
                 <tr><td><input class="button" type="button" value="Ventil &ouml;ffnen" onclick="submitManualControl('/open_relay')" /></td>
-                    <td><input type="number" id="manual_relay_time" name="manual_relay_time" placeholder="1200" value="!!!--manual_relay_time--!!!" /></td>
+                    <td><input type="number" id="manual_relay_time" name="manual_relay_time" placeholder="1200" value="!!!--manual_relay_time--!!!" step="100" /></td>
                     <td><input class="button" type="button" value="Ventil schlie&szlig;en" onclick="submitManualControl('/close_relay')" /></td></tr>
             </table>
         </form>
@@ -28,15 +28,15 @@
                 <tr><td colspan="3"><h3>Konfiguration</h3></td></tr>
                 <tr><td><input type="number" id="nominal_min_temp" name="nominal_min_temp" placeholder="42.0" value="!!!--nominal_min_temp--!!!" step="0.1" /></td>
                     <td><label for="nominal_min_temp">Solltemperatur Untergrenze (in °C)</label></td></tr>
-                <tr><td><input type="number" id="nominal_max_temp" name="nominal_max_temp" placeholder="58.0" value="!!!--nominal_max_temp--!!!" step="0.1" /></td>
+                <tr><td><input type="number" id="nominal_max_temp" name="nominal_max_temp" placeholder="57.0" value="!!!--nominal_max_temp--!!!" step="0.1" /></td>
                     <td><label for="nominal_max_temp">Solltemperatur Obergrenze (in °C)</label></td></tr>
                 <tr><td><input type="number" id="delay_before_start_1" name="delay_before_start_1" placeholder="660" value="!!!--delay_before_start_1--!!!" /></td>
                     <td><label for="delay_before_start_1">Dauer der 1. Startphase (in Sekunden)</label></td></tr>
-                <tr><td><input type="number" id="init_relay_time" name="init_relay_time" placeholder="7000" value="!!!--init_relay_time--!!!" /></td>
+                <tr><td><input type="number" id="init_relay_time" name="init_relay_time" placeholder="5000" value="!!!--init_relay_time--!!!" step="100" /></td>
                     <td><label for="init_relay_time">Relais Schaltzeit nach der 1. Startphase (in Millisekunden)</label></td></tr>
                 <tr><td><input type="number" id="delay_before_start_2" name="delay_before_start_2" placeholder="420" value="!!!--delay_before_start_2--!!!" /></td>
                     <td><label for="delay_before_start_2">Dauer der 2. Startphase (in Sekunden)</label></td></tr>
-                <tr><td><input type="number" id="relay_time" name="relay_time" placeholder="1800" value="!!!--relay_time--!!!" /></td>
+                <tr><td><input type="number" id="relay_time" name="relay_time" placeholder="1200" value="!!!--relay_time--!!!" step="100" /></td>
                     <td><label for="relay_time">Relais Schaltzeit nach der 2. Startphase (in Millisekunden)</label></td></tr>
                 <tr><td><input type="number" id="update_time" name="update_time" placeholder="120" value="!!!--update_time--!!!" /></td>
                     <td><label for="update_time">Dauer der Regelphase (in Sekunden)</label></td></tr>
@@ -58,7 +58,7 @@
                     <td><label for="log_level">Log Level auf der Konsole (nur sichtbar &uuml;ber USB)</label></td></tr>
                 <tr><td><input type="number" id="interval" name="interval" placeholder="1000" value="!!!--interval--!!!" /></td>
                     <td><label for="interval">Dauer einer Sekunde (in Millisekunden). Verringere den Wert, um die Zeit mit der echten Zeit anzugleichen</label></td></tr>
-                <tr><td><input type="number" id="temp_sampling_interval" name="temp_sampling_interval" placeholder="10000" value="!!!--temp_sampling_interval--!!!" /></td>
+                <tr><td><input type="number" id="temp_sampling_interval" name="temp_sampling_interval" placeholder="10000" value="!!!--temp_sampling_interval--!!!" step="100" /></td>
                     <td><label for="temp_sampling_interval">Intervall für (Kategorie-)Messung (in Millisekunden). Z.B. 10000 = 10 Sekunden -> Temperaturver&auml;nderung wird alle 10 Sekunden gemessen.</label></td></tr>
                 <tr><td><input type="number" id="temp_change_high_threshold_temp" name="temp_change_high_threshold_temp" placeholder="1.0" value="!!!--temp_change_high_threshold_temp--!!!" step="0.1" /></td>
                     <td><label for="temp_change_high_threshold_temp">Steigt oder fällt die Temperatur um diesen Wert (in &deg;C) innerhalb einer (Kategorie-)Messung, wird die Kategorie auf HIGH gesetzt</label></td></tr>
