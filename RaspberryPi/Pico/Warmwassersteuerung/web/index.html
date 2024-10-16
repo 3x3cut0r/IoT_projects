@@ -10,111 +10,124 @@
     <body>
         <br>
         <div class="lcd-display">
-            <div class='lcd-line' style='white-space: nowrap;'><!--LCD_LINE_1--></div>
-            <div class='lcd-line' style='white-space: nowrap;'><!--LCD_LINE_2--></div>
-            <div class='lcd-line' style='white-space: nowrap;'><!--LCD_LINE_3--></div>
-            <div class='lcd-line' style='white-space: nowrap;'><!--LCD_LINE_4--></div>
+            <div class='lcd-line' style='white-space: nowrap;'>!!!--LCD_LINE_1--!!!</div>
+            <div class='lcd-line' style='white-space: nowrap;'>!!!--LCD_LINE_2--!!!</div>
+            <div class='lcd-line' style='white-space: nowrap;'>!!!--LCD_LINE_3--!!!</div>
+            <div class='lcd-line' style='white-space: nowrap;'>!!!--LCD_LINE_4--!!!</div>
         </div>
+        <form id="manualControlForm" method="post">
+            <table>
+                <tr><td colspan="3"><h3>Steuerung Steuerung</h3></td></tr>
+                <tr><td><input class="button" type="button" value="Ventil &ouml;ffnen" onclick="submitManualControl('/open_relay')" /></td>
+                    <td><input type="number" id="manual_relay_time" name="manual_relay_time" placeholder="1200" value="!!!--manual_relay_time--!!!" /></td>
+                    <td><input class="button" type="button" value="Ventil schlie&szlig;en" onclick="submitManualControl('/close_relay')" /></td></tr>
+            </table>
+        </form>
         <form action="/save_config" method="post">
             <table>
-                <tr><td><h3>Konfiguration</h3></td></tr>
-                <tr><td><input type="number" id="nominal_min_temp" name="nominal_min_temp" placeholder="42.0" value="<!--nominal_min_temp-->" step="0.1" /></td>
+                <tr><td colspan="3"><h3>Konfiguration</h3></td></tr>
+                <tr><td><input type="number" id="nominal_min_temp" name="nominal_min_temp" placeholder="42.0" value="!!!--nominal_min_temp--!!!" step="0.1" /></td>
                     <td><label for="nominal_min_temp">Solltemperatur Untergrenze (in °C)</label></td></tr>
-                <tr><td><input type="number" id="nominal_max_temp" name="nominal_max_temp" placeholder="58.0" value="<!--nominal_max_temp-->" step="0.1" /></td>
+                <tr><td><input type="number" id="nominal_max_temp" name="nominal_max_temp" placeholder="58.0" value="!!!--nominal_max_temp--!!!" step="0.1" /></td>
                     <td><label for="nominal_max_temp">Solltemperatur Obergrenze (in °C)</label></td></tr>
-                <tr><td><input type="number" id="delay_before_start_1" name="delay_before_start_1" placeholder="660" value="<!--delay_before_start_1-->" /></td>
+                <tr><td><input type="number" id="delay_before_start_1" name="delay_before_start_1" placeholder="660" value="!!!--delay_before_start_1--!!!" /></td>
                     <td><label for="delay_before_start_1">Dauer der 1. Startphase (in Sekunden)</label></td></tr>
-                <tr><td><input type="number" id="init_relay_time" name="init_relay_time" placeholder="7000" value="<!--init_relay_time-->" /></td>
+                <tr><td><input type="number" id="init_relay_time" name="init_relay_time" placeholder="7000" value="!!!--init_relay_time--!!!" /></td>
                     <td><label for="init_relay_time">Relais Schaltzeit nach der 1. Startphase (in Millisekunden)</label></td></tr>
-                <tr><td><input type="number" id="delay_before_start_2" name="delay_before_start_2" placeholder="420" value="<!--delay_before_start_2-->" /></td>
+                <tr><td><input type="number" id="delay_before_start_2" name="delay_before_start_2" placeholder="420" value="!!!--delay_before_start_2--!!!" /></td>
                     <td><label for="delay_before_start_2">Dauer der 2. Startphase (in Sekunden)</label></td></tr>
-                <tr><td><input type="number" id="relay_time" name="relay_time" placeholder="1800" value="<!--relay_time-->" /></td>
+                <tr><td><input type="number" id="relay_time" name="relay_time" placeholder="1800" value="!!!--relay_time--!!!" /></td>
                     <td><label for="relay_time">Relais Schaltzeit nach der 2. Startphase (in Millisekunden)</label></td></tr>
-                <tr><td><input type="number" id="update_time" name="update_time" placeholder="120" value="<!--update_time-->" /></td>
+                <tr><td><input type="number" id="update_time" name="update_time" placeholder="120" value="!!!--update_time--!!!" /></td>
                     <td><label for="update_time">Dauer der Regelphase (in Sekunden)</label></td></tr>
-                <tr><td><input type="number" id="temp_update_interval" name="temp_update_interval" placeholder="5" value="<!--temp_update_interval-->" /></td>
+                <tr><td><input type="number" id="temp_update_interval" name="temp_update_interval" placeholder="5" value="!!!--temp_update_interval--!!!" /></td>
                     <td><label for="temp_update_interval">Intervall der Temperaturmessung (in Sekunden)</label></td></tr>
-                <tr><td><input type="checkbox" id="lcd_i2c_backlight" onclick="updateBacklightHiddenField(this.checked);"<!--lcd_i2c_backlight-->/></td>
+                <tr><td><input type="checkbox" id="lcd_i2c_backlight" onclick="updateBacklightHiddenField(this.checked);"!!!--lcd_i2c_backlight--!!!/></td>
                     <td><label for="lcd_i2c_backlight">LCD Hintergrundbeleuchtung (an / aus)</label></td>
-                    <td><input type="hidden" name="lcd_i2c_backlight" id="lcd_i2c_backlight_value" value="<!--lcd_i2c_backlight-->"/></td></tr>
-                <tr style="display: none;"><td><input type="checkbox" id="buttons_activated" onclick="updateButtonsHiddenField(this.checked);"<!--buttons_activated-->/></td>
+                    <td><input type="hidden" name="lcd_i2c_backlight" id="lcd_i2c_backlight_value" value="!!!--lcd_i2c_backlight--!!!"/></td></tr>
+                <tr style="display: none;"><td><input type="checkbox" id="buttons_activated" onclick="updateButtonsHiddenField(this.checked);"!!!--buttons_activated--!!!/></td>
                     <td><label for="buttons_activated">Buttons (aktivieren / deaktivieren)</label></td>
-                    <td><input type="hidden" name="buttons_activated" id="buttons_activated_value" value="<!--buttons_activated-->"/></td></tr>
+                    <td><input type="hidden" name="buttons_activated" id="buttons_activated_value" value="!!!--buttons_activated--!!!"/></td></tr>
                 <tr><td><select name="log_level" id="log_level">
-                            <option value="OFF"<!--log_level_OFF-->>OFF</option>
-                            <option value="ERROR"<!--log_level_ERROR-->>ERROR</option>
-                            <option value="WARN"<!--log_level_WARN-->>WARN</option>
-                            <option value="INFO"<!--log_level_INFO-->>INFO</option>
-                            <option value="VERBOSE"<!--log_level_VERBOSE-->>VERBOSE</option>
+                            <option value="OFF"!!!--log_level_OFF--!!!>OFF</option>
+                            <option value="ERROR"!!!--log_level_ERROR--!!!>ERROR</option>
+                            <option value="WARN"!!!--log_level_WARN--!!!>WARN</option>
+                            <option value="INFO"!!!--log_level_INFO--!!!>INFO</option>
+                            <option value="VERBOSE"!!!--log_level_VERBOSE--!!!>VERBOSE</option>
                         </select></td>
                     <td><label for="log_level">Log Level auf der Konsole (nur sichtbar &uuml;ber USB)</label></td></tr>
-                <tr><td><input type="number" id="interval" name="interval" placeholder="1000" value="<!--interval-->" /></td>
+                <tr><td><input type="number" id="interval" name="interval" placeholder="1000" value="!!!--interval--!!!" /></td>
                     <td><label for="interval">Dauer einer Sekunde (in Millisekunden). Verringere den Wert, um die Zeit mit der echten Zeit anzugleichen</label></td></tr>
-                <tr><td><input type="number" id="temp_sampling_interval" name="temp_sampling_interval" placeholder="10000" value="<!--temp_sampling_interval-->" /></td>
+                <tr><td><input type="number" id="temp_sampling_interval" name="temp_sampling_interval" placeholder="10000" value="!!!--temp_sampling_interval--!!!" /></td>
                     <td><label for="temp_sampling_interval">Intervall für (Kategorie-)Messung (in Millisekunden). Z.B. 10000 = 10 Sekunden -> Temperaturver&auml;nderung wird alle 10 Sekunden gemessen.</label></td></tr>
-                <tr><td><input type="number" id="temp_change_high_threshold_temp" name="temp_change_high_threshold_temp" placeholder="1.0" value="<!--temp_change_high_threshold_temp-->" step="0.1" /></td>
+                <tr><td><input type="number" id="temp_change_high_threshold_temp" name="temp_change_high_threshold_temp" placeholder="1.0" value="!!!--temp_change_high_threshold_temp--!!!" step="0.1" /></td>
                     <td><label for="temp_change_high_threshold_temp">Steigt oder fällt die Temperatur um diesen Wert (in &deg;C) innerhalb einer (Kategorie-)Messung, wird die Kategorie auf HIGH gesetzt</label></td></tr>
-                <tr><td><input type="number" id="temp_change_high_threshold_relay_time_multiplier" name="temp_change_high_threshold_relay_time_multiplier" placeholder="1.5" value="<!--temp_change_high_threshold_relay_time_multiplier-->" step="0.01" /></td>
+                <tr><td><input type="number" id="temp_change_high_threshold_relay_time_multiplier" name="temp_change_high_threshold_relay_time_multiplier" placeholder="1.5" value="!!!--temp_change_high_threshold_relay_time_multiplier--!!!" step="0.01" /></td>
                     <td><label for="temp_change_high_threshold_relay_time_multiplier">Multiplikator für "Relais Schaltzeit nach der 2. Startphase", wenn Kategorie = HIGH (z.B. 1.5; 1800 * 1.5 = 2700)</label></td></tr>
-                <tr><td><input type="number" id="temp_change_high_threshold_update_time_multiplier" name="temp_change_high_threshold_update_time_multiplier" placeholder="0.5" value="<!--temp_change_high_threshold_update_time_multiplier-->" step="0.01" /></td>
+                <tr><td><input type="number" id="temp_change_high_threshold_update_time_multiplier" name="temp_change_high_threshold_update_time_multiplier" placeholder="0.5" value="!!!--temp_change_high_threshold_update_time_multiplier--!!!" step="0.01" /></td>
                     <td><label for="temp_change_high_threshold_update_time_multiplier">Multiplikator für "Dauer der Regelphase", wenn Kategorie = HIGH (z.B. 0.5; 120 * 0.5 = 60)</label></td></tr>
-                <tr><td><input type="number" id="wifi_max_attempts" name="wifi_max_attempts" placeholder="10" value="<!--wifi_max_attempts-->" /></td>
+                <tr><td><input type="number" id="wifi_max_attempts" name="wifi_max_attempts" placeholder="10" value="!!!--wifi_max_attempts--!!!" /></td>
                     <td><label for="wifi_max_attempts">WLAN-Modul versucht x Sekunden sich zu verbinden vor einem erneuten Versuch</label></td></tr>
-                <tr><td><br /><input type="submit" value="Speichern" /></td></tr>
+                <tr><td colspan="3"><br /><input class='button' type="submit" value="Speichern" /></td></tr>
                 <tr><td><h3>Info</h3></td></tr>
-                <tr><td><div id="wifi_ssid"><!--wifi_ssid--></div></td>
+                <tr><td><div id="wifi_ssid">!!!--wifi_ssid--!!!</div></td>
                     <td><label for="wifi_ssid">WLAN SSID</label></td></tr>
-                <tr><td><div id="previous_millis"><!--previous_millis--></div></td>
+                <tr><td><div id="previous_millis">!!!--previous_millis--!!!</div></td>
                     <td><div for="previous_millis">Previous Millis</div></td></tr>
-                <tr><td><div id="temp_last_measurement_time"><!--temp_last_measurement_time--></div></td>
+                <tr><td><div id="temp_last_measurement_time">!!!--temp_last_measurement_time--!!!</div></td>
                     <td><div for="temp_last_measurement_time">Zeit der letzten (Kategorie-)Messung</div></td></tr>
-                <tr><td><div id="current_temp"><!--current_temp--></div></td>
+                <tr><td><div id="current_temp">!!!--current_temp--!!!</div></td>
                     <td><div for="current_temp">Temperatur aktuell</div></td></tr>
-                <tr><td><div id="temp_last_measurement"><!--temp_last_measurement--></div></td>
+                <tr><td><div id="temp_last_measurement">!!!--temp_last_measurement--!!!</div></td>
                     <td><div for="temp_last_measurement">Temperatur der letzten (Kategorie-)Messung</div></td></tr>
-                <tr><td><div id="temp_increasing"><!--temp_increasing--></div></td>
+                <tr><td><div id="temp_increasing">!!!--temp_increasing--!!!</div></td>
                     <td><div for="temp_increasing">Temperatur steigend (0=nein, 1=ja)</div></td></tr> 
-                <tr><td><div id="temp_change_category"><!--temp_change_category--></div></td>
+                <tr><td><div id="temp_change_category">!!!--temp_change_category--!!!</div></td>
                     <td><div for="temp_change_category">Kategorie der Temperaturveränderung</div></td></tr>
                 <tr><td><h3>PIN Belegung</h3></td></tr>
-                <tr><td><div id="TEMP_SENSOR_PIN"><!--TEMP_SENSOR_PIN--></div></td>
+                <tr><td><div id="TEMP_SENSOR_PIN">!!!--TEMP_SENSOR_PIN--!!!</div></td>
                     <td><div for="TEMP_SENSOR_PIN">Temperatur Sensor (PIN)</div></td></tr>
-                <tr><td><div id="TEMP_SENSOR_2_PIN"><!--TEMP_SENSOR_2_PIN--></div></td>
+                <tr><td><div id="TEMP_SENSOR_2_PIN">!!!--TEMP_SENSOR_2_PIN--!!!</div></td>
                     <td><div for="TEMP_SENSOR_2_PIN">Temperatur Sensor 2 (PIN)</div></td></tr>
-                <tr><td><div id="TEMP_SENSOR_RESOLUTION_BIT"><!--TEMP_SENSOR_RESOLUTION_BIT--></div></td>
+                <tr><td><div id="TEMP_SENSOR_RESOLUTION_BIT">!!!--TEMP_SENSOR_RESOLUTION_BIT--!!!</div></td>
                     <td><div for="TEMP_SENSOR_RESOLUTION_BIT">Temperatur Sensor Auflösung (BIT)</div></td></tr>
-                <tr><td><div id="LCD_PIN_SDA"><!--LCD_PIN_SDA--></div></td>
+                <tr><td><div id="LCD_PIN_SDA">!!!--LCD_PIN_SDA--!!!</div></td>
                     <td><div for="LCD_PIN_SDA">LCD SDA (PIN)</div></td></tr>
-                <tr><td><div id="LCD_PIN_SCL"><!--LCD_PIN_SCL--></div></td>
+                <tr><td><div id="LCD_PIN_SCL">!!!--LCD_PIN_SCL--!!!</div></td>
                     <td><div for="LCD_PIN_SCL">LCD SCL (PIN)</div></td></tr>
-                <tr><td><div id="LCD_ADDR"><!--LCD_ADDR--></div></td>
+                <tr><td><div id="LCD_ADDR">!!!--LCD_ADDR--!!!</div></td>
                     <td><div for="LCD_ADDR">LCD Adresse</div></td></tr>
-                <tr><td><div id="LCD_FREQ"><!--LCD_FREQ--></div></td>
+                <tr><td><div id="LCD_FREQ">!!!--LCD_FREQ--!!!</div></td>
                     <td><div for="LCD_FREQ">LCD Frequenz</div></td></tr>
-                <tr><td><div id="LCD_COLS"><!--LCD_COLS--></div></td>
+                <tr><td><div id="LCD_COLS">!!!--LCD_COLS--!!!</div></td>
                     <td><div for="LCD_COLS">LCD Spalten</div></td></tr>
-                <tr><td><div id="LCD_ROWS"><!--LCD_ROWS--></div></td>
+                <tr><td><div id="LCD_ROWS">!!!--LCD_ROWS--!!!</div></td>
                     <td><div for="LCD_ROWS">LCD Reihen</div></td></tr>
-                <tr><td><div id="RELAY_OPEN_PIN"><!--RELAY_OPEN_PIN--></div></td>
+                <tr><td><div id="RELAY_OPEN_PIN">!!!--RELAY_OPEN_PIN--!!!</div></td>
                     <td><div for="RELAY_OPEN_PIN">Relais Öffnen (PIN)</div></td></tr>
-                <tr><td><div id="RELAY_CLOSE_PIN"><!--RELAY_CLOSE_PIN--></div></td>
+                <tr><td><div id="RELAY_CLOSE_PIN">!!!--RELAY_CLOSE_PIN--!!!</div></td>
                     <td><div for="RELAY_CLOSE_PIN">Relais Schließen (PIN)</div></td></tr>
-                <tr style="display: none;"><td><div id="BUTTON_TEMP_UP_PIN"><!--BUTTON_TEMP_UP_PIN--></div></td>
+                <tr style="display: none;"><td><div id="BUTTON_TEMP_UP_PIN">!!!--BUTTON_TEMP_UP_PIN--!!!</div></td>
                     <td><div for="BUTTON_TEMP_UP_PIN">Knopf Temperatur Hoch (PIN)</div></td></tr>
-                <tr style="display: none;"><td><div id="BUTTON_TEMP_DOWN_PIN"><!--BUTTON_TEMP_DOWN_PIN--></div></td>
+                <tr style="display: none;"><td><div id="BUTTON_TEMP_DOWN_PIN">!!!--BUTTON_TEMP_DOWN_PIN--!!!</div></td>
                     <td><div for="BUTTON_TEMP_DOWN_PIN">Knopf Temperatur Runter (PIN)</div></td></tr>
             </table><br />
         </form>
         <form action="/reset" method="post">
             <table>
                 <tr><td><h3>Reset Pico</h3></td></tr>
-                <tr><td><input style="width: 104px;" type="checkbox" id="boot_normal" onclick="updateBootNormalHiddenField(this.checked);"<!--boot_normal-->/></td>
+                <tr><td><input style="width: 104px;" type="checkbox" id="boot_normal" onclick="updateBootNormalHiddenField(this.checked);"!!!--boot_normal--!!!/></td>
                     <td><label for="boot_normal">An = Starte Normal mit beiden Startphasen. Aus = &Uuml;berspringe beide Startphasen.</label></td>
-                    <td><input type="hidden" name="boot_normal" id="boot_normal_value" value="<!--boot_normal-->"/></td></tr>
-                <tr><td><br /><input type="submit" value="Reset Pico" /></td></tr>
+                    <td><input type="hidden" name="boot_normal" id="boot_normal_value" value="!!!--boot_normal--!!!"/></td></tr>
+                <tr><td colspan="3"><br /><input class='button' type="submit" value="Reset Pico" /></td></tr>
             </table>
         </form>
         <script>
+            function submitManualControl(action){
+                var form = document.getElementById('manualControlForm');
+                form.action = action;
+                form.submit(); 
+            }
             function updateBacklightHiddenField(checked) {
                 document.getElementById('lcd_i2c_backlight_value').value = checked ? "true" : "false";
             }
