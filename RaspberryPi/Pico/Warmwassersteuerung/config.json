@@ -11,7 +11,7 @@
     "manual_relay_time": 1200,
     "nominal_min_temp": 42.0,
     "nominal_max_temp": 57.0,
-    "temp_update_interval": 2,
+    "temp_update_interval": 5,
     "lcd_i2c_backlight": 1,
     "buttons_activated": 0,
     "log_level": "OFF",
