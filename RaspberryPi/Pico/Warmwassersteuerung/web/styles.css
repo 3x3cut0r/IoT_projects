@@ -15,6 +15,10 @@ body {
     border-radius: 5px;
 }
 
+.button {
+    width: 120px;
+}
+
 .lcd-line {
     margin: 3px 0;
 }
@@ -22,6 +26,10 @@ body {
 table {
     overflow-x: auto;
     white-space: nowrap;
+}
+
+td {
+    padding-right: 10px;
 }
 
 input {
