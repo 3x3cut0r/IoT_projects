@@ -76,13 +76,16 @@ async def main():
         print_nominal_temp()
 
         if config.get_bool_value("boot_normal", True):
+
             # wait start 1
             await wait_start(config.get_int_value("delay_before_start_1"), "Start 1/2:")
+
             # open relay initial
             await set_relay(
                 config.get_int_value("RELAY_OPEN_PIN", 14),
                 config.get_int_value("init_relay_time", 5000),
             )
+
             # wait start 2
             await wait_start(config.get_int_value("delay_before_start_2"), "Start 2/2:")
 
@@ -136,6 +139,7 @@ async def main():
 
             # main
             if time.ticks_diff(current_millis, previous_millis) > interval:
+
                 if update_time > 0:
                     # update timer
                     update_timer(update_time)
@@ -154,6 +158,7 @@ async def main():
                     log("VERBOSE", "mem_alloc(): {} Bytes".format(gc.mem_alloc()))
 
                 else:
+
                     # update temp
                     await update_temp()
                     await update_temp(2)
@@ -180,6 +185,7 @@ async def main():
             await asyncio.sleep(0.1)
 
     except Exception as e:
+
         # print error message
         message = f"ERROR: main.py: {str(e)}\n"
         print(message)
@@ -197,6 +203,7 @@ async def main():
 
 
 if __name__ == "__main__":
+
     log("INFO", "__main__")
 
     # create asyncio event loop

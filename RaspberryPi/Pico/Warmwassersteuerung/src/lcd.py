@@ -17,6 +17,7 @@ lcd = None
 lcd_addr = int(str(config.get_value("LCD_ADDR", "0x27")), 16)
 lcd_cols = config.get_int_value("LCD_COLS", 20)
 lcd_rows = config.get_int_value("LCD_ROWS", 4)
+
 try:
     # load lcd
     lcd = I2cLcd(i2c, lcd_addr, lcd_rows, lcd_cols)
