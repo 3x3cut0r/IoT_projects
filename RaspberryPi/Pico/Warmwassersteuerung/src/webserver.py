@@ -48,7 +48,25 @@ def replace_placeholder(content="", line_number=0):
         15: ("LCD_LINE_3", get_lcd_html_line(2)),
         16: ("LCD_LINE_4", get_lcd_html_line(3)),
         # MANUAL CONTROL
+        21: (
+            "highlighted",
+            (
+                " highlighted"
+                if config.get_float_value("current_temp", -127.0)
+                > config.get_float_value("nominal_max_temp", 57.0)
+                else ""
+            ),
+        ),
         22: ("manual_relay_time", config.get_value("manual_relay_time", "")),
+        23: (
+            "highlighted",
+            (
+                " highlighted"
+                if config.get_float_value("current_temp", -127.0)
+                < config.get_float_value("nominal_min_temp", 42.0)
+                else ""
+            ),
+        ),
         # CONFIGURATION
         29: ("nominal_min_temp", config.get_value("nominal_min_temp", "")),
         31: ("nominal_max_temp", config.get_value("nominal_max_temp", "")),

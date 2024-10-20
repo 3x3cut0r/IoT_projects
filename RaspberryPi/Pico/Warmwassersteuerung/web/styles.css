@@ -19,6 +19,11 @@ body {
     width: 120px;
 }
 
+.highlighted {
+    border: 2px solid black;
+    font-weight: bold;
+}
+
 .lcd-line {
     margin: 3px 0;
 }
