@@ -8,7 +8,7 @@
     "init_relay_time": 5000,
     "update_time": 120,
     "relay_time": 1200,
-    "manual_relay_time": 1200,
+    "manual_relay_time": 1500,
     "nominal_min_temp": 42.0,
     "nominal_max_temp": 57.0,
     "temp_update_interval": 5,
