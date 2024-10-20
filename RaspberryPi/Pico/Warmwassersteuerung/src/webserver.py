@@ -310,6 +310,7 @@ async def handle_post(body, requested_path="/save_config"):
             response_content = f'<span style="color: green;">INFO: Ventil wird f&uuml;r {manual_relay_time}ms ge&ouml;ffnet.</span>'
             log("INFO", f"open_relay({manual_relay_time}): manual trigger")
             relay_open_pin = config.get_int_value("RELAY_OPEN_PIN", 14)
+            config.set_value("stop_timer", manual_relay_time // 1000 + 1)
             await set_relay(relay_open_pin, manual_relay_time)
 
     # /close_relay
@@ -342,6 +343,7 @@ async def handle_post(body, requested_path="/save_config"):
             response_content = f'<span style="color: green;">INFO: Ventil wird f&uuml;r {manual_relay_time}ms geschlossen.</span>'
             log("INFO", f"close_relay({manual_relay_time}): manual trigger")
             relay_close_pin = config.get_int_value("RELAY_CLOSE_PIN", 15)
+            config.set_value("stop_timer", manual_relay_time // 1000 + 1)
             await set_relay(relay_close_pin, manual_relay_time)
 
     # /save_config

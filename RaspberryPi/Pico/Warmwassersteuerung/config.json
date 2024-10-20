@@ -29,6 +29,7 @@
     "temp_change_high_threshold_relay_time_multiplier": 2.0,
     "temp_change_high_threshold_update_time_multiplier": 0.4,
     "timer": 0,
+    "stop_timer": 0,
     "TEMP_SENSOR_PIN": 6,
     "TEMP_SENSOR_2_PIN": 10,
     "TEMP_SENSOR_RESOLUTION_BIT": 11,

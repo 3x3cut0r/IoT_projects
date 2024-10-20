@@ -281,14 +281,19 @@ def format_time(secs):
 
 # update timer
 def update_timer(secs, message="Regle in:"):
-    log("INFO", f"update_timer({secs})")
-    config.set_value("timer", secs)
+    stop_timer = config.get_int_value("stop_timer", 0)
+    if stop_timer >= 0:
+        log("INFO", f"stop_timer({stop_timer})")
+        config.set_value("stop_timer", stop_timer - 1)
+    else:
+        log("INFO", f"update_timer({secs})")
+        config.set_value("timer", secs)
 
-    time = format_time(secs)
-    cursor = 20 - len(time)
+        time = format_time(secs)
+        cursor = 20 - len(time)
 
-    print_lcd(3, 0, message)
-    print_lcd(3, cursor, time)
+        print_lcd(3, 0, message)
+        print_lcd(3, cursor, time)
 
 
 # wait start
@@ -297,7 +302,7 @@ async def wait_start(secs, lcd_text="Starte in:"):
 
     # load config
     previous_millis = 0
-    interval = config.get_int_value("interval", 1000)
+    interval = config.get_int_value("interval", 930)
     temp_update_interval = config.get_int_value("temp_update_interval", 5)
 
     while secs > 0:
