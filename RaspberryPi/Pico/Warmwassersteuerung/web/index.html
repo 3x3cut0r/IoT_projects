@@ -23,7 +23,7 @@
                     <td><input class="button" type="button" value="Ventil schlie&szlig;en" onclick="submitManualControl('/close_relay')" /></td></tr>
             </table>
         </form>
-        <form action="/save_config" method="post">
+        <form id="configForm" action="/save_config" method="post">
             <table>
                 <tr><td colspan="3"><h3>Konfiguration</h3></td></tr>
                 <tr><td><input type="number" id="nominal_min_temp" name="nominal_min_temp" placeholder="42.0" value="!!!--nominal_min_temp--!!!" step="0.1" /></td>
@@ -112,8 +112,10 @@
                 <tr style="display: none;"><td><div id="BUTTON_TEMP_DOWN_PIN">!!!--BUTTON_TEMP_DOWN_PIN--!!!</div></td>
                     <td><div for="BUTTON_TEMP_DOWN_PIN">Knopf Temperatur Runter (PIN)</div></td></tr>
             </table><br />
+            <!-- hidden fields -->
+            <input type="hidden" id="hidden_manual_relay_time" name="manual_relay_time" value="!!!--manual_relay_time--!!!">
         </form>
-        <form action="/reset" method="post">
+        <form id="resetForm" action="/reset" method="post">
             <table>
                 <tr><td><h3>Reset Pico</h3></td></tr>
                 <tr><td><input style="width: 104px;" type="checkbox" id="boot_normal" onclick="updateBootNormalHiddenField(this.checked);"!!!--boot_normal--!!!/></td>
@@ -137,6 +139,10 @@
             function updateBootNormalHiddenField(checked) {
                 document.getElementById('boot_normal_value').value = checked ? "true" : "false";
             }
+            document.getElementById('configForm').onsubmit = function() {
+                var manualRelayTime = document.getElementById('manual_relay_time').value;
+                document.getElementById('hidden_manual_relay_time').value = manualRelayTime;
+            };
         </script>
     </body>
 </html>

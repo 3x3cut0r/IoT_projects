@@ -160,7 +160,10 @@ def replace_placeholder(content="", line_number=0):
         108: ("RELAY_CLOSE_PIN", config.get_value("RELAY_CLOSE_PIN", "")),
         110: ("BUTTON_TEMP_UP_PIN", config.get_value("BUTTON_TEMP_UP_PIN", "")),
         112: ("BUTTON_TEMP_DOWN_PIN", config.get_value("BUTTON_TEMP_DOWN_PIN", "")),
-        119: (
+        # HIDDEN
+        116: ("manual_relay_time", config.get_value("manual_relay_time", "")),
+        # RESET
+        121: (
             "boot_normal",
             (
                 " checked"
@@ -169,7 +172,7 @@ def replace_placeholder(content="", line_number=0):
                 else ""
             ),
         ),
-        121: (
+        123: (
             "boot_normal",
             (
                 "true"
