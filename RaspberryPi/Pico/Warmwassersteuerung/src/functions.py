@@ -171,6 +171,9 @@ async def set_relay(pin, relay_time):
     relay_open_pin = config.get_int_value("RELAY_OPEN_PIN", 14)
     relay_close_pin = config.get_int_value("RELAY_CLOSE_PIN", 15)
 
+    # set stop timer
+    config.set_value("stop_timer", relay_time // 1000 + 1)
+
     # only switch if the temperature can be read
     if 0 < current_temp <= 120:
         if pin == relay_open_pin:
